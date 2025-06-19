@@ -44,17 +44,10 @@
             pointer-events: none; z-index: -1;
         }
         .particle {
-            position: absolute;
-            width: 20px; /* Base size for SVGs */
-            height: 20px;
+            position: absolute; width: 20px; height: 20px;
             animation: particleFloat 15s linear infinite;
         }
-        .particle svg {
-            width: 100%;
-            height: 100%;
-            fill: var(--accent-glow);
-            opacity: 0.6;
-        }
+        .particle svg { width: 100%; height: 100%; fill: var(--accent-glow); opacity: 0.6; }
 
         @keyframes particleFloat {
             0% { transform: translateY(110vh) scale(0.5) rotate(0deg); opacity: 0; }
@@ -65,7 +58,7 @@
         }
 
         /* --- Header and Hero Section Styling --- */
-        .page-header { text-align: center; padding: 60px 20px 40px; }
+        .page-header { text-align: center; padding: 60px 20px 20px; }
         .page-header .logo {
             font-size: 2.5rem; font-weight: 900;
             background: linear-gradient(135deg, #fff, #f0f0f0);
@@ -80,7 +73,16 @@
         }
         .page-header p {
             font-size: clamp(1rem, 2.5vw, 1.2rem); color: var(--secondary-text);
-            max-width: 700px; margin: 0 auto 2.5rem;
+            max-width: 700px; margin: 0 auto;
+        }
+        
+        /* --- Banner Ad Container Styling --- */
+        .top-banner-ad-container {
+            max-width: 320px; /* Set to the width of the ad */
+            margin: 40px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* --- Filter Controls Styling --- */
@@ -110,9 +112,10 @@
             background: var(--card-bg); backdrop-filter: blur(10px);
             border-radius: 20px; overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 5px 15px var(--shadow-color); cursor: pointer;
+            box-shadow: 0 5px 15px var(--shadow-color);
             transition: transform 0.4s ease, box-shadow 0.4s ease;
             opacity: 0; transform: translateY(40px); position: relative;
+            cursor: pointer;
         }
         .offer-card::before {
              content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
@@ -143,59 +146,23 @@
             border-radius: 20px; font-size: 1.1rem; font-weight: 600;
         }
         
-        /* --- Modal Pop-up Window --- */
-        #offer-details-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px);
-            display: flex; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden;
-            transition: opacity 0.4s ease, visibility 0.4s ease; z-index: 2000;
-        }
+        /* Modal styling remains the same... */
+        #offer-details-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; z-index: 2000; }
         #offer-details-screen.active { opacity: 1; visibility: visible; }
-        .offer-modal {
-            background: var(--card-bg); border-radius: 20px;
-            width: 90%; max-width: 600px; max-height: 90vh;
-            border: 1px solid var(--accent-glow);
-            box-shadow: 0 0 30px var(--accent-glow);
-            transform: scale(0.9); transition: transform 0.4s ease;
-            display: flex; flex-direction: column; overflow: hidden;
-        }
+        .offer-modal { background: var(--card-bg); border-radius: 20px; width: 90%; max-width: 600px; max-height: 90vh; border: 1px solid var(--accent-glow); box-shadow: 0 0 30px var(--accent-glow); transform: scale(0.9); transition: transform 0.4s ease; display: flex; flex-direction: column; overflow: hidden; }
         #offer-details-screen.active .offer-modal { transform: scale(1); }
-        .offer-header {
-            padding: 1.5rem 2rem; position: relative;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        .offer-header { padding: 1.5rem 2rem; position: relative; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         #offer-title-details { font-size: 1.5rem; padding-right: 40px; }
-        #back-to-home-btn {
-            position: absolute; top: 50%; right: 20px;
-            transform: translateY(-50%); font-size: 2.5rem;
-            color: var(--secondary-text); cursor: pointer;
-            background: none; border: none;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
+        #back-to-home-btn { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 2.5rem; color: var(--secondary-text); cursor: pointer; background: none; border: none; transition: transform 0.3s ease, color 0.3s ease; }
         #back-to-home-btn:hover { color: #fff; transform: translateY(-50%) rotate(90deg); }
         .offer-content { padding: 1.5rem 2rem; overflow-y: auto; }
         .offer-content h3 { font-size: 1.2rem; margin-bottom: 1rem; }
         #offer-steps-list { list-style: none; padding: 0; }
-        #offer-steps-list li {
-            margin-bottom: 1rem; line-height: 1.6; color: var(--secondary-text);
-            padding-left: 30px; position: relative;
-        }
-        #offer-steps-list li::before {
-            content: '🌿'; color: var(--accent-glow); position: absolute; left: 0;
-        }
+        #offer-steps-list li { margin-bottom: 1rem; line-height: 1.6; color: var(--secondary-text); padding-left: 30px; position: relative; }
+        #offer-steps-list li::before { content: '🌿'; color: var(--accent-glow); position: absolute; left: 0; }
         #offer-steps-list li strong, #offer-steps-list li a { color: var(--primary-text); font-weight: 600; text-decoration: none; }
-        .offer-footer {
-            padding: 1.5rem 2rem; margin-top: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        #offer-start-btn {
-            display: block; width: 100%; text-align: center; text-decoration: none;
-            padding: 1rem; border-radius: 12px; font-size: 1.1rem; font-weight: 700;
-            background: linear-gradient(135deg, #9EFD38, #38F9D7);
-            color: #1a2935; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
-        }
+        .offer-footer { padding: 1.5rem 2rem; margin-top: auto; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        #offer-start-btn { display: block; width: 100%; text-align: center; text-decoration: none; padding: 1rem; border-radius: 12px; font-size: 1.1rem; font-weight: 700; background: linear-gradient(135deg, #9EFD38, #38F9D7); color: #1a2935; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.3s ease; }
         #offer-start-btn:hover { transform: scale(1.05); }
     </style>
 </head>
@@ -206,8 +173,22 @@
     <header class="page-header">
         <div class="logo">SLoots</div>
         <h1>Unlock Your Earning Potential.</h1>
-        <p>Discover exclusive offers, complete simple tasks, and watch your earnings grow. The most premium platform for instant cashback and rewards.</p>
+        <p>Discover exclusive offers, complete simple tasks, and watch your earnings grow.</p>
     </header>
+
+    <!-- NEW BANNER AD PLACED HERE -->
+    <div class="top-banner-ad-container">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'b85a63e84936af4fc3a812c6358dc874',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/b85a63e84936af4fc3a812c6358dc874/invoke.js"></script>
+    </div>
 
     <div class="controls">
         <div class="filter-bar">
@@ -217,23 +198,18 @@
     </div>
 
     <main class="gallery-grid" id="tasks-grid">
-        <!-- Offer cards will be dynamically populated here by JavaScript -->
+        <!-- Offer cards will be populated here -->
     </main>
     
     <div id="offer-details-screen">
+        <!-- Modal content remains the same -->
         <div class="offer-modal">
-            <header class="offer-header">
-                <h2 id="offer-title-details">Offer Title</h2>
-                <button id="back-to-home-btn">×</button>
-            </header>
+            <header class="offer-header"><h2 id="offer-title-details"></h2><button id="back-to-home-btn">×</button></header>
             <div class="offer-content">
-                <h3>Steps for Completion:</h3>
-                <ul id="offer-steps-list"></ul>
+                <h3>Steps for Completion:</h3><ul id="offer-steps-list"></ul>
                 <p id="offer-special-note" style="margin-top: 1.5rem; font-weight: 500; color: var(--secondary-text); font-style: italic;"></p>
             </div>
-            <footer class="offer-footer">
-                <a href="#" id="offer-start-btn" target="_blank" class="start-btn">Start Task</a>
-            </footer>
+            <footer class="offer-footer"><a href="#" id="offer-start-btn" target="_blank" class="start-btn">Start Task</a></footer>
         </div>
     </div>
 
@@ -246,46 +222,19 @@
             '<svg viewBox="0 0 24 24"><path d="M22,8.45L20.54,7L15.65,11.89L17.11,13.34L22,8.45M14.24,13.3L12.12,11.17L2.93,20.36L4.39,21.82L14.24,13.3M6.5,10.88L11.4,5.97L9.95,4.5L5.05,9.4L6.5,10.88Z" /></svg>',
             '<svg viewBox="0 0 24 24"><path d="M4,2A2,2 0 0,0 2,4V10A2,2 0 0,0 4,12H5.71A5,5 0 0,1 10,15.3V20A2,2 0 0,0 12,22A2,2 0 0,0 14,20V15.3A5,5 0 0,1 18.29,12H20A2,2 0 0,0 22,10V4A2,2 0 0,0 20,2H4M4,4H10V10H4V4M14,4H20V10H14V4Z" /></svg>'
         ];
-        if (particleSystem) {
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                particle.innerHTML = leafSVGs[Math.floor(Math.random() * leafSVGs.length)];
-                particle.style.left = `${Math.random() * 100}vw`;
-                particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
-                particle.style.animationDelay = `${Math.random() * 15}s`;
-                particle.style.width = `${Math.random() * 15 + 10}px`;
-                particle.style.height = particle.style.width;
-                particleSystem.appendChild(particle);
-            }
-        }
+        if (particleSystem) { for (let i = 0; i < 50; i++) { const p = document.createElement('div'); p.classList.add('particle'); p.innerHTML = leafSVGs[Math.floor(Math.random() * leafSVGs.length)]; p.style.left = `${Math.random()*100}vw`; p.style.animationDuration = `${Math.random()*10+10}s`; p.style.animationDelay = `${Math.random()*15}s`; p.style.width = `${Math.random()*15+10}px`; p.style.height = p.style.width; particleSystem.appendChild(p); } }
 
         // --- COMPLETE LIST of all offers and loots ---
         const offers = [
             { id: 'nielsen', category: 'Campaign', title: 'Nielsen Panel Loot', subtitle: 'Install & earn ₹100+ bonus cash', reward: 100, link: 'https://jodcampaign.com/o/nielsen/ycqugcw', steps: ['Click "Start Task", enter your details (Age 18+), verify OTP, and complete the initial survey.', 'Download the Nielsen app from the campaign page.', 'Log in to the app and keep it open for 1-2 minutes to receive an instant ₹1.', '<strong>IMPORTANT:</strong> You must open the app daily for at least 2 minutes for the next 10 days.', 'On the 12th day, you will receive the final ₹100 reward in your UPI account.'], note: 'You MUST keep the app installed and open it daily for the task to be successful. If install fails, try turning off Google Play Protect.' },
-            { id: 'reviewtask1', category: 'Review & Earn', title: 'App Review Task 1', subtitle: 'Install, give a 5-star review & earn', reward: 14, link: 'https://lnk.ink/app20.in.1', steps: ['Click the "Start Task" button to go to the offer page.', 'Install the app from the provided link.', 'Give the app a 5-star review and write a positive comment.', 'Take a screenshot of your published review.', 'Upload the screenshot on the offer website along with your UPI details to receive payment.'], note: 'Cashback will be credited within 24 hours for each valid review.' },
-            { id: 'reviewtask2', category: 'Review & Earn', title: 'App Review Task 2', subtitle: 'Install, give a 5-star review & earn', reward: 15, link: 'https://lnk.ink/app20.in.0', steps: ['Click the "Start Task" button to go to the offer page.', 'Install the app from the provided link.', 'Give the app a 5-star review and write a positive comment.', 'Take a screenshot of your published review.', 'Upload the screenshot on the offer website along with your UPI details to receive payment.'], note: 'Cashback will be credited within 24 hours for each valid review.' },
-            { id: 'reviewtask3', category: 'Review & Earn', title: 'App Review Task 3', subtitle: 'Install, give a 5-star review & earn', reward: 7, link: 'https://lnk.ink/app20.in.4', steps: ['Click the "Start Task" button to go to the offer page.', 'Install the app from the provided link.', 'Give the app a 5-star review and write a positive comment.', 'Take a screenshot of your published review.', 'Upload the screenshot on the offer website along with your UPI details to receive payment.'], note: 'Cashback will be credited within 24 hours for each valid review.' },
-            { id: 'reviewtask4', category: 'Review & Earn', title: 'App Review Task 4', subtitle: 'Install, give a 5-star review & earn', reward: 7, link: 'https://lnk.ink/app20.in.4', steps: ['Click the "Start Task" button to go to the offer page.', 'Install the app from the provided link.', 'Give the app a 5-star review and write a positive comment.', 'Take a screenshot of your published review.', 'Upload the screenshot on the offer website along with your UPI details to receive payment.'], note: 'Cashback will be credited within 24 hours for each valid review.' },
-            { id: 'rewardfun_signup', category: 'Campaign', title: 'RewardFun Signup Bonus', subtitle: 'Get ₹10 Instantly + Withdraw', reward: 10, link: 'https://play.google.com/store/apps/details?id=com.reward_fun&referrer=utm_source%3DSSRCUT2X3K%26utm_medium%3DRewardFun', steps: ['Download the app using the link.', 'During signup, use the referral code: <strong>SSRCUT2X3K</strong>', 'You will receive a ₹10 bonus.', 'Complete any one offer inside the app to unlock withdrawal.', 'Withdraw your earnings to UPI.'], note: 'Completing one offer is required to withdraw the signup bonus.' },
-            { id: 'rewardfun_new_signup', category: 'UPI Loot', title: 'Reward Fun Signup Loot', subtitle: 'Limited Time ₹10 Instant Bonus', reward: 10, link: 'https://play.google.com/store/apps/details?id=com.reward_fun&referrer=utm_source%3DSSRCUT2X3K%26utm_medium%3DRewardFun', steps: ['Download the app using the link.', 'During signup, use the referral code: <strong>SSRCUT2X3K</strong>', 'You will receive a ₹10 signup bonus instantly.', 'Complete just one offer inside the app to enable withdrawal.', 'Withdraw your signup bonus directly to UPI (Minimum ₹10).', 'Share the app with friends for more earning opportunities!'], note: 'Direct withdrawal of the signup bonus is enabled after completing one in-app task.' },
-            { id: 'rewardfun_review_offer', category: 'Review & Earn', title: 'Review for Reward Fun', subtitle: 'Get ₹10 UPI cash for a simple review', reward: 10, link: 'https://forms.gle/EAaLg2LeZaRHE8XG8', steps: ['First, download and register on the Reward Fun app today (if you haven\'t already).', 'Go to the Play Store and give the app a positive 5-star review.', 'Click the "Start Task" button to open the Google Form.', 'Fill the form with your details, ensuring you enter the same mobile number you registered with.'], note: 'This bonus is only for new users who register and review on the same day. Payment will be sent to your UPI within 24 hours.' },
-            { id: 'navi', category: 'Campaign', title: 'Navi UPI Campaign', subtitle: 'Instant ₹15 UPI Cash on First Transfer', reward: 15, link: 'https://campaigns.co.in/campaigns/0yw0e3o04?as=344ciy9ip', steps: ['Enter your UPI ID on the campaign page and click Submit.', 'Register on the Navi app and complete your first UPI transaction.', 'Bonus: You can also earn up to ₹100 directly from the Navi app!', 'Receive ₹15 instant cash directly to your UPI.'], note: 'This offer is valid for new users on their first UPI transaction only.' },
-            { id: 'bhim', category: 'Special Deal', title: 'BHIM Recharge Offer (Temporary)', subtitle: 'Flat ₹30 Cashback on Recharge', reward: 30, link: '#', steps: ['Ensure your BHIM application is updated to the latest version.', 'Initiate a prepaid mobile recharge of at least ₹199.', 'You will receive a flat ₹30 cashback instantly upon successful recharge.'], note: 'In-app offer. Valid until 5th July 2025. Not eligible if you have already claimed the ₹20 cashback offer in the same month.' },
-            { id: 'britannia', category: 'Campaign', title: 'Britannia Voucher Loot', subtitle: 'Earn ₹10-₹50 via UPI', reward: 50, link: 'https://britanniabreadcampaign.com/', steps: ['Click the link and submit your details on the campaign page.', 'Enter the following Lot Number when asked: <strong>10P1M96</strong>', 'Wait up to 24 hours to receive a voucher code via SMS.', 'Use the link provided in the SMS, enter the voucher and your UPI ID.', 'Payment will be credited to your UPI within 24 hours.'], note: 'This offer can be attempted with multiple numbers.' },
-            { id: 'oyo', category: 'Special Deal', title: 'OYO Rooms Free Stay', subtitle: 'Book a Hotel Room for ₹0', reward: 0, link: '#', steps: ['Open your OYO Rooms application.', 'On the main screen, look for a banner that says "Free Stay".', 'If the banner is visible, you can browse and book an eligible hotel for a price of ₹0.'], note: 'This is a user-specific offer and appears mostly for older accounts. Not guaranteed for all users.' },
-            { id: 'fampay', category: 'Campaign', title: 'FamPay Referral Program', subtitle: 'Earn ₹500 For Every Referral', reward: 500, link: 'https://get.fampay.in/RAMJTTXS2', steps: ['Download the FamPay app using the link and complete your registration.', 'Complete your account KYC and order your personalized FamPay card.', 'Share your unique referral link with friends.', 'Earn a significant reward for every friend who signs up and completes their first transaction.'], note: 'This is a referral-based earning opportunity. Rewards are subject to FamPay\'s terms.' },
-            { id: 'indusind_bank_new', category: 'Bank Offer', title: 'IndusInd Bank Free Account', subtitle: 'Open Account & Get ₹600 UPI Cashback', reward: 600, link: 'https://lootcampaign.in?camp=Indus&ref=Hm1iqrTk', steps: ['Enter your UPI ID on the campaign page, which will redirect you to the bank\'s website.', 'Enter your Aadhar-linked mobile number, PAN, and Aadhar details.', 'Verify with OTP and fill in your personal details.', '<strong>Important:</strong> Select the (INDUS DELITE AMF) account and a Virtual Card to ensure it is Lifetime Free.', 'Add ₹400+ to the new account via UPI. This amount is fully withdrawable.', 'Complete your Video KYC.'], note: 'You will receive ₹600 UPI Cash within 48 hours of successful account opening. Your deposited money can be withdrawn anytime.' },
-            { id: 'axisflash', category: 'Bank Offer', title: 'Axis Bank Flash Sale', subtitle: 'Guaranteed ₹1710 Cashback MEGA LOOT', reward: 1710, link: 'https://campguruji.com/camp.php?camp=ZbhtojRo&ref=Nkf6ojK', steps: ['Enter your UPI and submit. You will be redirected to the Axis Bank website.', 'Complete the initial form with your PAN, Mobile, and Aadhar details.', 'Perform a simple Video KYC to verify your identity.', 'Fund your new account with ₹5,590. (₹5,000 is your withdrawable balance, ₹590 is a one-time fee).', 'Once KYC is approved, log in and perform one UPI transaction.', '<strong>Guaranteed Reward:</strong> Receive ₹1210 in your UPI within 48-72 hours, plus a ₹500 Amazon voucher from the bank within 30 days.'], note: 'Flash sale live from 1st to 30th June. Deposit amount can be withdrawn after account activation.' },
-            { id: 'sbicard', category: 'Bank Offer', title: 'SBI Cashback Credit Card', subtitle: 'Earn ₹1400 UPI Cashback + ₹500 Voucher', reward: 1400, link: 'https://campguruji.com/camp.php?camp=fA5pbwzI&ref=al0ymT8', steps: ['Apply for the card using the link. A joining fee of ₹500 is applicable.', 'Ensure you meet the eligibility criteria: Age 21-70, Salaried or Self-employed, Credit Score > 725.', 'Receive a ₹500 Amazon Gift Voucher as a welcome gift from SBI.', 'Our ₹1400 UPI cashback will be credited after your card has been successfully dispatched.'], note: 'One of the best credit cards for online purchases. Total benefit: ₹1900.' },
-            { id: 'jeetexch360', category: 'Betting & Bonus', title: 'Jeetexch360 Bonus Loot', subtitle: 'Flat ₹300 Bonus Trick', reward: 300, link: 'http://Jeetexch360.com', steps: ['For <strong>New Users:</strong> Create an account & deposit ₹101 one time.', 'For <strong>Old Users:</strong> Use \'Forgot Password\' & wait 24 hrs for bonus. Depositing may increase chances.', '<strong>Wager Trick:</strong> To complete the 1x wager, go to the \'Aviator\' game, set auto-cashout to 1.01x, and place a bet.', 'Withdraw your winnings after completing the wager.'], note: 'WARNING: This is for earning the bonus only using the trick. We are not responsible for any losses from other gameplay. Bank account required. Use Brave browser for multiple IDs.' },
-            { id: 'racejeet365', category: 'Betting & Bonus', title: 'Racejeet365 Bonus Loot', subtitle: 'Flat ₹300 Bonus Trick', reward: 300, link: 'http://Racejeet365.com', steps: ['For <strong>New Users:</strong> Create an account & deposit ₹101 one time.', 'For <strong>Old Users:</strong> Use \'Forgot Password\' & wait 24 hrs for bonus. Depositing may increase chances.', '<strong>Wager Trick:</strong> To complete the 1x wager, go to the \'Aviator\' game, set auto-cashout to 1.01x, and place a bet.', 'Withdraw your winnings after completing the wager.'], note: 'WARNING: This is for earning the bonus only using the trick. We are not responsible for any losses from other gameplay. Bank account required. Use Brave browser for multiple IDs.' },
-            { id: 'playkaro247', category: 'Betting & Bonus', title: 'Playkaro247 Bonus Loot', subtitle: 'Flat ₹300 Bonus Trick', reward: 300, link: 'http://Playkaro247.com', steps: ['For <strong>New Users:</strong> Create an account & deposit ₹101 one time.', 'For <strong>Old Users:</strong> Use \'Forgot Password\' & wait 24 hrs for bonus. Depositing may increase chances.', '<strong>Wager Trick:</strong> To complete the 1x wager, go to the \'Aviator\' game, set auto-cashout to 1.01x, and place a bet.', 'Withdraw your winnings after completing the wager.'], note: 'WARNING: This is for earning the bonus only using the trick. We are not responsible for any losses from other gameplay. Bank account required. Use Brave browser for multiple IDs.' },
-            { id: 'winclash', category: 'Betting & Bonus', title: 'Winclash Bonus Loot', subtitle: 'Flat ₹300 Bonus Trick', reward: 300, link: 'http://winclash.com', steps: ['For <strong>New Users:</strong> Create an account & deposit ₹101 one time.', 'For <strong>Old Users:</strong> Use \'Forgot Password\' & wait 24 hrs for bonus. Depositing may increase chances.', '<strong>Wager Trick:</strong> To complete the 1x wager, go to the \'Aviator\' game, set auto-cashout to 1.01x, and place a bet.', 'Withdraw your winnings after completing the wager.'], note: 'WARNING: This is for earning the bonus only using the trick. We are not responsible for any losses from other gameplay. Bank account required. Use Brave browser for multiple IDs.' },
-            { id: 'ak777', category: 'Investment & Earn', title: 'AK777 Casino', subtitle: '100% Loss Refund | Bank Withdraw', reward: 0, link: 'https://ak777game.com/?invite=RF0ZIO', steps: ['Register for an account using the provided link.', 'Make a first-time deposit (minimum ₹100).', 'If you experience a loss on your first deposit, the platform guarantees a 100% refund.', 'The refund is credited back to you at a rate of 10% daily until the full amount is covered.', 'A minimum recharge of ₹100 is required to enable withdrawals (minimum withdraw is ₹110).'], note: 'This offer provides a safety net for your first deposit. Play responsibly.' },
-            { id: 'indrummy', category: 'Betting & Bonus', title: 'IND Rummy Bonus', subtitle: '₹200+ Signup Bonus | Bank Withdraw', reward: 200, link: 'https://indrummy5.com?code=2BAVU7GKXN3&t=1749437778', steps: ['Register using the link to receive a signup bonus of over ₹150.', 'Use the full bonus amount to play games and increase your balance.', 'Once you meet the withdrawal threshold, you can withdraw your winnings directly to your bank account.'], note: 'No deposit is required for this offer. Verified and working.' },
-            { id: 'game3f', category: 'Betting & Bonus', title: 'Game 3F Rummy Loot', subtitle: '₹60 Bonus + Instant Withdrawals', reward: 60, link: 'http://apk.gm3f.com/weIft', steps: ['Sign up to receive a ₹60 bonus.', 'Play games with the bonus to increase your balance to over ₹200.', '<strong>Deposit ₹100 to unlock withdrawals.</strong> You can then withdraw the entire amount.', 'Payments are processed instantly.'], note: 'A deposit is required to enable the withdrawal function.' },
-            { id: 'rupeerush', category: 'Investment & Earn', title: 'RupeeRush SMS Task', subtitle: 'Daily Earning | Bank Withdraw', reward: 80, link: 'https://rushsms.xyz/landingPage.html?inviteCode=lgpOlt', steps: ['Download the app and complete registration.', 'Navigate to the "Hall" section, then select "SMS Task".', 'Download and install the "Assist Plugin" and grant all necessary permissions.', 'The app will automatically send 100 SMS per day to generate earnings.', 'Refer friends to earn an additional ₹80 per successful referral.'], note: 'This is a passive earning task with no deposit required. Earnings are sent directly to your bank.' },
+            { id: 'reviewtask1', category: 'Review & Earn', title: 'App Review Task 1', subtitle: 'Install, give a 5-star review & earn', reward: 14, link: 'https://lnk.ink/app20.in.1', steps: ['Click the "Start Task" button...', 'Install the app...', 'Give a 5-star review...'], note: 'Cashback within 24 hours.' },
+            { id: 'reviewtask2', category: 'Review & Earn', title: 'App Review Task 2', subtitle: 'Install, give a 5-star review & earn', reward: 15, link: 'https://lnk.ink/app20.in.0', steps: ['Click the "Start Task" button...', 'Install the app...', 'Give a 5-star review...'], note: 'Cashback within 24 hours.' },
+            { id: 'rewardfun_new_signup', category: 'UPI Loot', title: 'Reward Fun Signup Loot', subtitle: 'Limited Time ₹10 Instant Bonus', reward: 10, link: 'https://play.google.com/store/apps/details?id=com.reward_fun&referrer=utm_source%3DSSRCUT2X3K%26utm_medium%3DRewardFun', steps: ['Download with the link.', 'Use referral code: <strong>SSRCUT2X3K</strong>', 'Get ₹10 bonus.', 'Complete one offer to withdraw.'], note: 'Withdrawal enabled after one task.' },
+            { id: 'navi', category: 'Campaign', title: 'Navi UPI Campaign', subtitle: 'Instant ₹15 UPI Cash', reward: 15, link: 'https://campaigns.co.in/campaigns/0yw0e3o04?as=344ciy9ip', steps: ['Enter UPI and submit.', 'Register on Navi & complete first UPI transaction.', 'Receive ₹15 to your UPI.'], note: 'For new users only.' },
+            { id: 'indusind_bank_new', category: 'Bank Offer', title: 'IndusInd Bank Free Account', subtitle: 'Open Account & Get ₹600 UPI Cashback', reward: 600, link: 'https://lootcampaign.in?camp=Indus&ref=Hm1iqrTk', steps: ['Enter UPI, redirect to bank site.', 'Use Aadhar-linked mobile, PAN, Aadhar.', 'Select (INDUS DELITE AMF) account for Lifetime Free.', 'Add ₹400+ via UPI (withdrawable).', 'Complete Video KYC.'], note: '₹600 UPI cash within 48 hours.' },
+            { id: 'axisflash', category: 'Bank Offer', title: 'Axis Bank Flash Sale', subtitle: 'Guaranteed ₹1710 Cashback', reward: 1710, link: 'https://campguruji.com/camp.php?camp=ZbhtojRo&ref=Nkf6ojK', steps: ['Enter UPI, go to Axis site.', 'Complete form with PAN, Mobile, Aadhar.', 'Do Video KYC.', 'Fund account with ₹5,590 (₹5000 withdrawable).', 'Do one UPI transaction after KYC approval.'], note: '₹1210 UPI + ₹500 Amazon voucher. Deposit is withdrawable.' },
+            { id: 'playkaro247', category: 'Betting & Bonus', title: 'Playkaro247 Bonus Loot', subtitle: 'Flat ₹300 Bonus Trick', reward: 300, link: 'http://Playkaro247.com', steps: ['New Users: Deposit ₹101.', 'Old Users: Use \'Forgot Password\'.', 'Wager Trick: Use \'Aviator\' game with 1.01x auto-cashout.'], note: 'For bonus only. Not responsible for losses.' },
+            { id: 'rupeerush', category: 'Investment & Earn', title: 'RupeeRush SMS Task', subtitle: 'Daily Passive Earning', reward: 80, link: 'https://rushsms.xyz/landingPage.html?inviteCode=lgpOlt', steps: ['Download and register.', 'Go to Hall > SMS Task.', 'Install "Assist Plugin" and grant permissions.', 'App sends SMS for you.'], note: 'Passive earning, no deposit required.' },
         ];
 
         // --- All the JavaScript logic remains the same below ---
@@ -375,10 +324,8 @@
     });
     </script>
     
-    <!-- ======================================================= -->
-    <!-- == AD SCRIPT ADDED FOR TESTING AS REQUESTED == -->
-    <script type='text/javascript' src='//pl26955860.profitableratecpm.com/a1/f0/72/a1f0720619726fd9ac7eab67f6295def.js'></script>
-    <!-- ======================================================= -->
+    <!-- ON-CLICK / POP-UNDER SCRIPT -->
+    <script type='text/javascript' src='//pl26957225.profitableratecpm.com/48/20/da/4820da1fac9aa2ab2bb0fcb6b862f727.js'></script>
 
 </body>
 </html>
