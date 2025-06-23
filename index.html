@@ -108,14 +108,15 @@
             signOut
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // VERY IMPORTANT: REPLACE THIS WITH YOUR REAL FIREBASE CONFIG!
+        // Your web app's Firebase configuration - THIS IS NOW CORRECT
         const firebaseConfig = {
-            apiKey: "AIza...YOUR_KEY_HERE",
-            authDomain: "YOUR-PROJECT-ID.firebaseapp.com",
-            projectId: "YOUR-PROJECT-ID",
-            storageBucket: "YOUR-PROJECT-ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyAqtfmxxvVhbRBX-05O1AhSGmgxK808ncE",
+            authDomain: "monetra-66446.firebaseapp.com",
+            projectId: "monetra-66446",
+            storageBucket: "monetra-66446.appspot.com",
+            messagingSenderId: "1081175709983",
+            appId: "1:1081175709983:web:7baadd2aec2e7dfeb5382a",
+            measurementId: "G-W1KN10SC4D"
         };
 
         // Initialize Firebase
@@ -133,56 +134,32 @@
         const loggedOutViews = document.querySelectorAll('.logged-out-view');
 
         // --- AUTH FUNCTIONS ---
-
-        // Register new user
         registerButton.addEventListener('click', () => {
             const email = emailInput.value;
             const password = passwordInput.value;
             createUserWithEmailAndPassword(auth, email, password)
-                .then(userCredential => {
-                    authMessage.textContent = 'Registration successful! You are now logged in.';
-                    authMessage.style.color = 'lightgreen';
-                })
-                .catch(error => {
-                    authMessage.textContent = `Error: ${error.message}`;
-                    authMessage.style.color = 'tomato';
-                });
+                .then(userCredential => { authMessage.textContent = 'Registration successful! You are now logged in.'; authMessage.style.color = 'lightgreen'; })
+                .catch(error => { authMessage.textContent = `Error: ${error.message}`; authMessage.style.color = 'tomato'; });
         });
-
-        // Login existing user
         authForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const email = emailInput.value;
             const password = passwordInput.value;
             signInWithEmailAndPassword(auth, email, password)
-                .then(userCredential => {
-                    authMessage.textContent = 'Login successful!';
-                    authMessage.style.color = 'lightgreen';
-                })
-                .catch(error => {
-                    authMessage.textContent = `Error: ${error.message}`;
-                    authMessage.style.color = 'tomato';
-                });
+                .then(userCredential => { authMessage.textContent = 'Login successful!'; authMessage.style.color = 'lightgreen'; })
+                .catch(error => { authMessage.textContent = `Error: ${error.message}`; authMessage.style.color = 'tomato'; });
         });
-        
-        // Logout user
-        logoutButton.addEventListener('click', () => {
-            signOut(auth);
-        });
+        logoutButton.addEventListener('click', () => { signOut(auth); });
 
         // --- AUTH STATE LISTENER ---
         onAuthStateChanged(auth, user => {
-            console.log('Auth state changed. User:', user);
             if (user) {
-                // User is logged in
                 loggedInViews.forEach(view => view.style.display = 'block');
                 loggedOutViews.forEach(view => view.style.display = 'none');
             } else {
-                // User is logged out
                 loggedInViews.forEach(view => view.style.display = 'none');
                 loggedOutViews.forEach(view => view.style.display = 'block');
             }
-            // Clear any old messages
             authMessage.textContent = '';
         });
     </script>
