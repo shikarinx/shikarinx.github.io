@@ -1,283 +1,107 @@
-/* style.css */
+/* ADD THIS NEW CSS AT THE BOTTOM OF YOUR style.css FILE */
 
-/* --- Core Setup & Theme --- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-:root {
-    --bg-primary: #f4f1ec; /* A warm, creamy off-white */
-    --bg-secondary: #ffffff;
-    --text-primary: #1a1a1a;
-    --text-secondary: #5c5c5c;
-    --accent-primary: #d9534f; /* A soft, modern red/orange */
-    --accent-secondary: #ffc107; /* A vibrant gold for coins */
-    --border-color: #e0e0e0;
-    --shadow-color: rgba(0, 0, 0, 0.08);
-    --font-family: 'Inter', sans-serif;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: var(--font-family);
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    padding-top: 70px; /* Space for fixed header */
-    padding-bottom: 80px; /* Space for fixed footer nav */
-}
-
-/* --- Animations --- */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
-}
-
-
-/* --- Main Header --- */
-.main-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: var(--bg-primary);
-    padding: 1rem;
+/* --- Futuristic Auth Page Styling --- */
+.auth-body {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border-color);
-    z-index: 1000;
-}
-.profile-section {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.profile-icon {
-    width: 40px;
-    height: 40px;
-    background-color: var(--accent-primary);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    font-weight: 600;
-}
-.profile-name {
-    font-weight: 600;
-}
-.actions-section {
-    display: flex;
     align-items: center;
-    gap: 15px;
-}
-.action-icon {
-    position: relative;
-    cursor: pointer;
-}
-.action-icon img {
-    width: 28px;
-    height: 28px;
-}
-.wallet-balance {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: 600;
-}
-.wallet-balance img {
-    width: 20px;
-    height: 20px;
-}
-
-/* --- Bottom Navigation --- */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: var(--bg-secondary);
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    box-shadow: 0 -2px 10px var(--shadow-color);
-    z-index: 1000;
-}
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 0.8rem;
-    transition: color 0.3s ease;
-}
-.nav-item.active {
-    color: var(--accent-primary);
-    font-weight: 600;
-}
-.nav-item svg {
-    width: 24px;
-    height: 24px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-
-/* --- Main Content & Cards --- */
-.container {
-    padding: 1rem;
-}
-.promo-banner {
-    width: 100%;
-    border-radius: 12px;
+    min-height: 100vh;
+    padding: 2rem;
+    background: #0f0c29;
+    background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);
+    background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
     overflow: hidden;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 15px var(--shadow-color);
-}
-.promo-banner img {
-    width: 100%;
-    display: block;
-}
-.quick-actions {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-.action-card {
-    background-color: var(--bg-secondary);
-    padding: 1rem 0.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px var(--shadow-color);
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.action-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-}
-.action-card img {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 0.5rem;
 }
 
-/* --- Offer Card Styling --- */
-.section-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+.auth-card-futuristic {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    animation: fadeIn 0.8s ease-out;
 }
-.offer-card {
-    background-color: var(--bg-secondary);
-    border-radius: 12px;
+
+.auth-card-futuristic h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.auth-card-futuristic p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 2rem;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-group input {
+    width: 100%;
     padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 15px var(--shadow-color);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    animation: fadeIn 0.5s ease-out forwards;
-    opacity: 0;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
 }
-.offer-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 15px rgba(217, 83, 79, 0.5);
 }
-.offer-logo {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-}
-.offer-title {
-    flex-grow: 1;
-}
-.offer-title h3 {
+
+.auth-btn-futuristic {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--accent-primary), #c0392b);
+    color: white;
     font-size: 1.1rem;
     font-weight: 600;
-    margin: 0;
-}
-.offer-title p {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin: 0;
-}
-.offer-reward {
-    background-color: #fff8e1;
-    border: 1px solid var(--accent-secondary);
-    padding: 0.5rem 1rem;
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: 700;
-    color: #b98900;
-}
-.offer-reward img {
-    width: 16px;
-    height: 16px;
-}
-.offer-details {
-    border-top: 1px solid var(--border-color);
-    padding-top: 1rem;
-}
-.offer-details h4 {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-.offer-details ul {
-    list-style-position: inside;
-    padding-left: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-}
-.offer-details li {
-    margin-bottom: 0.25rem;
-}
-.offer-disclaimer {
-    background-color: #fef4f4;
-    color: #c0392b;
-    padding: 0.8rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    border: 1px solid #f5b7b1;
-}
-.offer-button {
-    display: block;
-    width: 100%;
-    text-align: center;
-    background-color: var(--accent-primary);
-    color: white;
-    padding: 0.8rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-}
-.offer-button:hover {
-    background-color: #c0392b;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(217, 83, 79, 0.3);
 }
 
-/* Ad container styles */
-.ad-container {
-    margin: 1.5rem 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.auth-btn-futuristic:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(217, 83, 79, 0.5);
+}
+
+.auth-switch-futuristic {
+    margin-top: 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.auth-switch-futuristic span {
+    color: var(--accent-primary);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.hidden-field {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, margin-bottom 0.5s ease-out;
+    margin-bottom: 0 !important;
+}
+
+.visible-field {
+    max-height: 100px; /* Should be larger than the input's height */
+    margin-bottom: 1.5rem !important;
 }
