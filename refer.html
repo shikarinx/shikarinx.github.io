@@ -5,14 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refer & Earn | MONETRA</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
 </head>
 <body>
     <header class="main-header"></header>
-    <main class="container">
+    <main class="container" style="position: relative; z-index: 1;">
         <h1 class="section-title fade-in" style="text-align: left;">Refer & Earn</h1>
         <div class="refer-card fade-in" style="animation-delay: 0.1s; background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 20px var(--shadow-color); margin-bottom: 1.5rem;">
             <p style="color: var(--text-secondary); font-size: 0.9rem;">Your Unique Referral Code</p>
@@ -39,22 +35,28 @@
         </div>
     </main>
     <nav class="bottom-nav"></nav>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <script src="app.js"></script>
     <script>
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const referCodeElement = document.getElementById('user-refer-code');
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                db.collection('users').doc(user.uid).get().then(doc => {
-                    if (doc.exists) { referCodeElement.textContent = doc.data().referralCode || "NO CODE"; }
-                });
-            }
-        });
-        document.getElementById('copy-refer-btn').addEventListener('click', () => {
-            const code = referCodeElement.textContent;
-            if(code && code !== 'Loading...') { navigator.clipboard.writeText(code).then(() => { alert('Referral code copied!'); }); }
+        document.addEventListener('DOMContentLoaded', function() {
+            firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            const referCodeElement = document.getElementById('user-refer-code');
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    db.collection('users').doc(user.uid).get().then(doc => {
+                        if (doc.exists) { referCodeElement.textContent = doc.data().referralCode || "NO CODE"; }
+                    });
+                }
+            });
+            document.getElementById('copy-refer-btn').addEventListener('click', () => {
+                const code = referCodeElement.textContent;
+                if(code && code !== 'Loading...') { navigator.clipboard.writeText(code).then(() => { alert('Referral code copied!'); }); }
+            });
         });
     </script>
 </body>
