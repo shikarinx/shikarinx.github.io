@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refer & Earn | MONETRA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="firebase-config.js"></script>
+    <style>
+        .refer-card { background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 20px var(--shadow-color); margin-bottom: 1.5rem; }
+        .referral-code-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .referral-code { background-color: #f0f0f0; border: 1px dashed #ccc; padding: 0.8rem; border-radius: 8px; font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; }
+        .copy-btn { background: none; border: none; cursor: pointer; }
+        .copy-btn svg { width: 24px; height: 24px; }
+        .referral-earnings { text-align: right; }
+        .share-icons { display: flex; justify-content: space-around; align-items: center; }
+        .share-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; }
+        .share-icon img { width: 24px; }
+        .how-it-works { text-align: center; }
+        .how-it-works img { max-width: 150px; margin: 1rem 0; }
+        .steps-list { list-style: none; text-align: left; max-width: 300px; margin: 0 auto; }
+        .step-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .step-number { background-color: var(--accent-primary); color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+    <header class="main-header"></header>
+    <main class="container">
+        <h1 class="section-title" style="text-align: left;">Refer & Earn</h1>
+        <div class="refer-card fade-in">
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Referral Code</p>
+            <div class="referral-code-section">
+                <div class="referral-code" id="user-refer-code">DXD86F</div>
+                <button class="copy-btn" id="copy-refer-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+            </div>
+            <div class="share-icons">
+                <div class="share-icon"><img src="https://i.imgur.com/gSj4yvj.png" alt="Instagram"></div>
+                <div class="share-icon"><img src="https://i.imgur.com/GzC09dC.png" alt="WhatsApp"></div>
+                <div class="share-icon"><img src="https://i.imgur.com/h59R0U8.png" alt="Facebook"></div>
+                <div class="share-icon"><img src="https://i.imgur.com/9C3Bv2a.png" alt="Telegram"></div>
+                <div class="share-icon"><img src="https://i.imgur.com/h9S4V2n.png" alt="Share"></div>
+            </div>
+        </div>
+        <div class="how-it-works fade-in" style="animation-delay: 0.2s;">
+            <img src="https://i.imgur.com/w4pA0kO.png" alt="Refer a Friend">
+            <ol class="steps-list">
+                <li class="step-item"><div class="step-number">1</div><span>Invite friends using your Referral Code</span></li>
+                <li class="step-item"><div class="step-number">2</div><span>If they complete 3 offer(s)</span></li>
+                <li class="step-item"><div class="step-number">3</div><span>You earn 50% of what they earn</span></li>
+                <li class="step-item"><div class="step-number">4</div><span>Refer Unlimited Friends</span></li>
+            </ol>
+        </div>
+    </main>
+    <nav class="bottom-nav"></nav>
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('copy-refer-btn').addEventListener('click', () => {
+            const code = document.getElementById('user-refer-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Referral code copied!');
+            });
+        });
+    </script>
+</body>
+</html>

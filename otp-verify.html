@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Phone | MONETRA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="firebase-config.js"></script>
+    <style>
+        body { padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .auth-card { background-color: var(--bg-secondary); padding: 2rem; border-radius: 16px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 4px 20px var(--shadow-color); }
+        .auth-card h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .auth-card p { color: var(--text-secondary); margin-bottom: 2rem; }
+        .input-group { margin-bottom: 1.5rem; }
+        .input-group input { width: 100%; padding: 1rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; text-align: center; }
+        .otp-inputs { display: flex; justify-content: center; gap: 10px; margin-bottom: 1.5rem; }
+        .otp-inputs input { width: 45px; height: 50px; text-align: center; font-size: 1.5rem; border: 1px solid var(--border-color); border-radius: 8px; }
+        .auth-btn { width: 100%; padding: 1rem; border: none; border-radius: 8px; background-color: var(--accent-primary); color: white; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .hidden { display: none; }
+        #resend-otp { margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <!-- Phone Number View -->
+        <div id="phone-view">
+            <h1>Get Started</h1>
+            <p>Enter your mobile number to receive a verification code.</p>
+            <div class="input-group">
+                <input type="tel" id="phone-number-input" placeholder="e.g., 9876543210">
+            </div>
+            <button id="send-otp-btn" class="auth-btn">Send OTP</button>
+            <div id="recaptcha-container"></div>
+        </div>
+
+        <!-- OTP View -->
+        <div id="otp-view" class="hidden">
+            <h1>OTP Verification</h1>
+            <p>Verify the OTP sent to your number.</p>
+            <div class="input-group">
+                <input type="text" id="otp-input" placeholder="Enter 6-digit OTP">
+            </div>
+            <button id="verify-otp-btn" class="auth-btn">Verify & Proceed</button>
+            <p id="resend-otp">Resend OTP in 30s</p>
+        </div>
+        <p id="error-message" style="color: #c0392b; margin-top: 1rem;"></p>
+    </div>
+
+    <script>
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        const phoneView = document.getElementById('phone-view');
+        const otpView = document.getElementById('otp-view');
+        const phoneNumberInput = document.getElementById('phone-number-input');
+        const sendOtpBtn = document.getElementById('send-otp-btn');
+        const otpInput = document.getElementById('otp-input');
+        const verifyOtpBtn = document.getElementById('verify-otp-btn');
+        const errorMessage = document.getElementById('error-message');
+
+        // Setup reCAPTCHA verifier
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response) => { /* reCAPTCHA solved */ }
+        });
+
+        sendOtpBtn.addEventListener('click', () => {
+            const phoneNumber = "+91" + phoneNumberInput.value;
+            const appVerifier = window.recaptchaVerifier;
+            
+            auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+                .then((confirmationResult) => {
+                    window.confirmationResult = confirmationResult;
+                    phoneView.classList.add('hidden');
+                    otpView.classList.remove('hidden');
+                }).catch((error) => {
+                    errorMessage.textContent = "Error sending OTP. Please check the number or try again.";
+                    console.error("Error during signInWithPhoneNumber", error);
+                    recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
+                });
+        });
+
+        verifyOtpBtn.addEventListener('click', () => {
+            const code = otpInput.value;
+            confirmationResult.confirm(code).then((result) => {
+                // User signed in successfully.
+                // Check if this is a new user
+                const isNewUser = result.additionalUserInfo.isNewUser;
+                if (isNewUser) {
+                    window.location.href = 'register-profile.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }).catch((error) => {
+                errorMessage.textContent = "Invalid OTP code. Please try again.";
+            });
+        });
+    </script>
+</body>
+</html>
