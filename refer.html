@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refer & Earn | MONETRA</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="firebase-config.js"></script>
     <style>
         .refer-card { background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 20px var(--shadow-color); margin-bottom: 1.5rem; }
         .referral-code-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
@@ -31,20 +28,17 @@
         <h1 class="section-title" style="text-align: left;">Refer & Earn</h1>
         <div class="refer-card fade-in">
             <p style="color: var(--text-secondary); font-size: 0.9rem;">Referral Code</p>
-            <div class="referral-code-section">
-                <div class="referral-code" id="user-refer-code">DXD86F</div>
-                <button class="copy-btn" id="copy-refer-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
-            </div>
+            <div class="referral-code-section"> <div class="referral-code" id="user-refer-code">DXD86F</div> <button class="copy-btn" id="copy-refer-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button> </div>
             <div class="share-icons">
-                <div class="share-icon"><img src="https://i.imgur.com/gSj4yvj.png" alt="Instagram"></div>
-                <div class="share-icon"><img src="https://i.imgur.com/GzC09dC.png" alt="WhatsApp"></div>
-                <div class="share-icon"><img src="https://i.imgur.com/h59R0U8.png" alt="Facebook"></div>
-                <div class="share-icon"><img src="https://i.imgur.com/9C3Bv2a.png" alt="Telegram"></div>
-                <div class="share-icon"><img src="https://i.imgur.com/h9S4V2n.png" alt="Share"></div>
+                <div class="share-icon"><img src="instagram.png" alt="Instagram"></div>
+                <div class="share-icon"><img src="whatsapp.png" alt="WhatsApp"></div>
+                <div class="share-icon"><img src="facebook.png" alt="Facebook"></div>
+                <div class="share-icon"><img src="telegram.png" alt="Telegram"></div>
+                <div class="share-icon"><img src="share.png" alt="Share"></div>
             </div>
         </div>
         <div class="how-it-works fade-in" style="animation-delay: 0.2s;">
-            <img src="https://i.imgur.com/w4pA0kO.png" alt="Refer a Friend">
+            <img src="refer-a-friend.png" alt="Refer a Friend">
             <ol class="steps-list">
                 <li class="step-item"><div class="step-number">1</div><span>Invite friends using your Referral Code</span></li>
                 <li class="step-item"><div class="step-number">2</div><span>If they complete 3 offer(s)</span></li>
@@ -54,13 +48,14 @@
         </div>
     </main>
     <nav class="bottom-nav"></nav>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="firebase-config.js"></script>
     <script src="app.js"></script>
     <script>
         document.getElementById('copy-refer-btn').addEventListener('click', () => {
             const code = document.getElementById('user-refer-code').textContent;
-            navigator.clipboard.writeText(code).then(() => {
-                alert('Referral code copied!');
-            });
+            navigator.clipboard.writeText(code).then(() => { alert('Referral code copied!'); });
         });
     </script>
 </body>

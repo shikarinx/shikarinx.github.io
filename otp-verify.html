@@ -25,7 +25,6 @@
 </head>
 <body>
     <div class="auth-card">
-        <!-- Phone Number View -->
         <div id="phone-view">
             <h1>Get Started</h1>
             <p>Enter your 10-digit mobile number to receive a verification code.</p>
@@ -36,8 +35,6 @@
             <button id="send-otp-btn" class="auth-btn">Send OTP</button>
             <div id="recaptcha-container" style="margin-top: 1rem;"></div>
         </div>
-
-        <!-- OTP View -->
         <div id="otp-view" class="hidden">
             <h1>OTP Verification</h1>
             <p>Verify the OTP sent to your number.</p>
@@ -45,7 +42,7 @@
                 <input type="text" id="otp-input" placeholder="Enter 6-digit OTP" style="text-align:center;">
             </div>
             <button id="verify-otp-btn" class="auth-btn">Verify & Proceed</button>
-            <p id="resend-otp">Resend OTP in 30s</p>
+            <p id="resend-otp" class="hidden">Resend OTP</p>
         </div>
         <p id="error-message" style="color: #c0392b; margin-top: 1rem;"></p>
     </div>
@@ -62,13 +59,23 @@
         const verifyOtpBtn = document.getElementById('verify-otp-btn');
         const errorMessage = document.getElementById('error-message');
 
-        window.onload = function() {
+        // ** THE FIX IS HERE **
+        // We initialize reCAPTCHA but DON'T render it immediately.
+        function setupRecaptcha() {
             window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                'size': 'invisible',
-                'callback': (response) => { /* reCAPTCHA solved */ }
+                'size': 'normal', // Changed to 'normal' to be visible
+                'callback': (response) => {
+                    // reCAPTCHA solved, allow signInWithPhoneNumber.
+                    sendOtpBtn.disabled = false;
+                },
+                'expired-callback': () => {
+                    // Response expired. Ask user to solve reCAPTCHA again.
+                    sendOtpBtn.disabled = true;
+                }
             });
-            recaptchaVerifier.render();
-        };
+        }
+        
+        window.onload = setupRecaptcha;
 
         sendOtpBtn.addEventListener('click', () => {
             const phoneNumber = "+91" + phoneNumberInput.value;
@@ -80,8 +87,9 @@
                     phoneView.classList.add('hidden');
                     otpView.classList.remove('hidden');
                 }).catch((error) => {
-                    errorMessage.textContent = "Error: Please check the number or try again later.";
+                    errorMessage.textContent = "Error: Please check the number or solve the reCAPTCHA.";
                     console.error("Error during signInWithPhoneNumber", error);
+                    // Reset the verifier if something goes wrong
                     grecaptcha.reset();
                 });
         });
