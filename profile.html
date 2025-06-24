@@ -3,74 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile | MONETRA</title>
+    <title>My Profile | MONETRA</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
-    <style>
-        .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-        .back-btn { background: none; border: none; cursor: pointer; }
-        .logout-btn { background: none; border: none; color: var(--accent-primary); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-size: 0.9rem; }
-        .profile-card { background-color: var(--bg-secondary); padding: 1.2rem; border-radius: 12px; box-shadow: 0 2px 8px var(--shadow-color); margin-bottom: 1.5rem; text-align: left; }
-        .profile-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .profile-info h2 { margin: 0; font-size: 1.2rem; }
-        .profile-info p { color: var(--text-secondary); font-size: 0.8rem; margin: 0.2rem 0; }
-        .edit-btn { background-color: #f0f0f0; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .stat-card { background-color: var(--bg-secondary); padding: 1.2rem; border-radius: 12px; box-shadow: 0 2px 8px var(--shadow-color); text-align: center; }
-        .stat-card .value { font-size: 1.5rem; font-weight: 700; color: var(--accent-primary); }
-        .stat-card .label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem; }
-    </style>
 </head>
 <body>
+    <div class="bg-animation"></div>
+    <canvas id="particles-canvas"></canvas>
+
+    <header class="app-header"></header>
+
     <main class="container">
-        <div class="page-header fade-in">
-            <button class="back-btn" onclick="window.history.back()"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> </button>
-            <h1 style="font-size: 1.2rem;">Profile</h1>
-            <button id="logout-btn-page" class="logout-btn"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Logout </button>
-        </div>
-        <div class="profile-card fade-in" style="animation-delay: 0.1s;">
-            <div class="profile-card-header">
-                <div class="profile-info"> <h2 id="profile-name">Loading...</h2> <p id="profile-phone"></p> <p id="profile-email"></p> </div>
-                <button class="edit-btn"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> </button>
+        <h1 class="section-title fade-in">My Profile</h1>
+
+        <div class="offer-card fade-in" style="animation-delay: 0.1s;">
+            <div class="offer-details" style="background: none; padding: 0; border: none;">
+                <p style="font-size: 1rem; color: var(--text-secondary);">Full Name</p>
+                <input type="text" id="profile-name-input" class="input-field" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: white; margin-bottom: 1rem;">
+                
+                <p style="font-size: 1rem; color: var(--text-secondary);">Email</p>
+                <p id="profile-email-display" style="font-size: 1.1rem; font-weight: 500; margin-bottom: 1rem;">Loading...</p>
+
+                <p style="font-size: 1rem; color: var(--text-secondary);">Mobile Number</p>
+                <p id="profile-phone-display" style="font-size: 1.1rem; font-weight: 500; margin-bottom: 1rem;">Loading...</p>
+
+                <button class="offer-button" id="save-profile-btn">Save Changes</button>
+                <p id="success-message" style="color: #2ecc71; text-align: center; margin-top: 1rem;"></p>
             </div>
         </div>
-        <h2 class="section-title fade-in" style="animation-delay: 0.2s;">Profile Statistics</h2>
-        <div class="stats-grid">
-            <div class="stat-card fade-in" style="animation-delay: 0.3s;"> <div class="value" id="stat-coins">0</div> <div class="label">Coins Earned</div> </div>
-            <div class="stat-card fade-in" style="animation-delay: 0.4s;"> <div class="value">₹<span id="stat-redeemed">0</span></div> <div class="label">Redeemed Amount</div> </div>
-            <div class="stat-card fade-in" style="animation-delay: 0.5s;"> <div class="value" id="stat-offers">0</div> <div class="label">Offers Tried</div> </div>
-            <div class="stat-card fade-in" style="animation-delay: 0.6s;"> <div class="value" id="stat-referrals">0</div> <div class="label">Referrals</div> </div>
-        </div>
     </main>
+
+    <nav class="app-bottom-nav"></nav>
+    <script src="app.js"></script>
     <script>
+        // Particle System
+        class ParticleSystem{constructor(c){this.c=c;this.x=c.getContext("2d");this.p=[];this.r();this.i();this.a();window.addEventListener("resize",()=>this.r())}r(){this.c.width=window.innerWidth;this.c.height=window.innerHeight}i(){for(let t=0;t<Math.floor(this.c.width*this.c.height/15e3);t++)this.p.push({x:Math.random()*this.c.width,y:Math.random()*this.c.height,vx:.3*(Math.random()-.5),vy:.3*(Math.random()-.5),s:Math.random()*2+1,h:200+60*Math.random()})}a(){this.x.clearRect(0,0,this.c.width,this.c.height);this.p.forEach((t,i)=>{t.x+=t.vx,t.y+=t.vy,(t.x<0||t.x>this.c.width)&&(t.vx*=-1),(t.y<0||t.y>this.c.height)&&(t.vy*=-1),this.x.beginPath(),this.x.arc(t.x,t.y,t.s,0,2*Math.PI),this.x.fillStyle=`hsla(${t.h}, 70%, 60%, 0.5)`,this.x.fill(),this.p.slice(i+1).forEach(i=>{const h=t.x-i.x,s=t.y-i.y,e=Math.sqrt(h*h+s*s);e<100&&(this.x.beginPath(),this.x.moveTo(t.x,t.y),this.x.lineTo(i.x,i.y),this.x.strokeStyle=`hsla(${t.h}, 70%, 60%, ${.1*(1-e/100)})`,this.x.stroke())})});requestAnimationFrame(()=>this.a())}}
+        new ParticleSystem(document.getElementById('particles-canvas'));
+
+        // Firebase Logic
         document.addEventListener('DOMContentLoaded', function() {
-            firebase.initializeApp(firebaseConfig);
             const auth = firebase.auth();
             const db = firebase.firestore();
-            const profileName = document.getElementById('profile-name');
-            const profilePhone = document.getElementById('profile-phone');
-            const profileEmail = document.getElementById('profile-email');
-            const statCoins = document.getElementById('stat-coins');
-            const logoutBtn = document.getElementById('logout-btn-page');
+
+            const nameInput = document.getElementById('profile-name-input');
+            const emailDisplay = document.getElementById('profile-email-display');
+            const phoneDisplay = document.getElementById('profile-phone-display');
+            const saveBtn = document.getElementById('save-profile-btn');
+            const successMessage = document.getElementById('success-message');
 
             auth.onAuthStateChanged(user => {
-                if (user) {
+                if(user) {
                     const userDocRef = db.collection('users').doc(user.uid);
-                    userDocRef.get().then((doc) => {
-                        if (doc.exists) {
-                            const userData = doc.data();
-                            profileName.textContent = userData.name || 'No Name Set';
-                            profileEmail.textContent = userData.email || 'No Email Set';
-                            profilePhone.textContent = userData.phone || 'No Phone Set';
-                            statCoins.textContent = userData.walletBalance || 0;
-                        } else { profileName.textContent = "Profile Data Not Found"; }
-                    }).catch((error) => { profileName.textContent = "Error Loading Profile"; });
-                } else { window.location.href = 'auth.html'; }
+                    userDocRef.get().then(doc => {
+                        if(doc.exists) {
+                            const data = doc.data();
+                            nameInput.value = data.name || '';
+                            emailDisplay.textContent = data.email || 'Not available';
+                            phoneDisplay.textContent = data.phone || 'Not available';
+                        }
+                    });
+
+                    saveBtn.addEventListener('click', () => {
+                        const newName = nameInput.value.trim();
+                        if (newName) {
+                            // Update name in both Auth and Firestore
+                            user.updateProfile({
+                                displayName: newName
+                            }).then(() => {
+                                return userDocRef.update({
+                                    name: newName
+                                });
+                            }).then(() => {
+                                successMessage.textContent = 'Profile updated successfully!';
+                                setTimeout(() => { successMessage.textContent = '' }, 3000);
+                            }).catch(error => {
+                                console.error("Error updating profile: ", error);
+                                successMessage.textContent = 'Error: Could not update profile.';
+                            });
+                        }
+                    });
+                }
             });
-            logoutBtn.addEventListener('click', () => { auth.signOut(); });
         });
     </script>
 </body>
