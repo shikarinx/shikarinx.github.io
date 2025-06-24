@@ -4,164 +4,290 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Name | Stylish Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        :root { --bg-color: #12121c; --text-color: #e0e0e0; --primary-color: #8a2be2; --secondary-color: #4169e1; --glass-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.2); --font-family: 'Poppins', sans-serif; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; background: linear-gradient(315deg, var(--bg-color), #2a2a3a, var(--bg-color)); background-size: 400% 400%; animation: gradientAnimation 15s ease infinite; }
-        @keyframes gradientAnimation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
-        .main-header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0; background: rgba(18, 18, 28, 0.7); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); }
-        .main-header .container { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: 700; color: white; text-decoration: none; }
-        .main-nav ul { display: flex; list-style: none; }
-        .main-nav a { color: var(--text-color); text-decoration: none; padding: 0.5rem 1rem; font-weight: 400; transition: color 0.3s ease; }
-        .main-nav a:hover, .main-nav button:hover { color: white; }
-        .main-nav button { background: none; border: none; color: var(--text-color); font-family: var(--font-family); font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; }
-        #hero { height: 100vh; display: flex; align-items: center; text-align: center; justify-content: center; }
-        #hero h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 1rem; color: white; }
-        #hero h1 span { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        #hero p { font-size: 1.2rem; margin-bottom: 2rem; }
-        .section { padding: 6rem 0; border-bottom: 1px solid var(--glass-border); }
-        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; font-weight: 600; }
-        .glass-card { background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--glass-border); padding: 2rem; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .glass-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); }
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-        .project-card h3 { color: white; margin-bottom: 1rem; border-left: 3px solid var(--primary-color); padding-left: 10px; }
-        .btn { display: inline-block; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: white; padding: 0.8rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; transition: transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: none; font-size: 1rem; cursor: pointer;}
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4); }
-        .main-footer { padding: 2rem 0; text-align: center; font-size: 0.9rem; }
-        .auth-form { display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 0 auto; }
-        .auth-form input { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 0.8rem; border-radius: 8px; color: white; font-size: 1rem; }
-        .auth-form input::placeholder { color: #aaa; }
-        #auth-message { text-align: center; margin-top: 1rem; font-weight: 600; min-height: 24px; }
-        .logged-out-view { display: block; }
-        .logged-in-view { display: none; }
+        /* CSS Variables for easy theme changes */
+        :root {
+            --bg-color: #12121c;
+            --text-color: #e0e0e0;
+            --primary-color: #8a2be2; /* BlueViolet */
+            --secondary-color: #4169e1; /* RoyalBlue */
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        /* Basic Reset & Body Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+
+            /* Animated Gradient Background */
+            background: linear-gradient(315deg, var(--bg-color), #2a2a3a, var(--bg-color));
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header & Navigation */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+            background: rgba(18, 18, 28, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        .main-nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover {
+            color: white;
+            text-shadow: 0 0 5px var(--primary-color);
+        }
+
+        /* Hero Section */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+        }
+
+        #hero .hero-content {
+            max-width: 800px;
+        }
+
+        #hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        #hero h1 span {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* General Section Styling */
+        .section {
+            padding: 6rem 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            font-weight: 600;
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px); /* For Safari */
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card h3 {
+             color: white;
+             margin-bottom: 1rem;
+             border-left: 3px solid var(--primary-color);
+             padding-left: 10px;
+        }
+
+        /* CTA Button */
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+        }
+
+        /* Footer */
+        .main-footer {
+            padding: 2rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Design */
+        @media(max-width: 768px) {
+            #hero h1 { font-size: 2.5rem; }
+            .main-nav { display: none; } /* Simple hiding for mobile, can be replaced by a hamburger menu */
+        }
+
     </style>
 </head>
 <body>
+
+    <!-- Header -->
     <header class="main-header">
         <div class="container">
             <a href="#" class="logo">YourName</a>
             <nav class="main-nav">
                 <ul>
                     <li><a href="#hero">Home</a></li>
-                    <li class="logged-in-view"><a href="#projects">Projects</a></li>
-                    <li class="logged-out-view"><a href="#login-section">Login</a></li>
-                    <li class="logged-in-view"><button id="logout-button">Logout</button></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main>
+        <!-- Hero Section -->
         <section id="hero">
             <div class="container hero-content">
-                <h1>Hi, I'm <span>Your Name</span>.</h1>
-                <p class="logged-out-view">Login to see my creative work.</p>
-                <p class="logged-in-view">Welcome back! Check out my latest projects below.</p>
-                <a href="#projects" class="btn logged-in-view">View My Work</a>
+                <h1>Hi, I'm <span>Your Name</span>.<br>I Build Stylish Things for the Web.</h1>
+                <p>Creative Developer & Designer. Welcome to my digital space where I showcase my creations and experiments.</p>
+                <a href="#projects" class="btn">View My Work</a>
             </div>
         </section>
 
-        <section id="login-section" class="section logged-out-view">
+        <!-- About Section -->
+        <section id="about" class="section">
             <div class="container">
-                <h2 class="section-title">Login or Register</h2>
+                <h2 class="section-title">About Me</h2>
                 <div class="glass-card">
-                    <form class="auth-form" id="auth-form">
-                        <input type="email" id="email-input" placeholder="Enter your email" required>
-                        <input type="password" id="password-input" placeholder="Enter your password" required minlength="6">
-                        <button type="submit" class="btn" id="login-button">Login</button>
-                        <button type="button" class="btn" id="register-button">Register</button>
-                    </form>
-                    <p id="auth-message"></p>
+                    <p>I am a passionate developer with a keen eye for design and user experience. My journey in web development started with a simple "Hello, World!" and has grown into a deep passion for creating beautiful, functional, and interactive digital experiences. I specialize in front-end technologies and love bringing ideas to life in the browser.</p>
                 </div>
             </div>
         </section>
 
-        <section id="projects" class="section logged-in-view">
+        <!-- Projects Section -->
+        <section id="projects" class="section">
             <div class="container">
                 <h2 class="section-title">My Creations</h2>
                 <div class="projects-grid">
-                    <div class="project-card glass-card"><h3>Red Dead Platformer</h3><p>A fun 2D platformer game built with pure HTML, CSS, and JavaScript.</p></div>
-                    <div class="project-card glass-card"><h3>AI Photo Animator</h3><p>A tool that transforms static photos into various artistic styles using AI.</p></div>
-                    <div class="project-card glass-card"><h3>Project Three</h3><p>Describe your third project here.</p></div>
+                    <!-- Project 1 -->
+                    <div class="project-card glass-card">
+                        <h3>Red Dead Platformer</h3>
+                        <p>A fun, challenging 2D platformer game built with pure HTML, CSS, and JavaScript. A minimalist design inspired by the iconic art style of Red Dead Redemption 2.</p>
+                    </div>
+                    <!-- Project 2 -->
+                    <div class="project-card glass-card">
+                        <h3>AI Photo Animator</h3>
+                        <p>A tool that transforms static photos into various artistic styles, from 3D animation to anime and oil paintings, using advanced AI models.</p>
+                    </div>
+                    <!-- Project 3 -->
+                    <div class="project-card glass-card">
+                        <h3>Project Three</h3>
+                        <p>Describe your third project here. Talk about the technology you used and what makes it special.</p>
+                    </div>
                 </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+             <div class="container" style="text-align: center;">
+                <h2 class="section-title">Get In Touch</h2>
+                <p style="margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">I'm always open to discussing new projects or creative ideas. Feel free to reach out!</p>
+                <a href="mailto:youremail@example.com" class="btn">Say Hello</a>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="main-footer">
-        <p>© 2024 Your Name. All Rights Reserved.</p>
+        <div class="container">
+            <p>© 2024 Your Name. All Rights Reserved.</p>
+        </div>
     </footer>
 
-    <!-- This script tag MUST have type="module" -->
-    <script type="module">
-        // Import functions from the Firebase SDK
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged,
-            createUserWithEmailAndPassword,
-            signInWithEmailAndPassword,
-            signOut
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        // Your web app's Firebase configuration - THIS IS NOW CORRECT
-        const firebaseConfig = {
-            apiKey: "AIzaSyAqtfmxxvVhbRBX-05O1AhSGmgxK808ncE",
-            authDomain: "monetra-66446.firebaseapp.com",
-            projectId: "monetra-66446",
-            storageBucket: "monetra-66446.appspot.com",
-            messagingSenderId: "1081175709983",
-            appId: "1:1081175709983:web:7baadd2aec2e7dfeb5382a",
-            measurementId: "G-W1KN10SC4D"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // Get DOM Elements
-        const emailInput = document.getElementById('email-input');
-        const passwordInput = document.getElementById('password-input');
-        const registerButton = document.getElementById('register-button');
-        const authForm = document.getElementById('auth-form');
-        const logoutButton = document.getElementById('logout-button');
-        const authMessage = document.getElementById('auth-message');
-        const loggedInViews = document.querySelectorAll('.logged-in-view');
-        const loggedOutViews = document.querySelectorAll('.logged-out-view');
-
-        // --- AUTH FUNCTIONS ---
-        registerButton.addEventListener('click', () => {
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            createUserWithEmailAndPassword(auth, email, password)
-                .then(userCredential => { authMessage.textContent = 'Registration successful! You are now logged in.'; authMessage.style.color = 'lightgreen'; })
-                .catch(error => { authMessage.textContent = `Error: ${error.message}`; authMessage.style.color = 'tomato'; });
-        });
-        authForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            signInWithEmailAndPassword(auth, email, password)
-                .then(userCredential => { authMessage.textContent = 'Login successful!'; authMessage.style.color = 'lightgreen'; })
-                .catch(error => { authMessage.textContent = `Error: ${error.message}`; authMessage.style.color = 'tomato'; });
-        });
-        logoutButton.addEventListener('click', () => { signOut(auth); });
-
-        // --- AUTH STATE LISTENER ---
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                loggedInViews.forEach(view => view.style.display = 'block');
-                loggedOutViews.forEach(view => view.style.display = 'none');
-            } else {
-                loggedInViews.forEach(view => view.style.display = 'none');
-                loggedOutViews.forEach(view => view.style.display = 'block');
-            }
-            authMessage.textContent = '';
-        });
-    </script>
 </body>
 </html>
