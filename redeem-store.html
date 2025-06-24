@@ -1,12 +1,178 @@
-<!doctype html>
-<html>
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-      <div>
-        Hello World!
-      </div>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redeem Store | MONETRA</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase and Config Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    
+    <style>
+        /* Styles specific to this page */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        .balance-display {
+            background-color: var(--bg-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+        .balance-display img {
+            width: 20px;
+        }
+        
+        .redeem-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        .redeem-card {
+            background-color: var(--bg-secondary);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+        .redeem-card:hover {
+            transform: translateY(-5px);
+        }
+        .redeem-card-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .redeem-card-header img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+        .redeem-card-header h3 {
+            font-size: 1.2rem;
+        }
+        .redeem-card-body {
+            padding: 1.5rem;
+        }
+        .redeem-card-body p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .redeem-btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--accent-primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: var(--font-family);
+        }
+        .redeem-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <div class="page-header fade-in">
+            <button class="back-btn" onclick="window.history.back()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </button>
+            <div class="balance-display">
+                <img src="coin.png" alt="Coin">
+                <span id="wallet-balance-value">0</span>
+            </div>
+        </div>
+
+        <h1 class="section-title fade-in" style="animation-delay: 0.1s;">Redeem Store</h1>
+
+        <div class="redeem-grid">
+            <!-- UPI Card -->
+            <div class="redeem-card fade-in" style="animation-delay: 0.2s;">
+                <div class="redeem-card-header">
+                    <img src="https://i.imgur.com/gKq1nZp.png" alt="UPI Logo">
+                    <h3>UPI Transfer</h3>
+                </div>
+                <div class="redeem-card-body">
+                    <p>Enter your UPI ID to receive a direct bank transfer. Minimum withdrawal: ₹5.</p>
+                    <button class="redeem-btn">Withdraw to UPI</button>
+                </div>
+            </div>
+            
+            <!-- Redeem Code Card -->
+            <div class="redeem-card fade-in" style="animation-delay: 0.3s;">
+                <div class="redeem-card-header">
+                    <img src="https://i.imgur.com/KqC6mJ3.png" alt="Gift Card Logo">
+                    <h3>Redeem Code</h3>
+                </div>
+                <div class="redeem-card-body">
+                    <p>Get Google Play, Amazon, or other gift card codes sent directly to your email.</p>
+                    <button class="redeem-btn">Get Gift Card</button>
+                </div>
+            </div>
+
+            <!-- Bank Transfer Card -->
+            <div class="redeem-card fade-in" style="animation-delay: 0.4s;">
+                <div class="redeem-card-header">
+                    <img src="https://i.imgur.com/D4sL9I2.png" alt="Bank Logo">
+                    <h3>Bank Transfer</h3>
+                </div>
+                <div class="redeem-card-body">
+                    <p>Enter your bank account details for a direct deposit. Minimum withdrawal: ₹100.</p>
+                    <button class="redeem-btn">Withdraw to Bank</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- No bottom nav on this page -->
+
+    <script>
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const balanceValue = document.getElementById('wallet-balance-value');
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        balanceValue.textContent = userData.walletBalance || 0;
+                    }
+                });
+            } else {
+                window.location.href = 'auth.html';
+            }
+        });
+    </script>
+</body>
 </html>

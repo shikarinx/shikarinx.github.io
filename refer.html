@@ -4,31 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refer & Earn | MONETRA</title>
-    <!-- ** ADDED THE LINK TO YOUR STYLES ** -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase and Config Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    
     <style>
+        /* Styles specific to this page */
         .refer-card { background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 20px var(--shadow-color); margin-bottom: 1.5rem; }
-        .referral-code-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .referral-code { background-color: #f0f0f0; border: 1px dashed #ccc; padding: 0.8rem; border-radius: 8px; font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; }
-        .copy-btn { background: none; border: none; cursor: pointer; }
-        .copy-btn svg { width: 24px; height: 24px; }
+        .referral-code-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; background-color: #f9f9f9; border: 1px dashed #ccc; padding: 0.8rem; border-radius: 8px; }
+        .referral-code { font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; color: var(--accent-primary); }
+        .copy-btn { background: none; border: none; cursor: pointer; padding: 5px; }
+        .copy-btn svg { width: 24px; height: 24px; stroke: var(--text-secondary); }
         .share-icons { display: flex; justify-content: space-around; align-items: center; }
-        .share-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; }
+        .share-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; cursor: pointer; transition: transform 0.2s ease; }
+        .share-icon:hover { transform: scale(1.1); }
         .share-icon img { width: 24px; }
         .how-it-works { text-align: center; }
         .how-it-works img { max-width: 150px; margin: 1rem 0; }
-        .steps-list { list-style: none; text-align: left; max-width: 300px; margin: 0 auto; }
-        .step-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-        .step-number { background-color: var(--accent-primary); color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+        .steps-list { list-style: none; text-align: left; max-width: 300px; margin: 0 auto; position: relative; }
+        .step-item { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; position: relative; }
+        .step-item:not(:last-child)::after { content: ''; position: absolute; left: 14px; top: 35px; width: 2px; height: 100%; border-left: 2px dashed var(--border-color); }
+        .step-number { background-color: var(--accent-primary); color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; z-index: 1; }
     </style>
 </head>
 <body>
     <header class="main-header"></header>
+
     <main class="container">
-        <h1 class="section-title" style="text-align: left;">Refer & Earn</h1>
-        <div class="refer-card fade-in">
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Referral Code</p>
-            <div class="referral-code-section"> <div class="referral-code" id="user-refer-code">DXD86F</div> <button class="copy-btn" id="copy-refer-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button> </div>
+        <h1 class="section-title fade-in" style="text-align: left;">Refer & Earn</h1>
+
+        <div class="refer-card fade-in" style="animation-delay: 0.1s;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Your Unique Referral Code</p>
+            <div class="referral-code-section">
+                <div class="referral-code" id="user-refer-code">Loading...</div>
+                <button class="copy-btn" id="copy-refer-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+            </div>
             <div class="share-icons">
                 <div class="share-icon"><img src="instagram.png" alt="Instagram"></div>
                 <div class="share-icon"><img src="whatsapp.png" alt="WhatsApp"></div>
@@ -37,6 +51,7 @@
                 <div class="share-icon"><img src="share.png" alt="Share"></div>
             </div>
         </div>
+
         <div class="how-it-works fade-in" style="animation-delay: 0.2s;">
             <img src="refer-a-friend.png" alt="Refer a Friend">
             <ol class="steps-list">
@@ -47,11 +62,48 @@
             </ol>
         </div>
     </main>
+
     <nav class="bottom-nav"></nav>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="firebase-config.js"></script>
+
     <script src="app.js"></script>
-    <script> document.getElementById('copy-refer-btn').addEventListener('click', () => { const code = document.getElementById('user-refer-code').textContent; navigator.clipboard.writeText(code).then(() => { alert('Referral code copied!'); }); }); </script>
+    <script>
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const referCodeElement = document.getElementById('user-refer-code');
+
+        // Listen for user login state
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in, fetch their data from Firestore
+                const userDocRef = db.collection('users').doc(user.uid);
+                
+                userDocRef.get().then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        if (userData.referralCode) {
+                            referCodeElement.textContent = userData.referralCode;
+                        } else {
+                            referCodeElement.textContent = "NO CODE";
+                        }
+                    } else {
+                        console.log("No such user document!");
+                    }
+                }).catch((error) => {
+                    console.log("Error getting document:", error);
+                });
+            }
+        });
+
+        // Copy button functionality
+        document.getElementById('copy-refer-btn').addEventListener('click', () => {
+            const code = referCodeElement.textContent;
+            if(code && code !== 'Loading...') {
+                navigator.clipboard.writeText(code).then(() => {
+                    alert('Referral code copied!');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
