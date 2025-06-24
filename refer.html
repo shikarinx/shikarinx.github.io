@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refer & Earn | MONETRA</title>
+    <!-- ** ADDED THE LINK TO YOUR STYLES ** -->
     <link rel="stylesheet" href="style.css">
     <style>
         .refer-card { background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 20px var(--shadow-color); margin-bottom: 1.5rem; }
@@ -11,7 +12,6 @@
         .referral-code { background-color: #f0f0f0; border: 1px dashed #ccc; padding: 0.8rem; border-radius: 8px; font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; }
         .copy-btn { background: none; border: none; cursor: pointer; }
         .copy-btn svg { width: 24px; height: 24px; }
-        .referral-earnings { text-align: right; }
         .share-icons { display: flex; justify-content: space-around; align-items: center; }
         .share-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; }
         .share-icon img { width: 24px; }
@@ -52,11 +52,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="firebase-config.js"></script>
     <script src="app.js"></script>
-    <script>
-        document.getElementById('copy-refer-btn').addEventListener('click', () => {
-            const code = document.getElementById('user-refer-code').textContent;
-            navigator.clipboard.writeText(code).then(() => { alert('Referral code copied!'); });
-        });
-    </script>
+    <script> document.getElementById('copy-refer-btn').addEventListener('click', () => { const code = document.getElementById('user-refer-code').textContent; navigator.clipboard.writeText(code).then(() => { alert('Referral code copied!'); }); }); </script>
 </body>
 </html>

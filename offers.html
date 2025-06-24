@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Offers | MONETRA</title>
+    <!-- ** ADDED THE LINK TO YOUR STYLES ** -->
     <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="firebase-config.js"></script>
     <style>
         .tabs { display: flex; gap: 1.5rem; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem; }
         .tab-item { padding: 1rem 0; font-weight: 600; color: var(--text-secondary); cursor: pointer; position: relative; }
@@ -14,6 +18,7 @@
         .empty-state img { max-width: 200px; margin-bottom: 1.5rem; }
         .empty-state h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
         .empty-state p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+        .offer-button { display: inline-block; width: auto; padding: 0.8rem 2rem; }
     </style>
 </head>
 <body>
@@ -25,13 +30,10 @@
             <img src="empty-box.png" alt="Empty Box">
             <h3>Start Earning Rewards Now</h3>
             <p>You don't have any Ongoing offers. Go to all offers and start availing offers.</p>
-            <a href="index.html" class="offer-button" style="display: inline-block; width: auto; padding: 0.8rem 2rem;">Explore Offers</a>
+            <a href="index.html" class="offer-button">Explore Offers</a>
         </div>
     </main>
     <nav class="bottom-nav"></nav>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="firebase-config.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

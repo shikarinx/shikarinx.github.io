@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MONETRA | Home</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- ** THIS IS THE CRUCIAL LINK TO YOUR STYLES ** -->
+    <link rel="stylesheet" href="style.css"> 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -25,8 +26,7 @@
         </div>
         <h2 class="section-title">Trending Offers</h2>
         <div class="offer-card fade-in" style="animation-delay: 0.2s;">
-            <div class="offer-header"> 
-                <img src="quckcauh-logo.jpg" alt="Quckcauh Logo" class="offer-logo">
+            <div class="offer-header"> <img src="quckcauh-logo.jpg" alt="Quckcauh Logo" class="offer-logo">
                 <div class="offer-title"> <h3>Quckcauh</h3> <p>Register & Earn Bonus</p> </div>
                 <div class="offer-reward"> <img src="coin.png" alt="Coin"> <span>80</span> </div>
             </div>
@@ -34,8 +34,7 @@
             <button class="offer-button" onclick="startOffer('https://tinyurl.com/2degtqyc')">Start Offer (Invite Code: 652968)</button>
         </div>
         <div class="offer-card fade-in" style="animation-delay: 0.3s;">
-            <div class="offer-header"> 
-                <img src="dreamshare-logo.jpg" alt="Dream Share Logo" class="offer-logo">
+            <div class="offer-header"> <img src="dreamshare-logo.jpg" alt="Dream Share Logo" class="offer-logo">
                 <div class="offer-title"> <h3>Dream Share</h3> <p>Refer Friends & Earn Big</p> </div>
                 <div class="offer-reward"> <img src="coin.png" alt="Coin"> <span>11 + Refer</span> </div>
             </div>
@@ -47,10 +46,7 @@
     <script src="app.js"></script>
     <script>
         const directLink = 'https://www.profitableratecpm.com/wcgx8tehp?key=112a38b9af1d2b59596ef2cda186f0f1';
-        function startOffer(offerUrl) {
-            window.open(directLink, '_blank');
-            window.open(offerUrl, '_blank');
-        }
+        function startOffer(offerUrl) { window.open(directLink, '_blank'); window.open(offerUrl, '_blank'); }
     </script>
 </body>
 </html>
