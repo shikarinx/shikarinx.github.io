@@ -13,10 +13,11 @@
         .auth-card { background-color: var(--bg-secondary); padding: 2rem; border-radius: 16px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 4px 20px var(--shadow-color); }
         .auth-card h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
         .auth-card p { color: var(--text-secondary); margin-bottom: 2rem; }
-        .input-group { margin-bottom: 1.5rem; }
-        .input-group input { width: 100%; padding: 1rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; text-align: center; }
-        .otp-inputs { display: flex; justify-content: center; gap: 10px; margin-bottom: 1.5rem; }
-        .otp-inputs input { width: 45px; height: 50px; text-align: center; font-size: 1.5rem; border: 1px solid var(--border-color); border-radius: 8px; }
+        .input-group { margin-bottom: 1.5rem; display: flex; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;}
+        .country-code { padding: 1rem; background-color: #f0f0f0; font-weight: 600; }
+        .input-group input { flex-grow: 1; padding: 1rem; border: none; font-size: 1rem; text-align: left; }
+        .input-group input:focus { outline: none; }
+        #otp-input { width: 100%; text-align: center; }
         .auth-btn { width: 100%; padding: 1rem; border: none; border-radius: 8px; background-color: var(--accent-primary); color: white; font-size: 1rem; font-weight: 600; cursor: pointer; }
         .hidden { display: none; }
         #resend-otp { margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary); }
@@ -27,12 +28,13 @@
         <!-- Phone Number View -->
         <div id="phone-view">
             <h1>Get Started</h1>
-            <p>Enter your mobile number to receive a verification code.</p>
+            <p>Enter your 10-digit mobile number to receive a verification code.</p>
             <div class="input-group">
-                <input type="tel" id="phone-number-input" placeholder="e.g., 9876543210">
+                <span class="country-code">+91</span>
+                <input type="tel" id="phone-number-input" placeholder="Your mobile number" maxlength="10">
             </div>
             <button id="send-otp-btn" class="auth-btn">Send OTP</button>
-            <div id="recaptcha-container"></div>
+            <div id="recaptcha-container" style="margin-top: 1rem;"></div>
         </div>
 
         <!-- OTP View -->
@@ -40,7 +42,7 @@
             <h1>OTP Verification</h1>
             <p>Verify the OTP sent to your number.</p>
             <div class="input-group">
-                <input type="text" id="otp-input" placeholder="Enter 6-digit OTP">
+                <input type="text" id="otp-input" placeholder="Enter 6-digit OTP" style="text-align:center;">
             </div>
             <button id="verify-otp-btn" class="auth-btn">Verify & Proceed</button>
             <p id="resend-otp">Resend OTP in 30s</p>
@@ -60,11 +62,13 @@
         const verifyOtpBtn = document.getElementById('verify-otp-btn');
         const errorMessage = document.getElementById('error-message');
 
-        // Setup reCAPTCHA verifier
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            'size': 'invisible',
-            'callback': (response) => { /* reCAPTCHA solved */ }
-        });
+        window.onload = function() {
+            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                'size': 'invisible',
+                'callback': (response) => { /* reCAPTCHA solved */ }
+            });
+            recaptchaVerifier.render();
+        };
 
         sendOtpBtn.addEventListener('click', () => {
             const phoneNumber = "+91" + phoneNumberInput.value;
@@ -76,17 +80,15 @@
                     phoneView.classList.add('hidden');
                     otpView.classList.remove('hidden');
                 }).catch((error) => {
-                    errorMessage.textContent = "Error sending OTP. Please check the number or try again.";
+                    errorMessage.textContent = "Error: Please check the number or try again later.";
                     console.error("Error during signInWithPhoneNumber", error);
-                    recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
+                    grecaptcha.reset();
                 });
         });
 
         verifyOtpBtn.addEventListener('click', () => {
             const code = otpInput.value;
             confirmationResult.confirm(code).then((result) => {
-                // User signed in successfully.
-                // Check if this is a new user
                 const isNewUser = result.additionalUserInfo.isNewUser;
                 if (isNewUser) {
                     window.location.href = 'register-profile.html';

@@ -9,45 +9,23 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="firebase-config.js"></script>
     <style>
-        /* Styles specific to the login page */
         body { padding: 0; display: flex; flex-direction: column; justify-content: flex-end; min-height: 100vh; background: var(--bg-primary); }
         .illustration-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; }
         .illustration-container img { max-width: 100%; max-height: 300px; }
-        .auth-container {
-            background-color: var(--bg-secondary);
-            padding: 2rem 1.5rem;
-            border-top-left-radius: 24px;
-            border-top-right-radius: 24px;
-            box-shadow: 0 -4px 20px var(--shadow-color);
-            text-align: center;
-        }
+        .auth-container { background-color: var(--bg-secondary); padding: 2rem 1.5rem; border-top-left-radius: 24px; border-top-right-radius: 24px; box-shadow: 0 -4px 20px var(--shadow-color); text-align: center; }
         .auth-container h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
         .auth-container p { color: var(--text-secondary); margin-bottom: 1.5rem; }
-        .auth-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 1rem;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            background-color: transparent;
-            font-size: 1rem;
-            font-weight: 600;
-            font-family: var(--font-family);
-            cursor: pointer;
-            margin-bottom: 1rem;
-            transition: background-color 0.3s ease;
-        }
+        .auth-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color); background-color: transparent; font-size: 1rem; font-weight: 600; font-family: var(--font-family); cursor: pointer; margin-bottom: 1rem; transition: background-color 0.3s ease; text-decoration: none; color: var(--text-primary); }
         .auth-btn.google { background-color: #f1f1f1; }
         .auth-btn.phone { background-color: var(--accent-primary); color: white; border: none; }
+        .auth-btn.email { background-color: #e8eaf6; }
         .auth-btn img { width: 24px; height: 24px; }
-        .terms { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--text-secondary); }
+        .terms { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;}
     </style>
 </head>
 <body>
     <div class="illustration-container">
+        <!-- ** FIXED IMAGE LINK ** -->
         <img src="https://i.imgur.com/vHqQzYV.png" alt="Welcome Illustration">
     </div>
 
@@ -63,10 +41,13 @@
         <p id="error-message" style="color: #c0392b; min-height: 1.2em; font-size: 0.9rem;"></p>
 
         <button class="auth-btn google" id="google-btn">
+             <!-- ** FIXED IMAGE LINK ** -->
             <img src="https://i.imgur.com/O9gC22D.png" alt="Google">
             Link Google
         </button>
         <button class="auth-btn phone" id="phone-btn">Use Mobile Number</button>
+        <!-- ** NEW EMAIL/PASSWORD BUTTON ** -->
+        <a href="email-auth.html" class="auth-btn email">Continue with Email</a>
     </div>
 
     <script>
