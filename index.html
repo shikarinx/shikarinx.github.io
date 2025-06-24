@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- ... Your head content (meta, title, styles, scripts) is the same ... -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MONETRA | Home</title>
@@ -12,37 +11,46 @@
     <script src="firebase-config.js"></script>
 </head>
 <body>
-    <header class="main-header">
-        <!-- This header will be populated by app.js -->
-    </header>
-
+    <header class="main-header"></header>
     <main class="container">
-        <!-- All your home page content remains the same... -->
+        <div class="ad-container fade-in">
+            <script type="text/javascript"> atOptions = { 'key' : 'b85a63e84936af4fc3a812c6358dc874', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} }; </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/b85a63e84936af4fc3a812c6358dc874/invoke.js"></script>
+        </div>
+        <div class="quick-actions fade-in" style="animation-delay: 0.1s;">
+            <div class="action-card"> <img src="play.png" alt="Play & Win"> <span>Play & Win</span> </div>
+            <div class="action-card"> <img src="earn.png" alt="Earn More"> <span>Earn more</span> </div>
+            <div class="action-card"> <img src="spin.png" alt="Spin & Win"> <span>Spin & Win</span> </div>
+            <div class="action-card"> <img src="games.png" alt="Games"> <span>Games</span> </div>
+        </div>
+        <h2 class="section-title">Trending Offers</h2>
+        <div class="offer-card fade-in" style="animation-delay: 0.2s;">
+            <div class="offer-header"> 
+                <img src="quckcauh-logo.jpg" alt="Quckcauh Logo" class="offer-logo">
+                <div class="offer-title"> <h3>Quckcauh</h3> <p>Register & Earn Bonus</p> </div>
+                <div class="offer-reward"> <img src="coin.png" alt="Coin"> <span>80</span> </div>
+            </div>
+            <div class="offer-details"> <h4>How to Earn:</h4> <ul> <li>Register using the link below. Sign-up bonus is ₹80.</li> <li>Bind your secondary WhatsApp account for 1 day.</li> <li>Earn ₹1 every hour. Reach ₹100 to withdraw.</li> <li>Withdrawal options: UPI and Bank.</li> </ul> <br> <div class="offer-disclaimer"> <strong>Disclaimer:</strong> This offer is paid directly by the advertiser. We do not track or handle payments for this specific task. </div> </div>
+            <button class="offer-button" onclick="startOffer('https://tinyurl.com/2degtqyc')">Start Offer (Invite Code: 652968)</button>
+        </div>
+        <div class="offer-card fade-in" style="animation-delay: 0.3s;">
+            <div class="offer-header"> 
+                <img src="dreamshare-logo.jpg" alt="Dream Share Logo" class="offer-logo">
+                <div class="offer-title"> <h3>Dream Share</h3> <p>Refer Friends & Earn Big</p> </div>
+                <div class="offer-reward"> <img src="coin.png" alt="Coin"> <span>11 + Refer</span> </div>
+            </div>
+            <div class="offer-details"> <h4>How to Earn:</h4> <ul> <li>Sign up for an initial bonus of ₹11.</li> <li>Refer friends to earn ₹100 per successful referral.</li> <li>You must bind a secondary WhatsApp account.</li> <li><strong>User Tip:</strong> You can reuse the same WhatsApp number by adding a '0' at the beginning.</li> </ul> <br> <div class="offer-disclaimer"> <strong>Disclaimer:</strong> This is a third-party offer. For WhatsApp unban issues, please use the "Submit Review" option within WhatsApp. </div> </div>
+            <button class="offer-button" onclick="startOffer('https://tinyurl.com/2cblke2v')">Start Offer</button>
+        </div>
     </main>
-
-    <nav class="bottom-nav">
-        <!-- ** This is the updated navigation structure for app.js ** -->
-        <a href="index.html" class="nav-item">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            <span>Home</span>
-        </a>
-        <a href="offers.html" class="nav-item">
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            <span>Offers</span>
-        </a>
-        <a href="refer.html" class="nav-item">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
-            <span>Refer</span>
-        </a>
-        <a href="settings.html" class="nav-item">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            <span>Settings</span>
-        </a>
-    </nav>
+    <nav class="bottom-nav"></nav>
     <script src="app.js"></script>
     <script>
-        // ** The `index.html` no longer needs any specific login logic here.
-        // ** `app.js` now handles the auth check and redirect for all pages.
+        const directLink = 'https://www.profitableratecpm.com/wcgx8tehp?key=112a38b9af1d2b59596ef2cda186f0f1';
+        function startOffer(offerUrl) {
+            window.open(directLink, '_blank');
+            window.open(offerUrl, '_blank');
+        }
     </script>
 </body>
 </html>
