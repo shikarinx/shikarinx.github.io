@@ -4,62 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Earn More | MONETRA</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        :root { --dark-bg: #0a0e27; --card-bg: rgba(255, 255, 255, 0.1); --text-primary: #ffffff; --text-secondary: #b8c5d6; --accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; padding-top: 80px; padding-bottom: 80px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+        .fade-in { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .app-header { background: rgba(10, 14, 39, 0.5); backdrop-filter: blur(15px); padding: 1rem 1.5rem; position: fixed; top: 0; left: 0; width: 100%; z-index: 100; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .profile-pic { width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.3); object-fit: cover; }
+        .user-details h3 { font-size: 1rem; font-weight: 600; } .user-details p { font-size: 0.8rem; color: var(--text-secondary); }
+        .header-actions { display: flex; align-items: center; gap: 1rem; }
+        .wallet-icon img { width: 28px; height: 28px; }
+        .app-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(10, 14, 39, 0.7); backdrop-filter: blur(20px); border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-around; padding: 0.5rem 0; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-secondary); text-decoration: none; font-size: 0.75rem; padding: 0.5rem; border-radius: 8px; }
+        .nav-item.active { color: white; transform: translateY(-3px); }
+        .nav-icon { width: 24px; height: 24px; }
+        .section-title { font-size: 1.8rem; font-weight: 700; text-align: center; margin-bottom: 2rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .offer-card { background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .offer-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .offer-logo { width: 60px; height: 60px; border-radius: 12px; }
+        .offer-title h3 { font-size: 1.2rem; } .offer-title p { font-size: 0.9rem; color: var(--text-secondary); }
+        .offer-reward { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 0.6rem 1rem; border-radius: 10px; font-weight: 700; font-size: 1rem; }
+        .offer-button { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; padding: 1rem; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; margin-top: 1rem; }
+    </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
-    <canvas id="particles-canvas"></canvas>
-
     <header class="app-header">
-        <div class="user-info">
-            <img src="profile.png" alt="Profile" class="profile-pic" id="profile-pic-header">
-            <div class="user-details">
-                <h3 id="user-name-header">Loading...</h3>
-                <p id="user-email-header">Loading...</p>
-            </div>
-        </div>
-        <div class="header-actions">
-            <div class="wallet-icon"><img src="coin.png" alt="Wallet"></div>
-            <span id="user-balance-header">0</span>
-        </div>
+        <div class="user-info"> <img src="profile.png" alt="Profile" class="profile-pic" id="profile-pic-header"> <div class="user-details"> <h3 id="user-name-header">Loading...</h3> <p id="user-email-header"></p> </div> </div>
+        <div class="header-actions"> <div class="wallet-icon"><img src="coin.png" alt="Wallet"></div> <span id="user-balance-header">0</span> </div>
     </header>
-
     <main class="container">
-        <h2 class="section-title">Trending Offers</h2>
+        <h1 class="section-title">Trending Offers</h1>
         <div class="offer-card fade-in">
-            <div class="offer-header">
-                <img src="quckcauh-logo.jpg" alt="Quckcauh Logo" class="offer-logo">
-                <div class="offer-title"> <h3>Quckcauh</h3> <p>Register & Earn Bonus</p> </div>
-                <div class="offer-reward"> <img src="coin.png" alt="Coin"> <span>80</span> </div>
-            </div>
-            <button class="offer-button" onclick="startOffer('https://tinyurl.com/2degtqyc')"> Start Offer </button>
+            <div class="offer-header"> <img src="quckcauh-logo.jpg" alt="Quckcauh Logo" class="offer-logo"> <div class="offer-title"> <h3>Quckcauh</h3> <p>Register & Earn Bonus</p> </div> <div class="offer-reward">₹80</div> </div>
+            <button class="offer-button" onclick="startOffer('https://tinyurl.com/2degtqyc')">Start Offer</button>
         </div>
-        <div class="offer-card fade-in" style="animation-delay: 0.1s;">
-            <div class="offer-header">
-                <img src="dreamshare-logo.jpg" alt="Dream Share Logo" class="offer-logo">
-                <div class="offer-title"> <h3>Dream Share</h3> <p>Refer & Earn</p> </div>
-                <div class="offer-reward"> <img src="coin.png" alt="Coin"> <span>11 + Refer</span> </div>
-            </div>
-            <button class="offer-button" onclick="startOffer('https://tinyurl.com/2cblke2v')"> Start Offer </button>
+        <div class="offer-card fade-in">
+            <div class="offer-header"> <img src="dreamshare-logo.jpg" alt="Dream Share Logo" class="offer-logo"> <div class="offer-title"> <h3>Dream Share</h3> <p>Refer & Earn</p> </div> <div class="offer-reward">₹11 + Refer</div> </div>
+            <button class="offer-button" onclick="startOffer('https://tinyurl.com/2cblke2v')">Start Offer</button>
         </div>
     </main>
-
     <nav class="app-bottom-nav">
         <a href="index.html" class="nav-item"> <img src="home-icon.png" class="nav-icon"> <span>Home</span> </a>
         <a href="earn-more.html" class="nav-item active"> <img src="earn-icon.png" class="nav-icon"> <span>Earn</span> </a>
         <a href="refer.html" class="nav-item"> <img src="refer-icon.png" class="nav-icon"> <span>Refer</span> </a>
         <a href="settings.html" class="nav-item"> <img src="settings-icon.png" class="nav-icon"> <span>Settings</span> </a>
     </nav>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-            const auth = firebase.auth();
-            const db = firebase.firestore();
+            const auth = firebase.auth(); const db = firebase.firestore();
             auth.onAuthStateChanged(user => {
                 if (!user) { window.location.replace('auth.html'); return; }
                 const userDocRef = db.collection('users').doc(user.uid);
