@@ -9,37 +9,31 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
-    <style>
-        .profile-main { padding: 1.5rem; }
-        .input-field { width: 100%; padding: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: white; font-size: 1rem; margin-bottom: 1rem; }
-        .info-label { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; text-align: left; }
-        .info-display { font-size: 1.1rem; font-weight: 500; margin-bottom: 1.5rem; text-align: left; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; }
-        .save-button { background: var(--secondary-gradient); color: white; border: none; padding: 1rem; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; }
-        .success-msg { color: #2ecc71; text-align: center; margin-top: 1rem; opacity: 0; transition: opacity 0.3s; }
-    </style>
 </head>
 <body>
     <div class="bg-animation"></div>
     <canvas id="particles-canvas"></canvas>
     <header class="app-header"></header>
+
     <main class="container">
         <h1 class="section-title fade-in">Edit Profile</h1>
         <div class="offer-card fade-in" style="animation-delay: 0.1s;">
             <div class="offer-details" style="background: none; padding: 0; border: none;">
-                <label for="profile-name-input" class="info-label">Full Name</label>
-                <input type="text" id="profile-name-input" class="input-field">
+                <label class="info-label" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; text-align: left; display: block;">Full Name</label>
+                <input type="text" id="profile-name-input" class="input-field" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: white; margin-bottom: 1rem; width: 100%; padding: 1rem; font-size: 1rem;">
                 
-                <label class="info-label">Email Address</label>
-                <p id="profile-email-display" class="info-display">Loading...</p>
+                <label class="info-label" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; text-align: left; display: block;">Email Address</label>
+                <p id="profile-email-display" style="font-size: 1.1rem; font-weight: 500; margin-bottom: 1.5rem; text-align: left; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px;">Loading...</p>
 
-                <label class="info-label">Mobile Number</label>
-                <p id="profile-phone-display" class="info-display">Loading...</p>
+                <label class="info-label" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; text-align: left; display: block;">Mobile Number</label>
+                <p id="profile-phone-display" style="font-size: 1.1rem; font-weight: 500; margin-bottom: 1.5rem; text-align: left; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px;">Loading...</p>
 
-                <button class="save-button" id="save-profile-btn">Save Changes</button>
-                <p id="success-message" class="success-msg"></p>
+                <button class="offer-button" id="save-profile-btn">Save Changes</button>
+                <p id="success-message" style="color: #2ecc71; text-align: center; margin-top: 1rem; opacity: 0; transition: opacity 0.3s;"></p>
             </div>
         </div>
     </main>
+
     <nav class="app-bottom-nav"></nav>
     <script src="app.js"></script>
     <script>
@@ -72,13 +66,11 @@
                     saveBtn.addEventListener('click', () => {
                         const newName = nameInput.value.trim();
                         if (newName) {
-                            saveBtn.disabled = true;
-                            saveBtn.textContent = 'Saving...';
+                            saveBtn.disabled = true; saveBtn.textContent = 'Saving...';
                             user.updateProfile({ displayName: newName })
                             .then(() => userDocRef.update({ name: newName }))
                             .then(() => {
-                                successMessage.textContent = 'Profile updated successfully!';
-                                successMessage.style.opacity = 1;
+                                successMessage.textContent = 'Profile updated successfully!'; successMessage.style.opacity = 1;
                                 setTimeout(() => { successMessage.style.opacity = 0; }, 3000);
                             })
                             .catch(error => { console.error("Error updating profile: ", error); })
