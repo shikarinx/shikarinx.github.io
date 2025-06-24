@@ -19,6 +19,7 @@
         .input-group input:focus { outline: none; }
         #otp-input { width: 100%; text-align: center; }
         .auth-btn { width: 100%; padding: 1rem; border: none; border-radius: 8px; background-color: var(--accent-primary); color: white; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .auth-btn:disabled { background-color: #ccc; cursor: not-allowed; }
         .hidden { display: none; }
         #resend-otp { margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary); }
     </style>
@@ -32,8 +33,9 @@
                 <span class="country-code">+91</span>
                 <input type="tel" id="phone-number-input" placeholder="Your mobile number" maxlength="10">
             </div>
-            <button id="send-otp-btn" class="auth-btn">Send OTP</button>
-            <div id="recaptcha-container" style="margin-top: 1rem;"></div>
+            <!-- The reCAPTCHA container is now inside the form -->
+            <div id="recaptcha-container" style="margin: 1.5rem 0; display: flex; justify-content: center;"></div>
+            <button id="send-otp-btn" class="auth-btn" disabled>Send OTP</button>
         </div>
         <div id="otp-view" class="hidden">
             <h1>OTP Verification</h1>
@@ -42,7 +44,6 @@
                 <input type="text" id="otp-input" placeholder="Enter 6-digit OTP" style="text-align:center;">
             </div>
             <button id="verify-otp-btn" class="auth-btn">Verify & Proceed</button>
-            <p id="resend-otp" class="hidden">Resend OTP</p>
         </div>
         <p id="error-message" style="color: #c0392b; margin-top: 1rem;"></p>
     </div>
@@ -59,23 +60,23 @@
         const verifyOtpBtn = document.getElementById('verify-otp-btn');
         const errorMessage = document.getElementById('error-message');
 
-        // ** THE FIX IS HERE **
-        // We initialize reCAPTCHA but DON'T render it immediately.
-        function setupRecaptcha() {
+        // ** THIS IS THE UPDATED RECAPTCHA LOGIC **
+        window.onload = function() {
             window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                'size': 'normal', // Changed to 'normal' to be visible
-                'callback': (response) => {
-                    // reCAPTCHA solved, allow signInWithPhoneNumber.
+                'size': 'normal', // Use the visible "I'm not a robot" checkbox
+                'callback': function(response) {
+                    // reCAPTCHA solved. Enable the Send OTP button.
                     sendOtpBtn.disabled = false;
+                    errorMessage.textContent = '';
                 },
-                'expired-callback': () => {
-                    // Response expired. Ask user to solve reCAPTCHA again.
+                'expired-callback': function() {
+                    // Response expired. Disable button and ask user to solve again.
                     sendOtpBtn.disabled = true;
+                    errorMessage.textContent = 'reCAPTCHA expired. Please solve it again.';
                 }
             });
-        }
-        
-        window.onload = setupRecaptcha;
+            recaptchaVerifier.render(); // This makes the checkbox appear
+        };
 
         sendOtpBtn.addEventListener('click', () => {
             const phoneNumber = "+91" + phoneNumberInput.value;
@@ -87,10 +88,8 @@
                     phoneView.classList.add('hidden');
                     otpView.classList.remove('hidden');
                 }).catch((error) => {
-                    errorMessage.textContent = "Error: Please check the number or solve the reCAPTCHA.";
+                    errorMessage.textContent = "Error sending OTP. Please refresh and try again.";
                     console.error("Error during signInWithPhoneNumber", error);
-                    // Reset the verifier if something goes wrong
-                    grecaptcha.reset();
                 });
         });
 
