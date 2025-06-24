@@ -46,3 +46,15 @@ body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(
 .offer-details { background: rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; font-size: 0.9rem; }
 .offer-button { background: var(--secondary-gradient); color: white; border: none; padding: 1rem 2rem; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; width: 100%; }
 .offer-button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(245, 87, 108, 0.3); }
+/* ADD THIS TO THE END OF YOUR style.css FILE */
+
+.nav-icon {
+    width: 24px;  /* Defines a specific width */
+    height: 24px; /* Defines a specific height */
+    margin-bottom: 2px;
+}
+
+.nav-item.active .nav-icon {
+    /* This can be used later to change the icon color when active */
+    filter: none; 
+}

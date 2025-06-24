@@ -1,31 +1,33 @@
-// app.js - FINAL & MOST RELIABLE VERSION
+// app.js - THE DEFINITIVE, BULLETPROOF VERSION
 
+// This function runs when the page content has loaded
 document.addEventListener("DOMContentLoaded", function() {
-    // Check if Firebase is available
+    
+    // Check if Firebase is available to prevent errors
     if (typeof firebase === 'undefined') {
         console.error("Firebase library not found. Check your script tags.");
         return;
     }
     
-    // Initialize Firebase only if it hasn't been already
+    // Initialize Firebase only once
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // --- 1. DEFINE & INJECT HTML COMPONENTS ---
+    // --- TEMPLATES FOR DYNAMIC CONTENT ---
     const headerHTML = `
         <div class="user-info">
-            <img src="profile.png" alt="Profile" class="profile-pic" id="profile-pic">
+            <img src="profile.png" alt="Profile" class="profile-pic" id="profile-pic-header">
             <div class="user-details">
-                <h3 id="user-name">Loading...</h3>
-                <p id="user-email">Loading...</p>
+                <h3 id="user-name-header">Loading...</h3>
+                <p id="user-email-header">Loading...</p>
             </div>
         </div>
         <div class="header-actions">
-            <div class="wallet-icon"> <img src="coin.png" alt="Wallet"> </div>
-            <span id="user-balance">0</span>
+            <div class="wallet-icon"><img src="coin.png" alt="Wallet"></div>
+            <span id="user-balance-header">0</span>
         </div>
     `;
 
@@ -36,13 +38,14 @@ document.addEventListener("DOMContentLoaded", function() {
         <a href="settings.html" class="nav-item"> <img src="settings-icon.png" class="nav-icon"> <span>Settings</span> </a>
     `;
 
+    // --- INJECT HTML INTO THE PAGE ---
     const headerElement = document.querySelector('.app-header');
     const navElement = document.querySelector('.app-bottom-nav');
     if (headerElement) headerElement.innerHTML = headerHTML;
     if (navElement) navElement.innerHTML = navHTML;
-
-    // --- 2. AUTHENTICATION & DYNAMIC CONTENT ---
-    auth.onAuthStateChanged(user => {
+    
+    // --- AUTHENTICATION & DATA LOADING LOGIC ---
+    auth.onAuthStateChanged(async (user) => {
         const currentPage = window.location.pathname.split("/").pop() || "index.html";
         const isAuthPage = currentPage === 'auth.html';
         
@@ -52,34 +55,28 @@ document.addEventListener("DOMContentLoaded", function() {
                 window.location.replace('index.html');
                 return;
             }
-            
-            // Get all display elements
-            const userNameDisplay = document.getElementById('user-name');
-            const userEmailDisplay = document.getElementById('user-email');
-            const profilePic = document.getElementById('profile-pic');
-            const balanceDisplay = document.getElementById('user-balance');
 
-            // Set profile picture immediately
-            if (profilePic) {
-                profilePic.src = user.photoURL || 'profile.png';
-            }
+            try {
+                // **THE FIX:** We now *wait* for the data to be fetched from Firestore
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    // Now that we have the data, we can safely update the header
+                    const userNameDisplay = document.getElementById('user-name-header');
+                    const userEmailDisplay = document.getElementById('user-email-header');
+                    const profilePic = document.getElementById('profile-pic-header');
+                    const balanceDisplay = document.getElementById('user-balance-header');
 
-            // Fetch user data from Firestore for name, email, and balance
-            const userDocRef = db.collection('users').doc(user.uid);
-            userDocRef.onSnapshot(doc => {
-                if (doc.exists) {
-                    const userData = doc.data();
-                    if (userNameDisplay) userNameDisplay.textContent = userData.name || 'User';
-                    if (userEmailDisplay) userEmailDisplay.textContent = userData.email || user.email;
-                    if (balanceDisplay) balanceDisplay.textContent = userData.walletBalance || 0;
-                } else {
-                    console.log("User document not found in Firestore.");
-                    if (userNameDisplay) userNameDisplay.textContent = user.displayName || 'User';
-                    if (userEmailDisplay) userEmailDisplay.textContent = user.email;
+                    if(userNameDisplay) userNameDisplay.textContent = userData.name || user.displayName || 'User';
+                    if(userEmailDisplay) userEmailDisplay.textContent = userData.email || user.email;
+                    if(balanceDisplay) balanceDisplay.textContent = userData.walletBalance || 0;
+                    if(profilePic) profilePic.src = user.photoURL || 'profile.png';
                 }
-            }, err => {
-                console.error("Error fetching user data:", err);
-            });
+
+            } catch (error) {
+                console.error("Error fetching user document:", error);
+            }
 
         } else {
             // User is not logged in
@@ -89,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // --- 3. NAVIGATION HIGHLIGHTING ---
+    // --- NAVIGATION HIGHLIGHTING ---
     const currentPage = window.location.pathname.split("/").pop() || "index.html";
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
