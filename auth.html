@@ -4,84 +4,535 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome | MONETRA</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Glassmorphism container */
+        .auth-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 48px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3)); }
+            100% { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6)); }
+        }
+
+        .form-title {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .form-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-group.hidden-field {
+            max-height: 0;
+            margin-bottom: 0;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .input-group.visible-field {
+            max-height: 100px;
+            margin-bottom: 24px;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+        }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-field:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 14px;
+            font-weight: 500;
+            min-height: 20px;
+            margin-bottom: 16px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-switch {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .auth-switch span {
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-switch span:hover {
+            color: #e0e7ff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive design */
+        @media (max-width: 640px) {
+            .auth-container {
+                padding: 32px 24px;
+                margin: 16px;
+            }
+            
+            .logo {
+                font-size: 28px;
+            }
+            
+            .form-title {
+                font-size: 24px;
+            }
+        }
+
+        /* Success animation */
+        @keyframes success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .success-animation {
+            animation: success 0.6s ease-in-out;
+        }
+    </style>
 </head>
-<body class="auth-body">
-    <div class="auth-card-futuristic">
-        <h1 id="form-title">Welcome Back</h1>
-        <p id="form-subtitle">Login to continue your journey</p>
+<body>
+    <div class="bg-animation" id="bg-animation"></div>
+    
+    <div class="auth-container">
+        <div class="logo-section">
+            <div class="logo">MONETRA</div>
+        </div>
+        
+        <h1 class="form-title" id="form-title">Welcome Back</h1>
+        <p class="form-subtitle" id="form-subtitle">Login to continue your journey</p>
+        
         <form id="auth-form">
-            <div class="input-group hidden-field" id="name-field-group"> <input type="text" id="full-name-input" placeholder="Full Name"> </div>
-            <div class="input-group hidden-field" id="number-field-group"> <input type="tel" id="number-input" placeholder="Mobile Number"> </div>
-            <div class="input-group"> <input type="email" id="email-input" placeholder="Email" required> </div>
-            <div class="input-group"> <input type="password" id="password-input" placeholder="Password" required> </div>
-            <p id="error-message" style="color: #ff5555; min-height: 1.2em;"></p>
-            <button type="submit" id="submit-btn" class="auth-btn-futuristic">Login</button>
+            <div class="input-group hidden-field" id="name-field-group">
+                <input type="text" class="input-field" id="full-name-input" placeholder="Full Name">
+            </div>
+            
+            <div class="input-group hidden-field" id="number-field-group">
+                <input type="tel" class="input-field" id="number-input" placeholder="Mobile Number">
+            </div>
+            
+            <div class="input-group">
+                <input type="email" class="input-field" id="email-input" placeholder="Email Address" required>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" class="input-field" id="password-input" placeholder="Password" required>
+            </div>
+            
+            <div class="error-message" id="error-message"></div>
+            
+            <button type="submit" class="submit-btn" id="submit-btn">
+                <div class="btn-content">
+                    <div class="loading-spinner" id="loading-spinner"></div>
+                    <span id="btn-text">Login</span>
+                </div>
+            </button>
         </form>
-        <p id="auth-switch-btn" class="auth-switch-futuristic">Don't have an account? <span>Sign up</span></p>
+        
+        <p class="auth-switch" id="auth-switch-btn">
+            Don't have an account? <span>Sign up</span>
+        </p>
     </div>
-    <script src="app.js"></script>
+
     <script>
+        // Create animated background particles
+        function createParticles() {
+            const bgAnimation = document.getElementById('bg-animation');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                bgAnimation.appendChild(particle);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
             const formTitle = document.getElementById('form-title');
             const formSubtitle = document.getElementById('form-subtitle');
             const authForm = document.getElementById('auth-form');
             const nameFieldGroup = document.getElementById('name-field-group');
             const numberFieldGroup = document.getElementById('number-field-group');
             const submitBtn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const loadingSpinner = document.getElementById('loading-spinner');
             const authSwitchBtn = document.getElementById('auth-switch-btn');
             const errorMessage = document.getElementById('error-message');
+            
             let isLoginMode = true;
+
+            // Toggle between login and signup
             authSwitchBtn.addEventListener('click', () => {
                 isLoginMode = !isLoginMode;
-                errorMessage.textContent = '';
+                
+                // Clear error message
+                hideError();
+                
                 if (isLoginMode) {
+                    // Switch to login mode
                     formTitle.textContent = 'Welcome Back';
                     formSubtitle.textContent = 'Login to continue your journey';
-                    submitBtn.textContent = 'Login';
+                    btnText.textContent = 'Login';
                     authSwitchBtn.innerHTML = "Don't have an account? <span>Sign up</span>";
-                    nameFieldGroup.classList.remove('visible-field'); nameFieldGroup.classList.add('hidden-field');
-                    numberFieldGroup.classList.remove('visible-field'); numberFieldGroup.classList.add('hidden-field');
+                    
+                    // Hide additional fields
+                    nameFieldGroup.classList.remove('visible-field');
+                    nameFieldGroup.classList.add('hidden-field');
+                    numberFieldGroup.classList.remove('visible-field');
+                    numberFieldGroup.classList.add('hidden-field');
                 } else {
+                    // Switch to signup mode
                     formTitle.textContent = 'Join MONETRA';
                     formSubtitle.textContent = 'Create your account to get started';
-                    submitBtn.textContent = 'Create Account';
+                    btnText.textContent = 'Create Account';
                     authSwitchBtn.innerHTML = "Already have an account? <span>Login</span>";
-                    nameFieldGroup.classList.remove('hidden-field'); nameFieldGroup.classList.add('visible-field');
-                    numberFieldGroup.classList.remove('hidden-field'); numberFieldGroup.classList.add('visible-field');
+                    
+                    // Show additional fields
+                    nameFieldGroup.classList.remove('hidden-field');
+                    nameFieldGroup.classList.add('visible-field');
+                    numberFieldGroup.classList.remove('hidden-field');
+                    numberFieldGroup.classList.add('visible-field');
                 }
             });
-            authForm.addEventListener('submit', (e) => {
+
+            // Form submission
+            authForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const email = authForm['email-input'].value.trim();
-                const password = authForm['password-input'].value.trim();
-                errorMessage.textContent = '';
-                if (isLoginMode) {
-                    firebase.auth().signInWithEmailAndPassword(email, password)
-                        .catch(error => { errorMessage.textContent = error.message; });
-                } else {
-                    const fullName = authForm['full-name-input'].value.trim();
-                    const mobileNumber = authForm['number-input'].value.trim();
-                    if (!fullName || !mobileNumber) { errorMessage.textContent = 'Please fill in all fields.'; return; }
-                    firebase.auth().createUserWithEmailAndPassword(email, password)
-                        .then(userCred => {
-                            const user = userCred.user;
-                            const uniquePart = user.uid.slice(-6).toUpperCase();
-                            const referralCode = `MON${uniquePart}`;
-                            return user.updateProfile({ displayName: fullName }).then(() => {
-                                return firebase.firestore().collection('users').doc(user.uid).set({
-                                    name: fullName, email: email, phone: mobileNumber,
-                                    referralCode: referralCode, walletBalance: 0,
-                                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                                });
-                            });
-                        })
-                        .catch(error => { errorMessage.textContent = error.message; });
+                
+                const email = document.getElementById('email-input').value.trim();
+                const password = document.getElementById('password-input').value.trim();
+                
+                // Clear previous errors
+                hideError();
+                
+                // Show loading state
+                showLoading();
+                
+                try {
+                    if (isLoginMode) {
+                        // Login logic (simulate API call)
+                        await simulateLogin(email, password);
+                    } else {
+                        // Signup logic
+                        const fullName = document.getElementById('full-name-input').value.trim();
+                        const mobileNumber = document.getElementById('number-input').value.trim();
+                        
+                        if (!fullName || !mobileNumber) {
+                            throw new Error('Please fill in all fields.');
+                        }
+                        
+                        await simulateSignup(email, password, fullName, mobileNumber);
+                    }
+                    
+                    // Success animation
+                    document.querySelector('.auth-container').classList.add('success-animation');
+                    
+                    // Simulate redirect after success
+                    setTimeout(() => {
+                        alert('Authentication successful! Redirecting...');
+                    }, 1000);
+                    
+                } catch (error) {
+                    showError(error.message);
+                } finally {
+                    hideLoading();
                 }
+            });
+
+            // Utility functions
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.add('show');
+            }
+
+            function hideError() {
+                errorMessage.classList.remove('show');
+                setTimeout(() => {
+                    errorMessage.textContent = '';
+                }, 300);
+            }
+
+            function showLoading() {
+                submitBtn.disabled = true;
+                loadingSpinner.style.display = 'block';
+                btnText.textContent = isLoginMode ? 'Logging in...' : 'Creating Account...';
+            }
+
+            function hideLoading() {
+                submitBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+                btnText.textContent = isLoginMode ? 'Login' : 'Create Account';
+            }
+
+            // Simulate API calls (replace with actual Firebase calls)
+            async function simulateLogin(email, password) {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        if (email === 'test@example.com' && password === 'password') {
+                            resolve();
+                        } else {
+                            reject(new Error('Invalid email or password.'));
+                        }
+                    }, 2000);
+                });
+            }
+
+            async function simulateSignup(email, password, fullName, mobileNumber) {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        if (password.length < 6) {
+                            reject(new Error('Password should be at least 6 characters.'));
+                        } else {
+                            resolve();
+                        }
+                    }, 2000);
+                });
+            }
+
+            // Add input focus effects
+            const inputs = document.querySelectorAll('.input-field');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
             });
         });
     </script>
