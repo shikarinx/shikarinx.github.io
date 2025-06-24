@@ -3,186 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MONETRA | Earn Smart, Live Better</title>
-    <!-- Firebase SDKs -->
+    <title>MONETRA | Home</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --dark-bg: #0a0e27;
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: #b8c5d6;
-            --shadow-glow: 0 20px 40px rgba(102, 126, 234, 0.3);
-            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); overflow-x: hidden; line-height: 1.6; }
-        #particles-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: linear-gradient(45deg, #0a0e27, #1a1f3a, #2d1b69); background-size: 400% 400%; animation: gradientShift 15s ease infinite; }
-        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        
-        /* Header & Nav */
-        .main-header { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem 0; position: sticky; top: 0; z-index: 100; animation: slideInDown 0.8s ease-out; }
-        .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
-        .logo { font-size: 2rem; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-transform: uppercase; letter-spacing: 2px; }
-        .nav-menu { display: flex; gap: 2rem; list-style: none; }
-        .nav-menu a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: all 0.3s ease; position: relative; }
-        .nav-menu a:hover { color: var(--text-primary); transform: translateY(-2px); }
-        .nav-menu a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary-gradient); transition: width 0.3s ease; }
-        .nav-menu a:hover::after { width: 100%; }
-        
-        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        
-        /* Hero Section */
-        .hero-section { text-align: center; padding: 4rem 0; animation: fadeInUp 1s ease-out; }
-        .hero-title { font-size: 3.5rem; font-weight: 900; margin-bottom: 1rem; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: textGlow 2s ease-in-out infinite alternate; }
-        .hero-subtitle { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .cta-button { background: var(--primary-gradient); color: white; padding: 1rem 2.5rem; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-glow); text-transform: uppercase; letter-spacing: 1px; }
-        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 25px 50px rgba(102, 126, 234, 0.4); }
-        
-        /* Quick Actions */
-        .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 4rem 0; }
-        .action-card { background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.4s ease; position: relative; overflow: hidden; }
-        .action-card:hover { transform: translateY(-10px) scale(1.05); box-shadow: var(--shadow-card), 0 0 30px rgba(102, 126, 234, 0.3); border-color: rgba(102, 126, 234, 0.5); }
-        .action-card .icon { width: 80px; height: 80px; margin: 0 auto 1rem; background: var(--accent-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; animation: float 3s ease-in-out infinite; }
-        .action-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: 700; }
-        .action-card p { color: var(--text-secondary); font-size: 1rem; }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-        
-        /* Section Title */
-        .section-title { font-size: 2.5rem; font-weight: 800; text-align: center; margin: 4rem 0 2rem; background: var(--secondary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        
-        /* ** MODIFIED OFFER CARD STYLES ** */
-        .offer-card { background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 1.5rem; margin-bottom: 1.5rem; transition: all 0.4s ease; }
-        .offer-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-card); border-color: rgba(102, 126, 234, 0.3); }
-        .offer-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-        .offer-logo { width: 60px; height: 60px; border-radius: 12px; }
-        .offer-title h3 { font-size: 1.2rem; } .offer-title p { font-size: 0.9rem; color: var(--text-secondary); }
-        .offer-reward { background: var(--accent-gradient); padding: 0.6rem 1rem; border-radius: 10px; font-weight: 700; font-size: 1rem; }
-        .offer-details { background: rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; font-size: 0.9rem; }
-        .offer-details h4 { font-size: 1rem; margin-bottom: 0.8rem; color: #4facfe; }
-        .offer-details ul { list-style: none; padding: 0; } .offer-details li { padding: 0.3rem 0; }
-        .offer-disclaimer { background: rgba(245, 87, 108, 0.1); border-left: 3px solid #f5576c; padding: 0.8rem; border-radius: 0 8px 8px 0; margin-top: 1rem; font-size: 0.85rem; }
-        .offer-button { background: var(--secondary-gradient); color: white; border: none; padding: 1rem 2rem; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; width: 100%; }
-        .offer-button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(245, 87, 108, 0.3); }
-
-        /* General Animations */
-        @keyframes slideInDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes textGlow { from { text-shadow: 0 0 15px rgba(102, 126, 234, 0.4); } to { text-shadow: 0 0 25px rgba(102, 126, 234, 0.7); } }
-        .fade-in { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; }
-        .fade-in:nth-child(2) { animation-delay: 0.1s; } .fade-in:nth-child(3) { animation-delay: 0.2s; }
-        
-        /* Responsive */
-        @media (max-width: 768px) { .hero-title { font-size: 2.5rem; } .container, .header-content { padding: 1rem; } .nav-menu { display: none; } .quick-actions { grid-template-columns: 1fr 1fr; } }
-    </style>
 </head>
 <body>
     <div class="bg-animation"></div>
     <canvas id="particles-canvas"></canvas>
     
-    <header class="main-header">
-        <div class="header-content">
-            <div class="logo">MONETRA</div>
-            <nav>
-                <ul class="nav-menu">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="auth.html" id="auth-link">Login</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <header class="app-header"></header>
 
     <main class="container">
-        <section class="hero-section">
-            <h1 class="hero-title">Earn Smart, Live Better</h1>
-            <p class="hero-subtitle">Discover amazing opportunities to earn rewards through games, offers, and referrals. Join thousands of users who are already earning with MONETRA.</p>
-            <button class="cta-button" onclick="document.getElementById('offers-section').scrollIntoView({ behavior: 'smooth' });">Get Started Now</button>
-        </section>
-
+        <h1 class="section-title fade-in">Quick Actions</h1>
         <div class="quick-actions">
-            <div class="action-card fade-in"> <div class="icon">🎮</div> <h3>Play & Win</h3> <p>Engage in exciting games and earn rewards.</p> </div>
-            <div class="action-card fade-in"> <div class="icon">💰</div> <h3>Earn More</h3> <p>Complete simple tasks and watch your earnings grow.</p> </div>
-        </div>
-
-        <h2 class="section-title" id="offers-section">Trending Offers</h2>
-        
-        <div class="offer-card fade-in">
-            <div class="offer-header">
-                <img src="quckcauh-logo.jpg" alt="Quckcauh Logo" class="offer-logo">
-                <div class="offer-title"> <h3>Quckcauh</h3> <p>Register & Earn Instant Bonus</p> </div>
-                <div class="offer-reward"> <span>₹80</span> </div>
-            </div>
-            <div class="offer-details">
-                <h4>How to Earn:</h4>
-                <ul>
-                    <li>Register using the link and get instant ₹80 sign-up bonus.</li>
-                    <li>Bind your secondary WhatsApp account for just 1 day.</li>
-                    <li>Earn ₹1 every hour automatically. Reach ₹100 to withdraw.</li>
-                </ul>
-                <div class="offer-disclaimer"> <strong>Disclaimer:</strong> This is a third-party offer. We do not handle payments. </div>
-            </div>
-            <button class="offer-button" onclick="startOffer('https://tinyurl.com/2degtqyc')"> Start Offer </button>
-        </div>
-
-        <div class="offer-card fade-in">
-            <div class="offer-header">
-                <img src="dreamshare-logo.jpg" alt="Dream Share Logo" class="offer-logo">
-                <div class="offer-title"> <h3>Dream Share</h3> <p>Refer Friends & Earn Big Rewards</p> </div>
-                <div class="offer-reward"> <span>₹11 + Refer</span> </div>
-            </div>
-            <div class="offer-details">
-                <h4>How to Earn:</h4>
-                <ul>
-                    <li>Sign up instantly and receive ₹11 welcome bonus.</li>
-                    <li>Refer friends and earn ₹100 per successful referral.</li>
-                    <li><strong>Pro Tip:</strong> Reuse WhatsApp number by adding '0' at the start.</li>
-                </ul>
-                <div class="offer-disclaimer"> <strong>Disclaimer:</strong> For WhatsApp issues, use the "Submit Review" option in the app. </div>
-            </div>
-            <button class="offer-button" onclick="startOffer('https://tinyurl.com/2cblke2v')"> Start Offer </button>
+            <a href="#" class="action-card fade-in">
+                <div class="icon">🎮</div>
+                <h3>Play & Win</h3>
+                <p>Engage in exciting games and earn rewards.</p>
+            </a>
+            <a href="earn-more.html" class="action-card fade-in" style="animation-delay: 0.1s;">
+                <div class="icon">💰</div>
+                <h3>Earn More</h3>
+                <p>Complete simple tasks and watch your earnings grow.</p>
+            </a>
         </div>
     </main>
 
+    <nav class="app-bottom-nav"></nav>
+
+    <script src="app.js"></script>
     <script>
-        // ** REAL FIREBASE AUTHENTICATION CHECK **
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const authLink = document.getElementById('auth-link');
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                // User is logged in, show "Logout"
-                authLink.textContent = 'Logout';
-                authLink.href = '#'; // Prevent navigation
-                authLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    auth.signOut();
-                });
-            } else {
-                // User is logged out, show "Login"
-                authLink.textContent = 'Login';
-                authLink.href = 'auth.html';
-            }
-        });
-
         // Particle System
         class ParticleSystem {
-            constructor(canvas) { this.canvas = canvas; this.ctx = canvas.getContext('2d'); this.particles = []; this.resize(); this.init(); this.animate(); window.addEventListener('resize', () => this.resize()); }
-            resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; }
-            init() { const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 15000); for (let i = 0; i < particleCount; i++) { this.particles.push({ x: Math.random() * this.canvas.width, y: Math.random() * this.canvas.height, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3, size: Math.random() * 2 + 1, hue: Math.random() * 60 + 200 }); } }
-            animate() { this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); this.particles.forEach((p, i) => { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1; if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1; this.ctx.beginPath(); this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); this.ctx.fillStyle = `hsla(${p.hue}, 70%, 60%, 0.5)`; this.ctx.fill(); this.particles.slice(i + 1).forEach(o => { const dx = p.x - o.x, dy = p.y - o.y, dist = Math.sqrt(dx*dx + dy*dy); if (dist < 100) { this.ctx.beginPath(); this.ctx.moveTo(p.x, p.y); this.ctx.lineTo(o.x, o.y); this.ctx.strokeStyle = `hsla(${p.hue}, 70%, 60%, ${0.1 * (1 - dist/100)})`; this.ctx.stroke(); } }); }); requestAnimationFrame(() => this.animate()); }
-        }
+            constructor(c){this.c=c;this.x=c.getContext("2d");this.p=[];this.r();this.i();this.a();window.addEventListener("resize",()=>this.r())}r(){this.c.width=window.innerWidth;this.c.height=window.innerHeight}i(){for(let t=0;t<Math.floor(this.c.width*this.c.height/15e3);t++)this.p.push({x:Math.random()*this.c.width,y:Math.random()*this.c.height,vx:.3*(Math.random()-.5),vy:.3*(Math.random()-.5),s:Math.random()*2+1,h:200+60*Math.random()})}a(){this.x.clearRect(0,0,this.c.width,this.c.height);this.p.forEach((t,i)=>{t.x+=t.vx,t.y+=t.vy,(t.x<0||t.x>this.c.width)&&(t.vx*=-1),(t.y<0||t.y>this.c.height)&&(t.vy*=-1),this.x.beginPath(),this.x.arc(t.x,t.y,t.s,0,2*Math.PI),this.x.fillStyle=`hsla(${t.h}, 70%, 60%, 0.5)`,this.x.fill(),this.p.slice(i+1).forEach(i=>{const h=t.x-i.x,s=t.y-i.y,e=Math.sqrt(h*h+s*s);e<100&&(this.x.beginPath(),this.x.moveTo(t.x,t.y),this.x.lineTo(i.x,i.y),this.x.strokeStyle=`hsla(${t.h}, 70%, 60%, ${.1*(1-e/100)})`,this.x.stroke())})});requestAnimationFrame(()=>this.a())}}
         new ParticleSystem(document.getElementById('particles-canvas'));
-        
-        // Offer functions
-        const directLink = 'https://www.profitableratecpm.com/wcgx8tehp?key=112a38b9af1d2b59596ef2cda186f0f1';
-        function startOffer(offerUrl) { window.open(directLink, '_blank'); setTimeout(() => { window.open(offerUrl, '_blank'); }, 300); }
     </script>
 </body>
 </html>
