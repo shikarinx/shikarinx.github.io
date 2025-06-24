@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refer & Earn | MONETRA</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
 </head>
 <body>
     <header class="main-header"></header>
@@ -39,6 +35,10 @@
         </div>
     </main>
     <nav class="bottom-nav"></nav>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <script src="app.js"></script>
     <script>
         firebase.initializeApp(firebaseConfig);
@@ -51,7 +51,7 @@
                 userDocRef.get().then((doc) => {
                     if (doc.exists) {
                         const userData = doc.data();
-                        if (userData.referralCode) { referCodeElement.textContent = userData.referralCode; } else { referCodeElement.textContent = "NO CODE"; }
+                        if (userData.referralCode) { referCodeElement.textContent = userData.referralCode; }
                     }
                 });
             }
