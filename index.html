@@ -5,105 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MONETRA | Home</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Firebase and Config Scripts must be loaded before app.js -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
 </head>
 <body>
-
-    <header class="main-header">
-        <!-- This will be populated by app.js -->
-    </header>
-
+    <header class="main-header"></header>
     <main class="container">
-        <!-- Ad Container at the top -->
         <div class="ad-container fade-in">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : 'b85a63e84936af4fc3a812c6358dc874',
-                    'format' : 'iframe',
-                    'height' : 50,
-                    'width' : 320,
-                    'params' : {}
-                };
-            </script>
+            <script type="text/javascript"> atOptions = { 'key' : 'b85a63e84936af4fc3a812c6358dc874', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} }; </script>
             <script type="text/javascript" src="//www.highperformanceformat.com/b85a63e84936af4fc3a812c6358dc874/invoke.js"></script>
         </div>
-        
-        <!-- Quick Actions with professional icons -->
         <div class="quick-actions fade-in" style="animation-delay: 0.1s;">
             <div class="action-card"> <img src="play.png" alt="Play & Win"> <span>Play & Win</span> </div>
             <div class="action-card"> <img src="earn.png" alt="Earn More"> <span>Earn more</span> </div>
             <div class="action-card"> <img src="spin.png" alt="Spin & Win"> <span>Spin & Win</span> </div>
             <div class="action-card"> <img src="games.png" alt="Games"> <span>Games</span> </div>
         </div>
-        
         <h2 class="section-title">Trending Offers</h2>
-
-        <!-- Offer Card 1 (Quckcauh) with your exact details -->
         <div class="offer-card fade-in" style="animation-delay: 0.2s;">
-            <div class="offer-header"> 
-                <img src="quckcauh-logo.jpg" alt="Quckcauh Logo" class="offer-logo">
+            <div class="offer-header"> <img src="quckcauh-logo.jpg" alt="Quckcauh Logo" class="offer-logo">
                 <div class="offer-title"> <h3>Quckcauh</h3> <p>Register & Earn Bonus</p> </div>
                 <div class="offer-reward"> <img src="coin.png" alt="Coin"> <span>80</span> </div>
             </div>
-            <div class="offer-details"> 
-                <h4>How to Earn:</h4> 
-                <ul> 
-                    <li>Register using the link below. Sign-up bonus is ₹80.</li> 
-                    <li>Bind your secondary WhatsApp account for 1 day.</li> 
-                    <li>Earn ₹1 every hour. Reach ₹100 to withdraw.</li> 
-                    <li>Withdrawal options: UPI and Bank.</li> 
-                </ul> 
-                <br> 
-                <div class="offer-disclaimer"> 
-                    <strong>Disclaimer:</strong> This offer is paid directly by the advertiser. We do not track or handle payments for this specific task. 
-                </div> 
-            </div>
+            <div class="offer-details"> <h4>How to Earn:</h4> <ul> <li>Register using the link below. Sign-up bonus is ₹80.</li> <li>Bind your secondary WhatsApp account for 1 day.</li> <li>Earn ₹1 every hour. Reach ₹100 to withdraw.</li> <li>Withdrawal options: UPI and Bank.</li> </ul> <br> <div class="offer-disclaimer"> <strong>Disclaimer:</strong> This offer is paid directly by the advertiser. We do not track or handle payments for this specific task. </div> </div>
             <button class="offer-button" onclick="startOffer('https://tinyurl.com/2degtqyc')">Start Offer (Invite Code: 652968)</button>
         </div>
-
-        <!-- Offer Card 2 (Dream Share) with your exact details -->
         <div class="offer-card fade-in" style="animation-delay: 0.3s;">
-            <div class="offer-header"> 
-                <img src="dreamshare-logo.jpg" alt="Dream Share Logo" class="offer-logo">
+            <div class="offer-header"> <img src="dreamshare-logo.jpg" alt="Dream Share Logo" class="offer-logo">
                 <div class="offer-title"> <h3>Dream Share</h3> <p>Refer Friends & Earn Big</p> </div>
                 <div class="offer-reward"> <img src="coin.png" alt="Coin"> <span>11 + Refer</span> </div>
             </div>
-            <div class="offer-details"> 
-                <h4>How to Earn:</h4> 
-                <ul> 
-                    <li>Sign up for an initial bonus of ₹11.</li> 
-                    <li>Refer friends to earn ₹100 per successful referral.</li> 
-                    <li>You must bind a secondary WhatsApp account.</li> 
-                    <li><strong>User Tip:</strong> You can reuse the same WhatsApp number by adding a '0' at the beginning. Max limit 4.</li> 
-                </ul> 
-                <br> 
-                <div class="offer-disclaimer"> 
-                    <strong>Disclaimer:</strong> This is a third-party offer. For WhatsApp unban issues, please use the "Submit Review" option within WhatsApp. 
-                </div> 
-            </div>
+            <div class="offer-details"> <h4>How to Earn:</h4> <ul> <li>Sign up for an initial bonus of ₹11.</li> <li>Refer friends to earn ₹100 per successful referral.</li> <li>You must bind a secondary WhatsApp account.</li> <li><strong>User Tip:</strong> You can reuse the same WhatsApp number by adding a '0' at the beginning.</li> </ul> <br> <div class="offer-disclaimer"> <strong>Disclaimer:</strong> This is a third-party offer. For WhatsApp unban issues, please use the "Submit Review" option within WhatsApp. </div> </div>
             <button class="offer-button" onclick="startOffer('https://tinyurl.com/2cblke2v')">Start Offer</button>
         </div>
     </main>
-
-    <footer class="bottom-nav">
-        <!-- This will be populated by app.js -->
-    </footer>
-
-    <!-- This must be the FIRST script tag at the bottom -->
+    <nav class="bottom-nav"></nav>
     <script src="app.js"></script>
-    
-    <!-- This is your page-specific logic -->
     <script>
         const directLink = 'https://www.profitableratecpm.com/wcgx8tehp?key=112a38b9af1d2b59596ef2cda186f0f1';
-        
-        function startOffer(offerUrl) {
-            window.open(directLink, '_blank');
-            window.open(offerUrl, '_blank');
-        }
+        function startOffer(offerUrl) { window.open(directLink, '_blank'); window.open(offerUrl, '_blank'); }
     </script>
 </body>
 </html>
