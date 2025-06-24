@@ -5,31 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome | MONETRA</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase Config -->
     <script src="firebase-config.js"></script>
 </head>
 <body class="auth-body">
+    <!-- This is the centered, futuristic card layout -->
     <div class="auth-card-futuristic">
         <h1 id="form-title">Welcome Back</h1>
         <p id="form-subtitle">Login to continue your journey</p>
+        
         <form id="auth-form">
-            <div class="input-group hidden-field" id="name-field-group"> <input type="text" id="full-name-input" placeholder="Full Name"> </div>
-            <div class="input-group hidden-field" id="number-field-group"> <input type="tel" id="number-input" placeholder="Mobile Number"> </div>
-            <div class="input-group"> <input type="email" id="email-input" placeholder="Email" required> </div>
-            <div class="input-group"> <input type="password" id="password-input" placeholder="Password" required> </div>
+            <!-- These fields are for Registration only, hidden by default -->
+            <div class="input-group hidden-field" id="name-field-group">
+                <input type="text" id="full-name-input" placeholder="Full Name">
+            </div>
+            
+            <div class="input-group hidden-field" id="number-field-group">
+                <input type="tel" id="number-input" placeholder="Mobile Number">
+            </div>
+            
+            <!-- These fields are always visible -->
+            <div class="input-group">
+                <input type="email" id="email-input" placeholder="Email" required>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="password-input" placeholder="Password" required>
+            </div>
+            
             <p id="error-message" style="color: #ff5555; min-height: 1.2em;"></p>
+            
             <button type="submit" id="submit-btn" class="auth-btn-futuristic">Login</button>
         </form>
+        
         <p id="auth-switch-btn" class="auth-switch-futuristic">Don't have an account? <span>Sign up</span></p>
     </div>
-    <script src="app.js"></script>
+
     <script>
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         
+        // Get DOM elements
         const formTitle = document.getElementById('form-title');
         const formSubtitle = document.getElementById('form-subtitle');
         const authForm = document.getElementById('auth-form');
@@ -45,36 +69,57 @@
         
         let isLoginMode = true;
         
+        // Auth Switch Logic
         authSwitchBtn.addEventListener('click', () => {
             isLoginMode = !isLoginMode;
+            
             if (isLoginMode) {
+                // Switch to Login Mode
                 formTitle.textContent = 'Welcome Back';
                 formSubtitle.textContent = 'Login to continue your journey';
                 submitBtn.textContent = 'Login';
                 authSwitchBtn.innerHTML = "Don't have an account? <span>Sign up</span>";
-                nameFieldGroup.classList.remove('visible-field'); nameFieldGroup.classList.add('hidden-field');
-                numberFieldGroup.classList.remove('visible-field'); numberFieldGroup.classList.add('hidden-field');
+                
+                // Hide additional fields
+                nameFieldGroup.classList.remove('visible-field');
+                nameFieldGroup.classList.add('hidden-field');
+                numberFieldGroup.classList.remove('visible-field');
+                numberFieldGroup.classList.add('hidden-field');
             } else {
+                // Switch to Register Mode
                 formTitle.textContent = 'Join MONETRA';
                 formSubtitle.textContent = 'Create your account to get started';
                 submitBtn.textContent = 'Create Account';
                 authSwitchBtn.innerHTML = "Already have an account? <span>Login</span>";
-                nameFieldGroup.classList.remove('hidden-field'); nameFieldGroup.classList.add('visible-field');
-                numberFieldGroup.classList.remove('hidden-field'); numberFieldGroup.classList.add('visible-field');
+                
+                // Show additional fields
+                nameFieldGroup.classList.remove('hidden-field');
+                nameFieldGroup.classList.add('visible-field');
+                numberFieldGroup.classList.remove('hidden-field');
+                numberFieldGroup.classList.add('visible-field');
             }
             errorMessage.textContent = '';
         });
         
+        // Form Submission Logic
         authForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            
             const email = emailInput.value.trim();
             const password = passwordInput.value.trim();
             errorMessage.textContent = '';
             
             if (isLoginMode) {
+                // Login Mode
                 auth.signInWithEmailAndPassword(email, password)
-                    .catch(error => { errorMessage.textContent = error.message; });
+                    .then(userCred => {
+                        window.location.href = 'index.html';
+                    })
+                    .catch(error => {
+                        errorMessage.textContent = error.message;
+                    });
             } else {
+                // Register Mode
                 const fullName = fullNameInput.value.trim();
                 const mobileNumber = numberInput.value.trim();
                 
@@ -87,25 +132,28 @@
                     .then(userCredential => {
                         const user = userCredential.user;
                         
-                        // ** NEW: Generate the unique referral code **
-                        // We take the last 6 characters of the user's unique ID for a short, clean code.
+                        // Generate referral code
                         const uniquePart = user.uid.slice(-6).toUpperCase();
                         const referralCode = `MON${uniquePart}`;
-
+                        
                         // Update Auth profile
                         return user.updateProfile({
                             displayName: fullName
                         }).then(() => {
-                            // Save all data to Firestore, including the new referral code
+                            // Save all data to Firestore
                             return db.collection('users').doc(user.uid).set({
                                 name: fullName,
                                 email: email,
                                 phone: mobileNumber,
-                                referralCode: referralCode, // <-- ADDED THIS
+                                referralCode: referralCode,
                                 walletBalance: 0,
                                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
                             });
                         });
+                    })
+                    .then(() => {
+                        // Redirect ONLY after all data is saved
+                        window.location.href = 'index.html';
                     })
                     .catch(error => {
                         errorMessage.textContent = error.message;
