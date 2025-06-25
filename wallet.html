@@ -34,8 +34,8 @@
         .btn-redeem { background: #fff; color: #39A7A7; border: none; padding: 12px 25px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; text-decoration: none; }
         .btn-redeem:hover { transform: scale(1.05); }
 
-        /* --- NEW SIMPLIFIED TRANSACTION SECTION --- */
-        .transaction-history-card {
+        /* --- NEW SIMPLIFIED HISTORY --- */
+        .history-card {
             background: var(--card-bg);
             backdrop-filter: blur(15px);
             border-radius: 20px;
@@ -43,15 +43,17 @@
             margin-top: 30px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .transaction-history-card h3 { font-size: 1.5rem; margin-bottom: 20px; color: #f093fb; }
-        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .transaction-item:last-child { border-bottom: none; }
-        .transaction-details .title { font-weight: 600; }
-        .transaction-details .date { font-size: 0.8rem; color: var(--text-secondary); }
-        .transaction-amount { font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: 6px; }
-        .earning { color: #69E3A5; }
-        .withdrawal { color: #f5576c; }
-        #no-transactions-message { text-align: center; padding: 40px; color: var(--text-secondary); }
+        .history-card h3 { font-size: 1.5rem; margin-bottom: 20px; color: #f093fb; }
+        .request-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .request-item:last-child { border-bottom: none; }
+        .request-details .title { font-weight: 600; }
+        .request-details .date { font-size: 0.8rem; color: var(--text-secondary); }
+        .request-status { text-align: right; }
+        .request-status .amount { font-weight: 700; font-size: 1.1rem; }
+        .request-status .status { font-size: 0.8rem; font-weight: 600; padding: 4px 8px; border-radius: 5px; margin-top: 5px; }
+        .status.pending { background-color: #ffc107; color: #333; }
+        .status.completed { background-color: #28a745; color: #fff; }
+        #no-requests-message { text-align: center; padding: 40px; color: var(--text-secondary); }
         
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; padding: 5px 15px; } .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; filter: grayscale(100%) opacity(0.6); } .nav-item span { font-size: 0.7rem; }
@@ -76,12 +78,10 @@
             <a href="redeem-options.html" class="btn-redeem">REDEEM</a>
         </div>
         
-        <!-- NEW SIMPLIFIED HISTORY LIST -->
-        <div class="transaction-history-card">
-            <h3>Transaction History</h3>
-            <div id="transaction-list">
-                <!-- Transactions will be loaded here -->
-                <p id="no-transactions-message">No transactions yet.</p>
+        <div class="history-card">
+            <h3>Redemption History</h3>
+            <div id="withdrawal-history-list">
+                <p id="no-requests-message">You have not made any redemption requests yet.</p>
             </div>
         </div>
     </main>
@@ -101,7 +101,7 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Standard particle and header script (no changes needed)
+        // Standard particle and header script...
         const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let pA; class P{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.dX=dX;this.dY=dY;this.s=s;this.c=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.dX=-this.dX;if(this.y>canvas.height||this.y<0)this.dY=-this.dY;this.x+=this.dX;this.y+=this.dY;this.draw()}}
         function iP(){pA=[];let n=(canvas.height*canvas.width)/9e3;for(let i=0;i<n;i++){let s=Math.random()*2+1,x=Math.random()*(innerWidth-s*2-s*2)+s*2,y=Math.random()*(innerHeight-s*2-s*2)+s*2,dX=Math.random()*.4-.2,dY=Math.random()*.4-.2;pA.push(new P(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
@@ -122,46 +122,42 @@
                         document.getElementById('wallet-balance-main').innerHTML = `${balance} <img src="coin-icon.png" class="coin-icon">`;
                     }
                 });
-                fetchTransactions(user.uid);
+                fetchWithdrawalHistory(user.uid);
             } else { window.location.href = 'auth.html'; }
         });
 
-        // --- NEW SIMPLIFIED SCRIPT ---
-        function fetchTransactions(userId) {
-            const transactionListEl = document.getElementById('transaction-list');
-            const noTransactionsMessage = document.getElementById('no-transactions-message');
+        // --- NEW SIMPLIFIED HISTORY SCRIPT ---
+        function fetchWithdrawalHistory(userId) {
+            const historyListEl = document.getElementById('withdrawal-history-list');
+            const noRequestsMessage = document.getElementById('no-requests-message');
             
-            db.collection('transactions').where('userId', '==', userId).orderBy('timestamp', 'desc').get().then(snapshot => {
+            db.collection('withdrawal_requests').where('userId', '==', userId).orderBy('request_date', 'desc').get().then(snapshot => {
                 if (snapshot.empty) {
-                    noTransactionsMessage.style.display = 'block';
-                    transactionListEl.innerHTML = ''; // Clear any previous items
+                    noRequestsMessage.style.display = 'block';
+                    historyListEl.innerHTML = '<p id="no-requests-message">You have not made any redemption requests yet.</p>';
                     return;
                 }
                 
-                let allTransactionsHTML = '';
-                noTransactionsMessage.style.display = 'none';
-
+                let historyHTML = '';
                 snapshot.forEach(doc => {
-                    const tx = doc.data();
-                    const date = tx.timestamp.toDate().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-
-                    const amountClass = tx.type === 'withdrawal' ? 'withdrawal' : 'earning';
-                    const sign = tx.type === 'withdrawal' ? '-' : '+';
+                    const req = doc.data();
+                    const date = req.request_date.toDate().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: '2-digit', year: 'numeric' });
                     
-                    allTransactionsHTML += `
-                        <div class="transaction-item">
-                            <div class="transaction-details">
-                                <div class="title">${tx.description}</div>
+                    historyHTML += `
+                        <div class="request-item">
+                            <div class="request-details">
+                                <div class="title">${req.type}</div>
                                 <div class="date">${date}</div>
                             </div>
-                            <div class="transaction-amount ${amountClass}">
-                                ${sign}${tx.amount} <img src="coin-icon.png" class="coin-icon" style="width:16px; height:16px;">
+                            <div class="request-status">
+                                <div class="amount">₹${req.amount}</div>
+                                <div class="status ${req.status}">${req.status}</div>
                             </div>
                         </div>
                     `;
                 });
                 
-                transactionListEl.innerHTML = allTransactionsHTML;
+                historyListEl.innerHTML = historyHTML;
             });
         }
     </script>

@@ -17,20 +17,13 @@
         
         .amount-selection h3 { font-size: 1.2rem; margin-bottom: 15px; }
         .amount-options { display: flex; flex-wrap: wrap; gap: 15px; }
-        .amount-btn {
-            background: #f0f0f0; border: 1px solid #ddd; padding: 10px 20px;
-            border-radius: 10px; cursor: pointer; font-weight: 600;
-        }
+        .amount-btn { background: #f0f0f0; border: 1px solid #ddd; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; }
         .amount-btn.active { background-color: #667eea; color: #fff; border-color: #667eea; }
         
         .info-section { font-size: 0.8rem; color: #888; line-height: 1.6; }
         
         .submit-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: #fff; border-top: 1px solid #eee; }
-        .btn-submit {
-            width: 100%; background: #667eea; color: #fff; border: none; padding: 18px;
-            border-radius: 15px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
+        .btn-submit { width: 100%; background: #667eea; color: #fff; border: none; padding: 18px; border-radius: 15px; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn-submit .coin-icon { width: 20px; height: 20px; }
         .btn-submit:disabled { background-color: #ccc; }
     </style>
@@ -71,35 +64,10 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- NEW CONFIG WITH YOUR CUSTOM COIN VALUES ---
         const redeemConfig = {
-            google: {
-                title: 'Google Gift Card',
-                label: 'Enter the email id.',
-                amounts: [
-                    { rs: 10, coins: 1250 },
-                    { rs: 20, coins: 2450 },
-                    { rs: 50, coins: 5500 }
-                ]
-            },
-            amazon: {
-                title: 'Amazon Pay',
-                label: 'Enter the email id.',
-                amounts: [
-                    { rs: 10, coins: 1250 },
-                    { rs: 20, coins: 2450 },
-                    { rs: 50, coins: 5500 }
-                ]
-            },
-            upi: {
-                title: 'UPI',
-                label: 'Enter the UPI address',
-                amounts: [
-                    { rs: 10, coins: 1250 },
-                    { rs: 20, coins: 2450 },
-                    { rs: 50, coins: 5500 }
-                ]
-            }
+            google: { title: 'Google Gift Card', label: 'Enter the email id.', amounts: [{ rs: 10, coins: 1250 },{ rs: 20, coins: 2450 },{ rs: 50, coins: 5500 }] },
+            amazon: { title: 'Amazon Pay', label: 'Enter the email id.', amounts: [{ rs: 10, coins: 1250 },{ rs: 20, coins: 2450 },{ rs: 50, coins: 5500 }] },
+            upi: { title: 'UPI', label: 'Enter the UPI address', amounts: [{ rs: 10, coins: 1250 },{ rs: 20, coins: 2450 },{ rs: 50, coins: 5500 }] }
         };
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -109,7 +77,6 @@
         let selectedOption = null;
         let currentUserData = null;
 
-        // Populate dynamic content
         document.getElementById('form-title').textContent = config.title;
         document.getElementById('input-label').textContent = config.label;
         const amountOptionsContainer = document.getElementById('amount-options');
@@ -122,75 +89,47 @@
             amountOptionsContainer.appendChild(btn);
         });
 
-        // Event listeners for amount buttons
         document.querySelectorAll('.amount-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                
-                selectedOption = {
-                    amount: parseInt(btn.dataset.amount),
-                    coins: parseInt(btn.dataset.coins)
-                };
-
+                selectedOption = { amount: parseInt(btn.dataset.amount), coins: parseInt(btn.dataset.coins) };
                 document.getElementById('submit-btn').innerHTML = `<img src="coin-icon.png" class="coin-icon"> ${selectedOption.coins}`;
                 document.getElementById('submit-btn').disabled = false;
             });
         });
 
         auth.onAuthStateChanged(user => {
-            if (user) {
-                db.collection('users').doc(user.uid).get().then(doc => {
-                    if (doc.exists) currentUserData = doc.data();
-                });
-            } else { window.location.href = 'auth.html'; }
+            if (user) { db.collection('users').doc(user.uid).get().then(doc => { if (doc.exists) currentUserData = doc.data(); }); } 
+            else { window.location.href = 'auth.html'; }
         });
 
         document.getElementById('submit-btn').addEventListener('click', async () => {
             const userInput = document.getElementById('redeem-input').value.trim();
-            if (!selectedOption || !userInput) {
-                alert('Please fill in all details and select an amount.');
-                return;
-            }
+            if (!selectedOption || !userInput) { alert('Please fill in all details and select an amount.'); return; }
 
             const coinCost = selectedOption.coins;
-            if (!currentUserData || currentUserData.walletBalance < coinCost) {
-                alert('You do not have enough coins!');
-                return;
-            }
+            if (!currentUserData || currentUserData.walletBalance < coinCost) { alert('You do not have enough coins!'); return; }
             
             if (!confirm(`This will cost ${coinCost} coins. Are you sure?`)) return;
 
             const user = auth.currentUser;
             const userRef = db.collection('users').doc(user.uid);
             
-            // --- CORRECTED LOGIC: Saves to the main collection ---
             await db.collection('withdrawal_requests').add({
-                userId: user.uid,
-                userName: currentUserData.name,
-                type: config.title,
-                amount: selectedOption.amount,
-                recipient_details: userInput,
-                status: 'pending',
+                userId: user.uid, userName: currentUserData.name, type: config.title,
+                amount: selectedOption.amount, recipient_details: userInput, status: 'pending',
                 request_date: firebase.firestore.FieldValue.serverTimestamp()
             });
 
-            await db.collection('transactions').add({
-                userId: user.uid,
-                amount: coinCost,
-                description: `Redeemed ${config.title} (₹${selectedOption.amount})`,
-                type: 'withdrawal',
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
+            // NO transaction record is needed here if we only show withdrawal_requests
+            
+            await userRef.update({ walletBalance: firebase.firestore.FieldValue.increment(-coinCost) });
 
-            await userRef.update({
-                walletBalance: firebase.firestore.FieldValue.increment(-coinCost)
-            });
-
-            alert('Redemption request submitted successfully! It will be processed soon.');
+            // --- NEW, BETTER CONFIRMATION MESSAGE ---
+            alert(`Amount Claimed!\nYour request for ₹${selectedOption.amount} has been submitted successfully. Payment will be automatically done within 24 hours.`);
             window.location.href = 'wallet.html';
         });
-
     </script>
 </body>
 </html>
