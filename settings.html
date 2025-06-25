@@ -71,7 +71,7 @@
         </div>
         <div class="settings-menu">
             <a href="profile.html" class="settings-item">
-                <img src="profile-icon.png" class="settings-item-icon" alt=""> <!-- ICON UPDATED HERE -->
+                <img src="profile-icon.png" class="settings-item-icon" alt="">
                 <span>Account Details</span>
                 <span class="arrow-icon">></span>
             </a>
@@ -92,32 +92,58 @@
         </button>
     </main>
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item">
-            <img src="home-icon.png" alt="Home"><span>Home</span>
-        </a>
-        <a href="earn-more.html" class="nav-item">
-            <img src="earn-icon.png" alt="Earn"><span>Earn</span>
-        </a>
-        <a href="refer.html" class="nav-item">
-            <img src="refer-icon.png" alt="Refer"><span>Refer</span>
-        </a>
-        <a href="settings.html" class="nav-item active">
-            <img src="settings-icon.png" alt="Settings"><span>Settings</span>
-        </a>
+        <a href="index.html" class="nav-item"><img src="home-icon.png" alt="Home"><span>Home</span></a>
+        <a href="earn-more.html" class="nav-item"><img src="earn-icon.png" alt="Earn"><span>Earn</span></a>
+        <a href="refer.html" class="nav-item"><img src="refer-icon.png" alt="Refer"><span>Refer</span></a>
+        <a href="settings.html" class="nav-item active"><img src="settings-icon.png" alt="Settings"><span>Settings</span></a>
     </nav>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-        const firebaseConfig = { apiKey: "AIzaSyAqtfmxxvVhbRBX-05O1AhSGmgxK8O8ncE", authDomain: "monetra-66446.firebaseapp.com", projectId: "monetra-66446", storageBucket: "monetra-66446.appspot.com", messagingSenderId: "1081175709983", appId: "1:1081175709983:web:7baadd2aec2e7dfeb5382a" };
-        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
         const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let pA; class P{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.dX=dX;this.dY=dY;this.s=s;this.c=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.dX=-this.dX;if(this.y>canvas.height||this.y<0)this.dY=-this.dY;this.x+=this.dX;this.y+=this.dY;this.draw()}}
         function iP(){pA=[];let n=(canvas.height*canvas.width)/9e3;for(let i=0;i<n;i++){let s=Math.random()*2+1,x=Math.random()*(innerWidth-s*2-s*2)+s*2,y=Math.random()*(innerHeight-s*2-s*2)+s*2,dX=Math.random()*.4-.2,dY=Math.random()*.4-.2;pA.push(new P(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
-        function aP(){requestAnimationFrame(aP);ctx.clearRect(0,0,innerWidth,innerHeight);pA.forEach(p=>p.update())}
+        function aP(){requestAnimationFrame(aP);ctx.clearRect(0,0,innerWidth,innerHeight);if(pA)pA.forEach(p=>p.update())}
         iP();aP();window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;iP()});
-        onAuthStateChanged(auth,async u=>{if(u){const e=[{p:'user-photo-header',n:'user-name-header',e:'user-email-header'},{p:'user-photo-main',n:'user-name-main',e:'user-email-main'}];e.forEach(l=>{document.getElementById(l.e).textContent=u.email;if(u.photoURL)document.getElementById(l.p).src=u.photoURL});const dR=doc(db,"users",u.uid);const dS=await getDoc(dR);if(dS.exists()){const uD=dS.data();e.forEach(l=>{document.getElementById(l.n).textContent=uD.name||'User'});document.getElementById('wallet-balance').textContent=`₹ ${uD.walletBalance}`}else{e.forEach(l=>{document.getElementById(l.n).textContent='User'});document.getElementById('wallet-balance').textContent='₹ 0'}}else{window.location.href='auth.html'}});
-        const lO=document.getElementById('logout-btn');lO.addEventListener('click',()=>{signOut(auth).then(()=>{window.location.href='auth.html'}).catch(e=>{console.error('Sign out error',e)})});
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // Set Header Email
+                document.getElementById('user-email-header').textContent = user.email;
+                // Set Main Card Email
+                document.getElementById('user-email-main').textContent = user.email;
+
+                if (user.photoURL) {
+                    document.getElementById('user-photo-header').src = user.photoURL;
+                    document.getElementById('user-photo-main').src = user.photoURL;
+                }
+                
+                const userDocRef = db.collection('users').doc(user.uid);
+                userDocRef.get().then(doc => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        document.getElementById('user-name-header').textContent = userData.name || 'User';
+                        document.getElementById('user-name-main').textContent = userData.name || 'User';
+                        document.getElementById('wallet-balance').textContent = `₹ ${userData.walletBalance}`;
+                    } else {
+                        document.getElementById('user-name-header').textContent = 'User';
+                        document.getElementById('user-name-main').textContent = 'User';
+                        document.getElementById('wallet-balance').textContent = '₹ 0';
+                    }
+                });
+            } else { window.location.href = 'auth.html'; }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            auth.signOut().then(() => { window.location.href = 'auth.html'; });
+        });
     </script>
 </body>
 </html>

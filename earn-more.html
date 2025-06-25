@@ -60,8 +60,8 @@
         <div class="profile-info">
             <img id="user-photo" src="profile.png" alt="Profile" class="profile-pic">
             <div class="user-details">
-                <h3 id="user-name">Loading...</h3>
-                <p id="user-email">Please wait</p>
+                <h3 id="user-name-header">Loading...</h3>
+                <p id="user-email-header">Please wait</p>
             </div>
         </div>
         <div class="wallet-balance">
@@ -107,43 +107,41 @@
         <a href="settings.html" class="nav-item"><img src="settings-icon.png" alt="Settings"><span>Settings</span></a>
     </nav>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <!-- Firebase Config -->
     <script src="firebase-config.js"></script>
     <script>
-        // Particle background logic
         const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let pA; class P{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.dX=dX;this.dY=dY;this.s=s;this.c=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.dX=-this.dX;if(this.y>canvas.height||this.y<0)this.dY=-this.dY;this.x+=this.dX;this.y+=this.dY;this.draw()}}
         function iP(){pA=[];let n=(canvas.height*canvas.width)/9e3;for(let i=0;i<n;i++){let s=Math.random()*2+1,x=Math.random()*(innerWidth-s*2-s*2)+s*2,y=Math.random()*(innerHeight-s*2-s*2)+s*2,dX=Math.random()*.4-.2,dY=Math.random()*.4-.2;pA.push(new P(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
         function aP(){requestAnimationFrame(aP);ctx.clearRect(0,0,innerWidth,innerHeight);if(pA)pA.forEach(p=>p.update())}
         iP();aP();window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;iP()});
-
-        // --- FIXED DATA LOADING SCRIPT ---
+        
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                document.getElementById('user-email').textContent = user.email;
+                document.getElementById('user-email-header').textContent = user.email;
                 if (user.photoURL) document.getElementById('user-photo').src = user.photoURL;
-                db.collection('users').doc(user.uid).get().then(doc => {
+                
+                const userDocRef = db.collection('users').doc(user.uid);
+                userDocRef.get().then(doc => {
                     if (doc.exists) {
                         const userData = doc.data();
-                        document.getElementById('user-name').textContent = userData.name || 'User';
+                        document.getElementById('user-name-header').textContent = userData.name || 'User';
                         document.getElementById('wallet-balance').textContent = `₹ ${userData.walletBalance}`;
+                    } else {
+                        document.getElementById('user-name-header').textContent = 'User';
+                        document.getElementById('wallet-balance').textContent = '₹ 0';
                     }
                 });
             } else { window.location.href = 'auth.html'; }
         });
-
-        // Navigation Function
-        function viewOffer(offerId) {
-            window.location.href = `offer-details.html?offer=${offerId}`;
-        }
+        
+        function viewOffer(offerId) { window.location.href = `offer-details.html?offer=${offerId}`; }
     </script>
 </body>
 </html>

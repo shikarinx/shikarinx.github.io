@@ -44,8 +44,6 @@
 </head>
 <body>
     <canvas id="particle-canvas"></canvas>
-
-    <!-- This header is now using the correct IDs -->
     <header class="app-header">
         <div class="profile-info">
             <img id="user-photo" src="profile.png" alt="Profile" class="profile-pic">
@@ -59,7 +57,6 @@
             <span id="wallet-balance">0</span>
         </div>
     </header>
-
     <main class="app-container">
         <h2 class="section-title">Quick Actions</h2>
         <div class="actions-grid">
@@ -67,7 +64,6 @@
             <a href="earn-more.html" class="action-card"><h4>Earn More</h4><p>Complete special offers for big rewards</p></a>
         </div>
     </main>
-
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item active"><img src="home-icon.png" alt="Home"><span>Home</span></a>
         <a href="earn-more.html" class="nav-item"><img src="earn-icon.png" alt="Earn"><span>Earn</span></a>
@@ -75,37 +71,26 @@
         <a href="settings.html" class="nav-item"><img src="settings-icon.png" alt="Settings"><span>Settings</span></a>
     </nav>
 
-    <!-- These are the correct script tags to match your auth.html -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
-
-    <!-- This is the corrected script that fixes the blank screen and loading issues -->
     <script>
-        // Particle background logic
         const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let pA; class P{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.dX=dX;this.dY=dY;this.s=s;this.c=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.dX=-this.dX;if(this.y>canvas.height||this.y<0)this.dY=-this.dY;this.x+=this.dX;this.y+=this.dY;this.draw()}}
         function iP(){pA=[];let n=(canvas.height*canvas.width)/9e3;for(let i=0;i<n;i++){let s=Math.random()*2+1,x=Math.random()*(innerWidth-s*2-s*2)+s*2,y=Math.random()*(innerHeight-s*2-s*2)+s*2,dX=Math.random()*.4-.2,dY=Math.random()*.4-.2;pA.push(new P(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
         function aP(){requestAnimationFrame(aP);ctx.clearRect(0,0,innerWidth,innerHeight);if(pA)pA.forEach(p=>p.update())}
         iP();aP();window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;iP()});
-
-        // FINAL, CORRECTED SCRIPT
+        
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                // Set Email Instantly (This is the main fix)
                 document.getElementById('user-email-header').textContent = user.email;
-
-                // Set Profile Picture
-                if (user.photoURL) { // For future use
-                    document.getElementById('user-photo').src = user.photoURL;
-                }
+                if (user.photoURL) document.getElementById('user-photo').src = user.photoURL;
                 
-                // Fetch Name and Wallet from Database
                 const userDocRef = db.collection('users').doc(user.uid);
                 userDocRef.get().then(doc => {
                     if (doc.exists) {
@@ -113,15 +98,11 @@
                         document.getElementById('user-name-header').textContent = userData.name || 'User';
                         document.getElementById('wallet-balance').textContent = `₹ ${userData.walletBalance}`;
                     } else {
-                        // If no data, use defaults
                         document.getElementById('user-name-header').textContent = 'User';
                         document.getElementById('wallet-balance').textContent = '₹ 0';
                     }
                 });
-
-            } else {
-                window.location.href = 'auth.html';
-            }
+            } else { window.location.href = 'auth.html'; }
         });
     </script>
 </body>
