@@ -14,23 +14,11 @@
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.7);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--text-primary);
-            overflow-x: hidden;
-            padding-top: 80px;
-            padding-bottom: 90px;
-        }
-
+        body { font-family: 'Poppins', sans-serif; background-color: var(--dark-bg); color: var(--text-primary); overflow-x: hidden; padding-top: 80px; padding-bottom: 90px; }
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
         .app-container { padding: 0 20px; animation: fadeInUp 0.5s ease-out forwards; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- Header --- */
         .app-header { position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); z-index: 10; }
         .profile-info { display: flex; align-items: center; gap: 12px; }
         .profile-pic { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
@@ -39,30 +27,12 @@
         .wallet-balance { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-weight: 600; }
         .coin-icon { width: 20px; height: 20px; }
         #wallet-balance { font-weight: 700; color: #f093fb; font-size: 1.1rem; }
-
-        /* Content */
         .section-title { font-size: 1.5rem; font-weight: 700; margin: 30px 0 20px; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .actions-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        .action-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-decoration: none;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+        .action-card { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease; text-decoration: none; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .action-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
         .action-card h4 { font-size: 1.3rem; margin-bottom: 10px; font-weight: 600; }
         .action-card p { font-size: 0.9rem; color: var(--text-secondary); }
-
-        /* Bottom Navigation */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; padding: 5px 15px; }
         .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; filter: grayscale(100%) opacity(0.6); }
@@ -74,7 +44,6 @@
 </head>
 <body>
     <canvas id="particle-canvas"></canvas>
-
     <header class="app-header">
         <div class="profile-info">
             <img id="user-photo" src="profile.png" alt="Profile" class="profile-pic">
@@ -88,72 +57,62 @@
             <span id="wallet-balance">0</span>
         </div>
     </header>
-
     <main class="app-container">
         <h2 class="section-title">Quick Actions</h2>
         <div class="actions-grid">
-            <a href="#" class="action-card">
-                <h4>Play & Win</h4>
-                <p>Engage in fun games to earn points</p>
-            </a>
-            <a href="earn-more.html" class="action-card">
-                <h4>Earn More</h4>
-                <p>Complete special offers for big rewards</p>
-            </a>
+            <a href="#" class="action-card"><h4>Play & Win</h4><p>Engage in fun games to earn points</p></a>
+            <a href="earn-more.html" class="action-card"><h4>Earn More</h4><p>Complete special offers for big rewards</p></a>
         </div>
     </main>
-    
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active">
-            <img src="home-icon.png" alt="Home"><span>Home</span>
-        </a>
-        <a href="earn-more.html" class="nav-item">
-            <img src="earn-icon.png" alt="Earn"><span>Earn</span>
-        </a>
-        <a href="refer.html" class="nav-item">
-            <img src="refer-icon.png" alt="Refer"><span>Refer</span>
-        </a>
-        <a href="settings.html" class="nav-item">
-            <img src="settings-icon.png" alt="Settings"><span>Settings</span>
-        </a>
+        <a href="index.html" class="nav-item active"><img src="home-icon.png" alt="Home"><span>Home</span></a>
+        <a href="earn-more.html" class="nav-item"><img src="earn-icon.png" alt="Earn"><span>Earn</span></a>
+        <a href="refer.html" class="nav-item"><img src="refer-icon.png" alt="Refer"><span>Refer</span></a>
+        <a href="settings.html" class="nav-item"><img src="settings-icon.png" alt="Settings"><span>Settings</span></a>
     </nav>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
 
-        const firebaseConfig = { apiKey: "AIzaSyAqtfmxxvVhbRBX-05O1AhSGmgxK8O8ncE", authDomain: "monetra-66446.firebaseapp.com", projectId: "monetra-66446", storageBucket: "monetra-66446.appspot.com", messagingSenderId: "1081175709983", appId: "1:1081175709983:web:7baadd2aec2e7dfeb5382a" };
-        
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
+    <script>
         // Particle background logic
         const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let particlesArray; class Particle{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.directionX=dX;this.directionY=dY;this.size=s;this.color=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle=this.color;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.directionX=-this.directionX;if(this.y>canvas.height||this.y<0)this.directionY=-this.directionY;this.x+=this.directionX;this.y+=this.directionY;this.draw()}}
-        function initParticles(){particlesArray=[];let num=(canvas.height*canvas.width)/9000;for(let i=0;i<num;i++){let s=(Math.random()*2)+1,x=(Math.random()*((innerWidth-s*2)-(s*2))+s*2),y=(Math.random()*((innerHeight-s*2)-(s*2))+s*2),dX=(Math.random()*.4)-.2,dY=(Math.random()*.4)-.2;particlesArray.push(new Particle(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
-        function animateParticles(){requestAnimationFrame(animateParticles);ctx.clearRect(0,0,innerWidth,innerHeight);particlesArray.forEach(p=>p.update())}
-        initParticles();animateParticles(); window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;initParticles()});
-        
-        // --- FIXED AUTH AND DATA LOADING SCRIPT ---
-        onAuthStateChanged(auth, async (user) => {
+        let pA; class P{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.dX=dX;this.dY=dY;this.s=s;this.c=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.dX=-this.dX;if(this.y>canvas.height||this.y<0)this.dY=-this.dY;this.x+=this.dX;this.y+=this.dY;this.draw()}}
+        function iP(){pA=[];let n=(canvas.height*canvas.width)/9e3;for(let i=0;i<n;i++){let s=Math.random()*2+1,x=Math.random()*(innerWidth-s*2-s*2)+s*2,y=Math.random()*(innerHeight-s*2-s*2)+s*2,dX=Math.random()*.4-.2,dY=Math.random()*.4-.2;pA.push(new P(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
+        function aP(){requestAnimationFrame(aP);ctx.clearRect(0,0,innerWidth,innerHeight);if(pA)pA.forEach(p=>p.update())}
+        iP();aP();window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;iP()});
+
+        // --- FIXED DATA LOADING SCRIPT ---
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('user-email').textContent = user.email;
                 if (user.photoURL) {
                     document.getElementById('user-photo').src = user.photoURL;
                 }
-                const userDocRef = doc(db, "users", user.uid);
-                const userDocSnap = await getDoc(userDocRef);
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    document.getElementById('user-name').textContent = userData.name || 'User';
-                    document.getElementById('wallet-balance').textContent = `₹ ${userData.walletBalance}`;
-                } else {
-                    console.log("User document not found!");
-                    document.getElementById('user-name').textContent = 'User';
-                    document.getElementById('wallet-balance').textContent = '₹ 0';
-                }
+                
+                const userDocRef = db.collection('users').doc(user.uid);
+                userDocRef.get().then(doc => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        document.getElementById('user-name').textContent = userData.name || 'User';
+                        document.getElementById('wallet-balance').textContent = `₹ ${userData.walletBalance}`;
+                    } else {
+                        console.log("User document not found!");
+                        document.getElementById('user-name').textContent = 'User';
+                        document.getElementById('wallet-balance').textContent = '₹ 0';
+                    }
+                }).catch(error => {
+                    console.error("Error fetching user data:", error);
+                });
+
             } else {
                 window.location.href = 'auth.html';
             }
