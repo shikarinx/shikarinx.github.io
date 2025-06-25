@@ -32,7 +32,7 @@
         .balance-info p { font-size: 0.9rem; opacity: 0.9; }
         .balance-info .amount { font-size: 2.5rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .balance-info .amount .coin-icon { width: 30px; height: 30px; }
-        .btn-redeem { background: #fff; color: #39A7A7; border: none; padding: 12px 25px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
+        .btn-redeem { background: #fff; color: #39A7A7; border: none; padding: 12px 25px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; text-decoration: none; }
         .btn-redeem:hover { transform: scale(1.05); }
 
         .transaction-section h3 { font-size: 1.5rem; margin-bottom: 20px; }
@@ -85,11 +85,10 @@
         </div>
     </main>
     <nav class="bottom-nav">
-        <!-- Make sure these links are correct for your structure -->
-        <a href="index.html" class="nav-item"><img src="home-icon.png"><span>Home</span></a>
-        <a href="earn-more.html" class="nav-item"><img src="earn-icon.png"><span>Earn</span></a>
-        <a href="refer.html" class="nav-item"><img src="refer-icon.png"><span>Refer</span></a>
-        <a href="settings.html" class="nav-item active"><img src="settings-icon.png"><span>Settings</span></a>
+        <a href="index.html" class="nav-item"><img src="home-icon.png" alt="Home"><span>Home</span></a>
+        <a href="earn-more.html" class="nav-item"><img src="earn-icon.png" alt="Earn"><span>Earn</span></a>
+        <a href="refer.html" class="nav-item"><img src="refer-icon.png" alt="Refer"><span>Refer</span></a>
+        <a href="settings.html" class="nav-item active"><img src="settings-icon.png" alt="Settings"><span>Settings</span></a>
     </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -101,7 +100,6 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Standard particle and header script (no changes needed)
         const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let pA; class P{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.dX=dX;this.dY=dY;this.s=s;this.c=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.dX=-this.dX;if(this.y>canvas.height||this.y<0)this.dY=-this.dY;this.x+=this.dX;this.y+=this.dY;this.draw()}}
         function iP(){pA=[];let n=(canvas.height*canvas.width)/9e3;for(let i=0;i<n;i++){let s=Math.random()*2+1,x=Math.random()*(innerWidth-s*2-s*2)+s*2,y=Math.random()*(innerHeight-s*2-s*2)+s*2,dX=Math.random()*.4-.2,dY=Math.random()*.4-.2;pA.push(new P(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
@@ -131,7 +129,6 @@
             const withdrawalsList = document.getElementById('withdrawal-list');
             const noTransactionsMsg = document.getElementById('no-transactions-msg');
             
-            // Clear lists before fetching
             earningsList.innerHTML = '';
             withdrawalsList.innerHTML = '';
             
@@ -158,10 +155,11 @@
                             </div>
                         </div>
                     `;
-
+                    
+                    // --- THIS IS THE CORRECTED LOGIC ---
                     if (tx.type === 'earning') {
                         earningsList.innerHTML += itemHTML;
-                    } else if (tx.type === 'withdrawal') { // *** THIS IS THE FIX ***
+                    } else if (tx.type === 'withdrawal') {
                         withdrawalsList.innerHTML += itemHTML;
                     }
                 });
