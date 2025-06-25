@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Redeem Options</title>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; }
+        .header { display: flex; align-items: center; margin-bottom: 30px; }
+        .back-btn { font-size: 2rem; color: #333; text-decoration: none; }
+        h1 { font-size: 1.5rem; margin-left: 15px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .redeem-card {
+            background-color: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+            text-decoration: none;
+        }
+        .redeem-card:hover { transform: translateY(-5px); }
+        .redeem-card img { max-width: 80%; max-height: 80px; }
+        .disclaimer { margin-top: 40px; font-size: 0.8rem; color: #888; text-align: center; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="wallet.html" class="back-btn">←</a>
+        <h1>Redeem Option</h1>
+    </header>
+
+    <main>
+        <div class="options-grid">
+            <a href="redeem-form.html?type=google" class="redeem-card">
+                <img src="google-play.png" alt="Google Play">
+            </a>
+            <a href="redeem-form.html?type=amazon" class="redeem-card">
+                <img src="amazon-pay.png" alt="Amazon Pay">
+            </a>
+            <a href="redeem-form.html?type=upi" class="redeem-card">
+                <img src="upi.png" alt="UPI">
+            </a>
+        </div>
+        <p class="disclaimer">
+            The merchants featured are not sponsors or directly affiliated with MONETRA. The logos and trademarks are owned by them.
+        </p>
+    </main>
+</body>
+</html>

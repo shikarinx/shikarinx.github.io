@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Redeem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; }
+        .header { display: flex; align-items: center; margin-bottom: 30px; }
+        .back-btn { font-size: 2rem; color: #333; text-decoration: none; }
+        h1 { font-size: 1.5rem; margin-left: 15px; }
+        
+        .form-section { background: #fff; padding: 25px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        label { font-weight: 600; display: block; margin-bottom: 10px; }
+        input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #ddd; font-size: 1rem; box-sizing: border-box; }
+        
+        .amount-selection h3 { font-size: 1.2rem; margin-bottom: 15px; }
+        .amount-options { display: flex; flex-wrap: wrap; gap: 15px; }
+        .amount-btn {
+            background: #f0f0f0; border: 1px solid #ddd; padding: 10px 20px;
+            border-radius: 10px; cursor: pointer; font-weight: 600;
+        }
+        .amount-btn.active { background-color: #667eea; color: #fff; border-color: #667eea; }
+        
+        .info-section { font-size: 0.8rem; color: #888; line-height: 1.6; }
+        
+        .submit-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: #fff; border-top: 1px solid #eee; }
+        .btn-submit {
+            width: 100%; background: #667eea; color: #fff; border: none; padding: 18px;
+            border-radius: 15px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-submit .coin-icon { width: 20px; height: 20px; }
+        .btn-submit:disabled { background-color: #ccc; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="redeem-options.html" class="back-btn">←</a>
+        <h1 id="form-title">Redeem</h1>
+    </header>
+    
+    <main>
+        <div class="form-section">
+            <label id="input-label" for="redeem-input">Enter details</label>
+            <input type="text" id="redeem-input" placeholder="...">
+        </div>
+
+        <div class="form-section">
+            <h3>Select Amount</h3>
+            <div id="amount-options" class="amount-options"></div>
+        </div>
+        
+        <div class="info-section">
+            <h4 id="info-title">Convert your coins</h4>
+            <p id="info-text">Please ensure your details are valid and accurate. Incorrect details may result in the inability to receive your reward, and the points will not be refunded.</p>
+        </div>
+    </main>
+
+    <footer class="submit-container">
+        <button id="submit-btn" class="btn-submit" disabled>Select an amount</button>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // --- NEW CONFIG WITH YOUR CUSTOM COIN VALUES ---
+        const redeemConfig = {
+            google: {
+                title: 'Google Gift Card',
+                label: 'Enter the email id.',
+                amounts: [
+                    { rs: 10, coins: 1250 },
+                    { rs: 20, coins: 2450 },
+                    { rs: 50, coins: 5500 }
+                ]
+            },
+            amazon: {
+                title: 'Amazon Pay',
+                label: 'Enter the email id.',
+                amounts: [
+                    { rs: 10, coins: 1250 },
+                    { rs: 20, coins: 2450 },
+                    { rs: 50, coins: 5500 }
+                ]
+            },
+            upi: {
+                title: 'UPI',
+                label: 'Enter the UPI address',
+                amounts: [
+                    { rs: 10, coins: 1250 },
+                    { rs: 20, coins: 2450 },
+                    { rs: 50, coins: 5500 }
+                ]
+            }
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type');
+        const config = redeemConfig[type];
+        
+        let selectedOption = null;
+        let currentUserData = null;
+
+        // Populate dynamic content
+        document.getElementById('form-title').textContent = config.title;
+        document.getElementById('input-label').textContent = config.label;
+        const amountOptionsContainer = document.getElementById('amount-options');
+        config.amounts.forEach(option => {
+            const btn = document.createElement('button');
+            btn.className = 'amount-btn';
+            btn.textContent = `₹ ${option.rs}`;
+            btn.dataset.amount = option.rs;
+            btn.dataset.coins = option.coins;
+            amountOptionsContainer.appendChild(btn);
+        });
+
+        // Event listeners for amount buttons
+        document.querySelectorAll('.amount-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                selectedOption = {
+                    amount: parseInt(btn.dataset.amount),
+                    coins: parseInt(btn.dataset.coins)
+                };
+
+                document.getElementById('submit-btn').innerHTML = `<img src="coin-icon.png" class="coin-icon"> ${selectedOption.coins}`;
+                document.getElementById('submit-btn').disabled = false;
+            });
+        });
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if (doc.exists) currentUserData = doc.data();
+                });
+            } else { window.location.href = 'auth.html'; }
+        });
+
+        document.getElementById('submit-btn').addEventListener('click', async () => {
+            const userInput = document.getElementById('redeem-input').value.trim();
+            if (!selectedOption || !userInput) {
+                alert('Please fill in all details and select an amount.');
+                return;
+            }
+
+            const coinCost = selectedOption.coins;
+            if (!currentUserData || currentUserData.walletBalance < coinCost) {
+                alert('You do not have enough coins!');
+                return;
+            }
+            
+            if (!confirm(`This will cost ${coinCost} coins. Are you sure?`)) return;
+
+            const user = auth.currentUser;
+            const userRef = db.collection('users').doc(user.uid);
+            
+            // --- CORRECTED LOGIC: Saves to the main collection ---
+            await db.collection('withdrawal_requests').add({
+                userId: user.uid,
+                userName: currentUserData.name,
+                type: config.title,
+                amount: selectedOption.amount,
+                recipient_details: userInput,
+                status: 'pending',
+                request_date: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            await db.collection('transactions').add({
+                userId: user.uid,
+                amount: coinCost,
+                description: `Redeemed ${config.title} (₹${selectedOption.amount})`,
+                type: 'withdrawal',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            await userRef.update({
+                walletBalance: firebase.firestore.FieldValue.increment(-coinCost)
+            });
+
+            alert('Redemption request submitted successfully! It will be processed soon.');
+            window.location.href = 'wallet.html';
+        });
+
+    </script>
+</body>
+</html>
