@@ -26,7 +26,7 @@
         .user-details p { font-size: 0.8rem; color: var(--text-secondary); }
         .wallet-balance { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-weight: 600; }
         .coin-icon { width: 20px; height: 20px; }
-        #wallet-balance { font-weight: 700; color: #f093fb; font-size: 1.1rem; }
+        #wallet-balance { font-weight: 700; font-size: 1.1rem; }
         .settings-profile-card { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px; padding: 25px; margin-top: 20px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); }
         .settings-profile-card .profile-pic { width: 80px; height: 80px; margin: 0 auto 15px; border-width: 3px; }
         .settings-profile-card h3 { font-size: 1.5rem; }
@@ -80,7 +80,8 @@
                 <span>Wallet History</span>
                 <span class="arrow-icon">></span>
             </a>
-             <a href="#" class="settings-item">
+             <!-- LINK TO TELEGRAM SUPPORT -->
+             <a href="https://t.me/MON_SUPPORT" target="_blank" class="settings-item">
                 <img src="help-icon.png" class="settings-item-icon" alt="">
                 <span>Help & Support</span>
                 <span class="arrow-icon">></span>
@@ -115,9 +116,7 @@
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                // Set Header Email
                 document.getElementById('user-email-header').textContent = user.email;
-                // Set Main Card Email
                 document.getElementById('user-email-main').textContent = user.email;
 
                 if (user.photoURL) {
@@ -131,11 +130,14 @@
                         const userData = doc.data();
                         document.getElementById('user-name-header').textContent = userData.name || 'User';
                         document.getElementById('user-name-main').textContent = userData.name || 'User';
-                        document.getElementById('wallet-balance').textContent = `₹ ${userData.walletBalance}`;
+                        
+                        // --- THIS IS THE FIX ---
+                        // It now shows the number without the currency symbol
+                        document.getElementById('wallet-balance').textContent = userData.walletBalance || 0;
                     } else {
                         document.getElementById('user-name-header').textContent = 'User';
                         document.getElementById('user-name-main').textContent = 'User';
-                        document.getElementById('wallet-balance').textContent = '₹ 0';
+                        document.getElementById('wallet-balance').textContent = 0;
                     }
                 });
             } else { window.location.href = 'auth.html'; }
