@@ -101,37 +101,51 @@
         function aP(){requestAnimationFrame(aP);ctx.clearRect(0,0,innerWidth,innerHeight);if(pA)pA.forEach(p=>p.update())}
         iP();aP();window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;iP()});
         
-        // --- FIXED DATA LOADING SCRIPT ---
+        // --- FINAL, CORRECTED SCRIPT ---
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         let currentUser = null;
 
+        // Function to populate all user data on the page
+        function populateProfileData(userData, authUser) {
+            // Header elements
+            document.getElementById('user-name-header').textContent = userData.name || 'User';
+            document.getElementById('user-email-header').textContent = authUser.email;
+            document.getElementById('wallet-balance').textContent = `₹ ${userData.walletBalance}`;
+            if (authUser.photoURL) { // Or use your default profile.png
+                document.getElementById('user-photo').src = authUser.photoURL;
+            }
+
+            // Main profile card elements
+            document.getElementById('name-value').textContent = userData.name || 'Not set';
+            document.getElementById('email-value').textContent = userData.email || 'Not set';
+            document.getElementById('phone-value').textContent = userData.phone || 'Not set';
+            document.getElementById('name-input').value = userData.name || '';
+        }
+
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUser = user;
-                // Header
-                document.getElementById('user-email-header').textContent = user.email;
-                if (user.photoURL) document.getElementById('user-photo').src = user.photoURL;
-
                 const userDocRef = db.collection('users').doc(user.uid);
+                
                 userDocRef.get().then(doc => {
                     if (doc.exists) {
-                        const userData = doc.data();
-                        document.getElementById('user-name-header').textContent = userData.name || 'User';
-                        document.getElementById('wallet-balance').textContent = `₹ ${userData.walletBalance}`;
-                        
-                        // Profile page data
-                        document.getElementById('name-value').textContent = userData.name || 'Not set';
-                        document.getElementById('email-value').textContent = userData.email || 'Not set';
-                        document.getElementById('phone-value').textContent = userData.phone || 'Not set';
-                        document.getElementById('name-input').value = userData.name || '';
-                    } else { window.location.href = 'auth.html'; }
+                        // THIS IS THE FIX: Call the populate function AFTER data is fetched
+                        populateProfileData(doc.data(), user);
+                    } else {
+                        console.error("User document not found in Firestore!");
+                        // Handle case where user exists in Auth but not Firestore
+                    }
+                }).catch(error => {
+                    console.error("Error fetching user data:", error);
                 });
-            } else { window.location.href = 'auth.html'; }
+            } else {
+                window.location.href = 'auth.html';
+            }
         });
 
-        // Edit/Save Logic
+        // Edit/Save Logic (no changes needed here)
         const editBtn = document.getElementById('edit-name-btn');
         const saveBtn = document.getElementById('save-name-btn');
         const nameValue = document.getElementById('name-value');
