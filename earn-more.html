@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>MONETRA - Earn More</title>
-    <!-- The CSS from index.html is copied here for self-containment -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,44 +11,74 @@
             --secondary-gradient: linear-gradient(135deg, #f093fb, #f5576c);
             --dark-bg: #0a0e27;
             --card-bg: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--dark-bg); color: #fff; overflow-x: hidden; padding-top: 80px; padding-bottom: 90px; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--dark-bg); color: var(--text-primary); overflow-x: hidden; padding-top: 80px; padding-bottom: 90px; }
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        .app-container { padding: 0 20px; animation: fadeInUp 0.5s ease-out forwards; }
+        .app-container { padding: 0 15px; animation: fadeInUp 0.5s ease-out forwards; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .app-header { position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); z-index: 10; }
-        .profile-info { display: flex; align-items: center; }
-        .profile-pic { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-right: 15px; }
-        .user-details h3 { font-size: 1.1rem; font-weight: 600; }
-        .user-details p { font-size: 0.8rem; color: rgba(255, 255, 255, 0.7); }
-        .wallet-balance { background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-weight: 600; }
-        .wallet-balance span { font-weight: 700; color: #f093fb; margin-left: 5px; }
-        .section-title { font-size: 1.5rem; font-weight: 700; margin: 30px 0 20px; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
+        /* --- Header --- */
+        .app-header { position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); z-index: 10; }
+        .profile-info { display: flex; align-items: center; gap: 12px; }
+        .profile-pic { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
+        .user-details h3 { font-size: 1.1rem; font-weight: 600; line-height: 1.2; }
+        .user-details p { font-size: 0.8rem; color: var(--text-secondary); }
+        .wallet-balance { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-weight: 600; }
+        .coin-icon { width: 20px; height: 20px; }
+        #wallet-balance { font-weight: 700; color: #f093fb; font-size: 1.1rem; }
+
+        /* --- Content --- */
+        .section-title { font-size: 1.5rem; font-weight: 700; margin: 30px 0 20px; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; padding-left: 5px; }
         .offers-list { display: flex; flex-direction: column; gap: 20px; }
-        .offer-card { 
-            background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px;
-            padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
+        
+        .offer-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex; align-items: center; justify-content: space-between;
         }
         .offer-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+        
+        .offer-main { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .offer-icon { width: 50px; height: 50px; border-radius: 12px; object-fit: cover; }
+        .offer-details { flex-grow: 1; }
         .offer-details h4 { font-size: 1.1rem; font-weight: 600; }
-        .offer-details p { font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); }
-        .btn-offer {
-            padding: 10px 20px; border: none; border-radius: 10px;
-            background: var(--secondary-gradient); color: #fff; font-weight: 600;
-            cursor: pointer; transition: transform 0.2s; white-space: nowrap;
+        .offer-details p { font-size: 0.85rem; color: var(--text-secondary); }
+        .offer-reward {
+            background-color: #00aaff;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
         }
-        .btn-offer:hover { transform: scale(1.05); }
+        .btn-offer {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: var(--secondary-gradient);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-offer:hover { transform: scale(1.02); }
 
+        /* --- Bottom Navigation --- */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: rgba(255, 255, 255, 0.6); text-decoration: none; padding: 5px 15px; border-radius: 10px; transition: all 0.3s ease; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; padding: 5px 15px; }
         .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; filter: grayscale(100%) opacity(0.6); }
         .nav-item span { font-size: 0.7rem; }
-        .nav-item.active { color: #fff; }
-        .nav-item.active img { filter: grayscale(0%) opacity(1); }
+        .nav-item.active { color: var(--text-primary); }
+        .nav-item.active img { filter: none; }
         .nav-item.active span { font-weight: 600; }
     </style>
 </head>
@@ -61,11 +90,12 @@
             <img id="user-photo" src="profile.png" alt="Profile" class="profile-pic">
             <div class="user-details">
                 <h3 id="user-name">Loading...</h3>
-                <p>Welcome Back</p>
+                <p id="user-email">Please wait</p>
             </div>
         </div>
         <div class="wallet-balance">
-            PTS: <span id="wallet-balance">0</span>
+            <img src="coin-icon.png" class="coin-icon" alt="coin">
+            <span id="wallet-balance">0</span>
         </div>
     </header>
 
@@ -73,16 +103,24 @@
         <h2 class="section-title">Trending Offers</h2>
         <div class="offers-list">
             <div class="offer-card">
-                <div class="offer-details">
-                    <h4>Quckcauh</h4>
-                    <p>Complete a quick survey for points.</p>
+                <div class="offer-main">
+                    <img src="quckcauh-logo.png" alt="Quckcauh" class="offer-icon">
+                    <div class="offer-details">
+                        <h4>Quckcauh</h4>
+                        <p>Register & Earn Bonus</p>
+                    </div>
+                    <div class="offer-reward">₹80</div>
                 </div>
                 <button class="btn-offer" onclick="startOffer('https://example.com/quckcauh-offer')">Start Offer</button>
             </div>
             <div class="offer-card">
-                <div class="offer-details">
-                    <h4>Dream Share</h4>
-                    <p>Install and reach level 5.</p>
+                <div class="offer-main">
+                    <img src="dreamshare-logo.png" alt="Dream Share" class="offer-icon">
+                    <div class="offer-details">
+                        <h4>Dream Share</h4>
+                        <p>Refer & Earn</p>
+                    </div>
+                    <div class="offer-reward">₹11 + Refer</div>
                 </div>
                 <button class="btn-offer" onclick="startOffer('https://example.com/dreamshare-offer')">Start Offer</button>
             </div>
@@ -91,88 +129,64 @@
     
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item">
-            <img src="home-icon.png" alt="Home">
-            <span>Home</span>
+            <img src="home-icon.png" alt="Home"><span>Home</span>
         </a>
         <a href="earn-more.html" class="nav-item active">
-            <img src="earn-icon.png" alt="Earn">
-            <span>Earn</span>
+            <img src="earn-icon.png" alt="Earn"><span>Earn</span>
         </a>
         <a href="refer.html" class="nav-item">
-            <img src="refer-icon.png" alt="Refer">
-            <span>Refer</span>
+            <img src="refer-icon.png" alt="Refer"><span>Refer</span>
         </a>
         <a href="settings.html" class="nav-item">
-            <img src="settings-icon.png" alt="Settings">
-            <span>Settings</span>
+            <img src="settings-icon.png" alt="Settings"><span>Settings</span>
         </a>
     </nav>
 
     <script type="module">
-        // Firebase and Particle JS are identical to index.html and are included here.
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAqtfmxxvVhbRBX-05O1AhSGmgxK8O8ncE",
-            authDomain: "monetra-66446.firebaseapp.com",
-            projectId: "monetra-66446",
-            storageBucket: "monetra-66446.appspot.com",
-            messagingSenderId: "1081175709983",
-            appId: "1:1081175709983:web:7baadd2aec2e7dfeb5382a"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyAqtfmxxvVhbRBX-05O1AhSGmgxK8O8ncE", authDomain: "monetra-66446.firebaseapp.com", projectId: "monetra-66446", storageBucket: "monetra-66446.appspot.com", messagingSenderId: "1081175709983", appId: "1:1081175709983:web:7baadd2aec2e7dfeb5382a" };
         
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Particle background logic
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let particlesArray;
-        class Particle {
-            constructor(x, y, dX, dY, s, c) { this.x=x; this.y=y; this.directionX=dX; this.directionY=dY; this.size=s; this.color=c; }
-            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle=this.color; ctx.fill(); }
-            update() {
-                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
-                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
-                this.x += this.directionX; this.y += this.directionY; this.draw();
-            }
-        }
-        function initParticles() {
-            particlesArray = []; let num = (canvas.height * canvas.width) / 9000;
-            for (let i = 0; i < num; i++) {
-                let s = (Math.random() * 2) + 1, x = (Math.random() * ((innerWidth - s * 2) - (s * 2)) + s * 2), y = (Math.random() * ((innerHeight - s * 2) - (s * 2)) + s * 2), dX = (Math.random() * .4) - .2, dY = (Math.random() * .4) - .2;
-                particlesArray.push(new Particle(x, y, dX, dY, s, 'rgba(102, 126, 234, 0.6)'));
-            }
-        }
-        function animateParticles() { requestAnimationFrame(animateParticles); ctx.clearRect(0, 0, innerWidth, innerHeight); particlesArray.forEach(p => p.update()); }
-        initParticles(); animateParticles();
-        window.addEventListener('resize', () => { canvas.width = innerWidth; canvas.height = innerHeight; initParticles(); });
+        // Particle background logic (No changes needed)
+        const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let particlesArray; class Particle{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.directionX=dX;this.directionY=dY;this.size=s;this.color=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle=this.color;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.directionX=-this.directionX;if(this.y>canvas.height||this.y<0)this.directionY=-this.directionY;this.x+=this.directionX;this.y+=this.directionY;this.draw()}}
+        function initParticles(){particlesArray=[];let num=(canvas.height*canvas.width)/9000;for(let i=0;i<num;i++){let s=(Math.random()*2)+1,x=(Math.random()*((innerWidth-s*2)-(s*2))+s*2),y=(Math.random()*((innerHeight-s*2)-(s*2))+s*2),dX=(Math.random()*.4)-.2,dY=(Math.random()*.4)-.2;particlesArray.push(new Particle(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
+        function animateParticles(){requestAnimationFrame(animateParticles);ctx.clearRect(0,0,innerWidth,innerHeight);particlesArray.forEach(p=>p.update())}
+        initParticles();animateParticles(); window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;initParticles()});
         
-        // Auth state and data fetching logic
+        // --- FIXED AUTH AND DATA LOADING SCRIPT ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                document.getElementById('user-email').textContent = user.email;
+                if (user.photoURL) {
+                    document.getElementById('user-photo').src = user.photoURL;
+                }
                 const userDocRef = doc(db, "users", user.uid);
                 const userDocSnap = await getDoc(userDocRef);
                 if (userDocSnap.exists()) {
                     const userData = userDocSnap.data();
-                    document.getElementById('user-name').textContent = userData.name;
-                    document.getElementById('wallet-balance').textContent = userData.walletBalance;
-                    if (user.photoURL) document.getElementById('user-photo').src = user.photoURL;
-                } else { window.location.href = 'auth.html'; }
-            } else { window.location.href = 'auth.html'; }
+                    document.getElementById('user-name').textContent = userData.name || 'User';
+                    document.getElementById('wallet-balance').textContent = `₹ ${userData.walletBalance}`;
+                } else {
+                    console.log("User document not found!");
+                    document.getElementById('user-name').textContent = 'User';
+                    document.getElementById('wallet-balance').textContent = '₹ 0';
+                }
+            } else {
+                window.location.href = 'auth.html';
+            }
         });
         
         // Offer functionality
         const adsterraDirectLink = "https://www.profitableratecpm.com/wcgx8tehp?key=112a38b9af1d2b59596ef2cda186f0f1";
-        
         window.startOffer = function(specificOfferUrl) {
-            // Open Adsterra link in a new tab
             window.open(adsterraDirectLink, '_blank');
-            // Open the specific offer link in another new tab
             window.open(specificOfferUrl, '_blank');
         }
     </script>
