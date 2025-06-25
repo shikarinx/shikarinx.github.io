@@ -49,7 +49,7 @@
         .transaction-amount { font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: 6px; }
         .transaction-amount.earning { color: #69E3A5; }
         .transaction-amount.withdrawal { color: #f5576c; }
-        #no-transactions-msg { text-align: center; padding: 40px; color: var(--text-secondary); }
+        .no-items-msg { text-align: center; padding: 40px; color: var(--text-secondary); display: none; }
         
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; padding: 5px 15px; } .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; filter: grayscale(100%) opacity(0.6); } .nav-item span { font-size: 0.7rem; }
@@ -79,9 +79,12 @@
                 <div class="tab active" data-tab="earning">EARNING</div>
                 <div class="tab" data-tab="withdrawal">WITHDRAWAL</div>
             </div>
-            <div id="earning-list" class="transaction-list active"></div>
-            <div id="withdrawal-list" class="transaction-list"></div>
-            <p id="no-transactions-msg" style="display: none;">No transactions yet.</p>
+            <div id="earning-list" class="transaction-list active">
+                <p class="no-items-msg">No earnings yet.</p>
+            </div>
+            <div id="withdrawal-list" class="transaction-list">
+                <p class="no-items-msg">No withdrawals yet.</p>
+            </div>
         </div>
     </main>
     <nav class="bottom-nav">
@@ -127,22 +130,14 @@
         function fetchTransactions(userId) {
             const earningsList = document.getElementById('earning-list');
             const withdrawalsList = document.getElementById('withdrawal-list');
-            const noTransactionsMsg = document.getElementById('no-transactions-msg');
-            
-            earningsList.innerHTML = '';
-            withdrawalsList.innerHTML = '';
             
             db.collection('transactions').where('userId', '==', userId).orderBy('timestamp', 'desc').get().then(snapshot => {
-                if (snapshot.empty) {
-                    noTransactionsMsg.style.display = 'block';
-                    return;
-                }
-                
-                noTransactionsMsg.style.display = 'none';
+                let earningsHTML = [];
+                let withdrawalsHTML = [];
 
                 snapshot.forEach(doc => {
                     const tx = doc.data();
-                    const date = tx.timestamp.toDate().toLocaleString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    const date = tx.timestamp.toDate().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
                     const itemHTML = `
                         <div class="transaction-item">
@@ -156,13 +151,25 @@
                         </div>
                     `;
                     
-                    // --- THIS IS THE CORRECTED LOGIC ---
                     if (tx.type === 'earning') {
-                        earningsList.innerHTML += itemHTML;
+                        earningsHTML.push(itemHTML);
                     } else if (tx.type === 'withdrawal') {
-                        withdrawalsList.innerHTML += itemHTML;
+                        withdrawalsHTML.push(itemHTML);
                     }
                 });
+                
+                // --- THIS IS THE CORRECTED DISPLAY LOGIC ---
+                if (earningsHTML.length > 0) {
+                    earningsList.innerHTML = earningsHTML.join('');
+                } else {
+                    earningsList.querySelector('.no-items-msg').style.display = 'block';
+                }
+
+                if (withdrawalsHTML.length > 0) {
+                    withdrawalsList.innerHTML = withdrawalsHTML.join('');
+                } else {
+                    withdrawalsList.querySelector('.no-items-msg').style.display = 'block';
+                }
             });
         }
 
