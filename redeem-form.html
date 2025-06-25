@@ -17,13 +17,20 @@
         
         .amount-selection h3 { font-size: 1.2rem; margin-bottom: 15px; }
         .amount-options { display: flex; flex-wrap: wrap; gap: 15px; }
-        .amount-btn { background: #f0f0f0; border: 1px solid #ddd; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+        .amount-btn {
+            background: #f0f0f0; border: 1px solid #ddd; padding: 10px 20px;
+            border-radius: 10px; cursor: pointer; font-weight: 600;
+        }
         .amount-btn.active { background-color: #667eea; color: #fff; border-color: #667eea; }
         
         .info-section { font-size: 0.8rem; color: #888; line-height: 1.6; }
         
         .submit-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: #fff; border-top: 1px solid #eee; }
-        .btn-submit { width: 100%; background: #667eea; color: #fff; border: none; padding: 18px; border-radius: 15px; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-submit {
+            width: 100%; background: #667eea; color: #fff; border: none; padding: 18px;
+            border-radius: 15px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
         .btn-submit .coin-icon { width: 20px; height: 20px; }
         .btn-submit:disabled { background-color: #ccc; }
     </style>
@@ -64,10 +71,44 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // --- UPDATED CONFIG WITH YOUR NEW VALUES ---
         const redeemConfig = {
-            google: { title: 'Google Gift Card', label: 'Enter the email id.', amounts: [{ rs: 10, coins: 1250 },{ rs: 20, coins: 2450 },{ rs: 50, coins: 5500 }] },
-            amazon: { title: 'Amazon Pay', label: 'Enter the email id.', amounts: [{ rs: 10, coins: 1250 },{ rs: 20, coins: 2450 },{ rs: 50, coins: 5500 }] },
-            upi: { title: 'UPI', label: 'Enter the UPI address', amounts: [{ rs: 10, coins: 1250 },{ rs: 20, coins: 2450 },{ rs: 50, coins: 5500 }] }
+            google: {
+                title: 'Google Gift Card',
+                label: 'Enter the email id.',
+                amounts: [
+                    { rs: 10, coins: 1250 },
+                    { rs: 20, coins: 2450 },
+                    { rs: 50, coins: 5500 },
+                    { rs: 100, coins: 11500 }, // New
+                    { rs: 200, coins: 21500 }, // New
+                    { rs: 500, coins: 52000 }  // New
+                ]
+            },
+            amazon: {
+                title: 'Amazon Pay',
+                label: 'Enter the email id.',
+                amounts: [
+                    { rs: 10, coins: 1250 },
+                    { rs: 20, coins: 2450 },
+                    { rs: 50, coins: 5500 },
+                    { rs: 100, coins: 11500 }, // New
+                    { rs: 200, coins: 21500 }, // New
+                    { rs: 500, coins: 52000 }  // New
+                ]
+            },
+            upi: {
+                title: 'UPI',
+                label: 'Enter the UPI address',
+                amounts: [
+                    { rs: 10, coins: 1250 },
+                    { rs: 20, coins: 2450 },
+                    { rs: 50, coins: 5500 },
+                    { rs: 100, coins: 11500 }, // New
+                    { rs: 200, coins: 21500 }, // New
+                    { rs: 500, coins: 52000 }  // New
+                ]
+            }
         };
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -121,12 +162,9 @@
                 amount: selectedOption.amount, recipient_details: userInput, status: 'pending',
                 request_date: firebase.firestore.FieldValue.serverTimestamp()
             });
-
-            // NO transaction record is needed here if we only show withdrawal_requests
             
             await userRef.update({ walletBalance: firebase.firestore.FieldValue.increment(-coinCost) });
 
-            // --- NEW, BETTER CONFIRMATION MESSAGE ---
             alert(`Amount Claimed!\nYour request for ₹${selectedOption.amount} has been submitted successfully. Payment will be automatically done within 24 hours.`);
             window.location.href = 'wallet.html';
         });
