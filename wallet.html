@@ -21,23 +21,13 @@
         .app-container { padding: 0 15px; animation: fadeInUp 0.5s ease-out forwards; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        .app-header { /* ... Standard header CSS ... */ position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); z-index: 10; }
+        .app-header { position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); z-index: 10; }
         .profile-info { display: flex; align-items: center; gap: 12px; } .profile-pic { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
         .user-details h3 { font-size: 1.1rem; font-weight: 600; } .user-details p { font-size: 0.8rem; color: var(--text-secondary); }
         .wallet-balance { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-weight: 600; }
         .coin-icon { width: 20px; height: 20px; } #wallet-balance { font-weight: 700; }
 
-        /* Wallet Content */
-        .balance-card {
-            background: var(--green-gradient);
-            border-radius: 20px;
-            padding: 25px;
-            margin: 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: transform 0.3s ease;
-        }
+        .balance-card { background: var(--green-gradient); border-radius: 20px; padding: 25px; margin: 20px 0; display: flex; justify-content: space-between; align-items: center; transition: transform 0.3s ease; }
         .balance-card:hover { transform: translateY(-5px); }
         .balance-info p { font-size: 0.9rem; opacity: 0.9; }
         .balance-info .amount { font-size: 2.5rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
@@ -61,7 +51,7 @@
         .transaction-amount.withdrawal { color: #f5576c; }
         #no-transactions-msg { text-align: center; padding: 40px; color: var(--text-secondary); }
         
-        .bottom-nav { /* ... Standard bottom nav CSS ... */ position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; padding: 5px 15px; } .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; filter: grayscale(100%) opacity(0.6); } .nav-item span { font-size: 0.7rem; }
         .nav-item.active { color: var(--text-primary); } .nav-item.active img { filter: none; } .nav-item.active span { font-weight: 600; }
     </style>
@@ -95,10 +85,11 @@
         </div>
     </main>
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item">...</a>
-        <a href="earn-more.html" class="nav-item">...</a>
-        <a href="refer.html" class="nav-item">...</a>
-        <a href="settings.html" class="nav-item active">...</a>
+        <!-- Make sure these links are correct for your structure -->
+        <a href="index.html" class="nav-item"><img src="home-icon.png"><span>Home</span></a>
+        <a href="earn-more.html" class="nav-item"><img src="earn-icon.png"><span>Earn</span></a>
+        <a href="refer.html" class="nav-item"><img src="refer-icon.png"><span>Refer</span></a>
+        <a href="settings.html" class="nav-item active"><img src="settings-icon.png"><span>Settings</span></a>
     </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -106,14 +97,19 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script>
-        // ... Standard particle and header script (no changes) ...
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // Standard particle and header script (no changes needed)
+        const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let pA; class P{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.dX=dX;this.dY=dY;this.s=s;this.c=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.dX=-this.dX;if(this.y>canvas.height||this.y<0)this.dY=-this.dY;this.x+=this.dX;this.y+=this.dY;this.draw()}}
+        function iP(){pA=[];let n=(canvas.height*canvas.width)/9e3;for(let i=0;i<n;i++){let s=Math.random()*2+1,x=Math.random()*(innerWidth-s*2-s*2)+s*2,y=Math.random()*(innerHeight-s*2-s*2)+s*2,dX=Math.random()*.4-.2,dY=Math.random()*.4-.2;pA.push(new P(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
+        function aP(){requestAnimationFrame(aP);ctx.clearRect(0,0,innerWidth,innerHeight);if(pA)pA.forEach(p=>p.update())}
+        iP();aP();window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;iP()});
+
         auth.onAuthStateChanged(user => {
             if (user) {
-                // Header population
                 document.getElementById('user-email-header').textContent = user.email;
                 if (user.photoURL) document.getElementById('user-photo').src = user.photoURL;
                 const userDocRef = db.collection('users').doc(user.uid);
@@ -126,8 +122,6 @@
                         document.getElementById('wallet-balance-main').innerHTML = `${balance} <img src="coin-icon.png" class="coin-icon">`;
                     }
                 });
-
-                // Fetch and display transactions
                 fetchTransactions(user.uid);
             } else { window.location.href = 'auth.html'; }
         });
@@ -137,12 +131,18 @@
             const withdrawalsList = document.getElementById('withdrawal-list');
             const noTransactionsMsg = document.getElementById('no-transactions-msg');
             
+            // Clear lists before fetching
+            earningsList.innerHTML = '';
+            withdrawalsList.innerHTML = '';
+            
             db.collection('transactions').where('userId', '==', userId).orderBy('timestamp', 'desc').get().then(snapshot => {
                 if (snapshot.empty) {
                     noTransactionsMsg.style.display = 'block';
                     return;
                 }
                 
+                noTransactionsMsg.style.display = 'none';
+
                 snapshot.forEach(doc => {
                     const tx = doc.data();
                     const date = tx.timestamp.toDate().toLocaleString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -154,21 +154,20 @@
                                 <div class="date">${date}</div>
                             </div>
                             <div class="transaction-amount ${tx.type}">
-                                ${tx.type === 'withdrawal' ? '-' : ''}${tx.amount} <img src="coin-icon.png" class="coin-icon" style="width:16px; height:16px;">
+                                ${tx.type === 'withdrawal' ? '-' : '+'}${tx.amount} <img src="coin-icon.png" class="coin-icon" style="width:16px; height:16px;">
                             </div>
                         </div>
                     `;
 
                     if (tx.type === 'earning') {
                         earningsList.innerHTML += itemHTML;
-                    } else {
+                    } else if (tx.type === 'withdrawal') { // *** THIS IS THE FIX ***
                         withdrawalsList.innerHTML += itemHTML;
                     }
                 });
             });
         }
 
-        // Tab switching logic
         const tabs = document.querySelectorAll('.tab');
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
