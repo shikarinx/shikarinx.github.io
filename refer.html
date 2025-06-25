@@ -27,13 +27,58 @@
         .wallet-balance { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-weight: 600; }
         .coin-icon { width: 20px; height: 20px; }
         #wallet-balance { font-weight: 700; color: #f093fb; font-size: 1.1rem; }
+        
         .section-title { font-size: 1.5rem; font-weight: 700; margin: 30px 0 20px; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .referral-card { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px; padding: 40px 25px; border: 1px solid rgba(255, 255, 255, 0.1); margin-top: 20px; }
+        .referral-card { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px; padding: 30px 25px; border: 1px solid rgba(255, 255, 255, 0.1); margin-top: 20px; }
         .referral-card p { font-size: 1rem; color: rgba(255,255,255,0.8); margin-bottom: 25px; }
         .referral-code-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; border: 2px dashed rgba(255,255,255,0.3); margin-bottom: 25px; }
         #referral-code { font-size: 1.8rem; font-weight: 700; letter-spacing: 4px; }
         .btn-copy { width: 100%; padding: 15px; border: none; border-radius: 10px; background: var(--secondary-gradient); color: #fff; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
-        .btn-copy:hover { transform: translateY(-3px); }
+        
+        /* --- NEW STYLES FOR REFERRAL LIST --- */
+        .referrals-list-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 30px;
+            text-align: left;
+        }
+        .referrals-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .referrals-header h4 {
+            font-size: 1.2rem;
+            color: #f093fb;
+        }
+        .referrals-count {
+            background-color: rgba(0,0,0,0.3);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        #referred-friends-list .friend-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        #referred-friends-list .friend-item:last-child {
+            border-bottom: none;
+        }
+        .friend-item .friend-name {
+            font-weight: 500;
+        }
+        #no-referrals-message {
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 20px 0;
+        }
+
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; padding: 5px 15px; }
         .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; filter: grayscale(100%) opacity(0.6); }
@@ -61,11 +106,23 @@
     <main class="app-container">
         <h2 class="section-title">Refer & Earn</h2>
         <div class="referral-card">
-            <p>Share your code with friends. You both get bonus points!</p>
+            <p>Share your code with friends. You get 200 coins for each successful referral!</p>
             <div class="referral-code-box">
                 <span id="referral-code">LOADING...</span>
             </div>
             <button id="copy-btn" class="btn-copy">Copy Code</button>
+        </div>
+
+        <!-- NEW REFERRAL LIST SECTION -->
+        <div class="referrals-list-card">
+            <div class="referrals-header">
+                <h4>Referred Friends</h4>
+                <div class="referrals-count" id="referrals-count">0</div>
+            </div>
+            <div id="referred-friends-list">
+                <!-- Friends will be listed here by the script -->
+                <p id="no-referrals-message">You haven't referred any friends yet.</p>
+            </div>
         </div>
     </main>
     <nav class="bottom-nav">
@@ -89,12 +146,16 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-
+        
         const referralCodeEl = document.getElementById('referral-code');
         const copyBtn = document.getElementById('copy-btn');
-        
+        const referralsCountEl = document.getElementById('referrals-count');
+        const referredFriendsListEl = document.getElementById('referred-friends-list');
+        const noReferralsMessage = document.getElementById('no-referrals-message');
+
         auth.onAuthStateChanged(user => {
             if (user) {
+                // --- Part 1: Populate Header and Referral Code ---
                 document.getElementById('user-email-header').textContent = user.email;
                 if (user.photoURL) document.getElementById('user-photo').src = user.photoURL;
                 
@@ -111,6 +172,37 @@
                         referralCodeEl.textContent = 'N/A';
                     }
                 });
+
+                // --- Part 2: Fetch and Display Referred Friends ---
+                const referralsQuery = db.collection('referrals').where('referrerUid', '==', user.uid);
+
+                referralsQuery.get().then(querySnapshot => {
+                    const referralsCount = querySnapshot.size;
+                    referralsCountEl.textContent = referralsCount;
+
+                    if (referralsCount > 0) {
+                        noReferralsMessage.style.display = 'none'; // Hide the 'no referrals' message
+                        referredFriendsListEl.innerHTML = ''; // Clear the list
+
+                        querySnapshot.forEach(doc => {
+                            const referralData = doc.data();
+                            const friendItem = document.createElement('div');
+                            friendItem.className = 'friend-item';
+                            
+                            const friendName = document.createElement('span');
+                            friendName.className = 'friend-name';
+                            friendName.textContent = referralData.newUserName || 'A friend';
+                            
+                            friendItem.appendChild(friendName);
+                            referredFriendsListEl.appendChild(friendItem);
+                        });
+                    } else {
+                        noReferralsMessage.style.display = 'block'; // Show the 'no referrals' message
+                    }
+                }).catch(error => {
+                    console.error("Error getting referrals: ", error);
+                });
+
             } else { window.location.href = 'auth.html'; }
         });
 

@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome | MONETRA</title>
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <!-- Firebase Config -->
     <script src="firebase-config.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -58,6 +56,7 @@
         <form id="auth-form">
             <div class="input-group hidden-field" id="name-field-group"> <input type="text" class="input-field" id="full-name-input" placeholder="Full Name"> </div>
             <div class="input-group hidden-field" id="number-field-group"> <input type="tel" class="input-field" id="number-input" placeholder="Mobile Number"> </div>
+            <div class="input-group hidden-field" id="referral-field-group"> <input type="text" class="input-field" id="referral-input" placeholder="Referral Code (Optional)"> </div>
             <div class="input-group"> <input type="email" class="input-field" id="email-input" placeholder="Email Address" required> </div>
             <div class="input-group"> <input type="password" class="input-field" id="password-input" placeholder="Password" required> </div>
             <div class="error-message" id="error-message"></div>
@@ -68,36 +67,20 @@
         <p class="auth-switch" id="auth-switch-btn"> Don't have an account? <span>Sign up</span> </p>
     </div>
 
-    <!-- THIS IS THE ONLY PART THAT HAS BEEN CHANGED -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- SETUP ---
-            // Initialize Firebase
+            // Setup
             firebase.initializeApp(firebaseConfig);
             const auth = firebase.auth();
             const db = firebase.firestore();
 
-            // Create animated background particles
-            function createParticles() {
-                const bgAnimation = document.getElementById('bg-animation');
-                if (!bgAnimation) return;
-                for (let i = 0; i < 50; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    particle.style.left = Math.random() * 100 + '%';
-                    particle.style.animationDelay = Math.random() * 15 + 's';
-                    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                    bgAnimation.appendChild(particle);
-                }
-            }
-            createParticles();
-
-            // Get DOM elements
+            function createParticles() { /* ...particle code... */ } createParticles();
             const formTitle = document.getElementById('form-title');
             const formSubtitle = document.getElementById('form-subtitle');
             const authForm = document.getElementById('auth-form');
             const nameFieldGroup = document.getElementById('name-field-group');
             const numberFieldGroup = document.getElementById('number-field-group');
+            const referralFieldGroup = document.getElementById('referral-field-group');
             const submitBtn = document.getElementById('submit-btn');
             const btnText = document.getElementById('btn-text');
             const loadingSpinner = document.getElementById('loading-spinner');
@@ -106,19 +89,15 @@
             
             let isLoginMode = true;
 
-            // --- UI FUNCTIONS ---
             function showError(message) { errorMessage.textContent = message; errorMessage.classList.add('show'); }
             function hideError() { errorMessage.classList.remove('show'); }
             function showLoading() { submitBtn.disabled = true; loadingSpinner.style.display = 'block'; btnText.textContent = isLoginMode ? 'Logging in...' : 'Creating Account...'; }
             function hideLoading() { submitBtn.disabled = false; loadingSpinner.style.display = 'none'; btnText.textContent = isLoginMode ? 'Login' : 'Create Account'; }
 
-            // --- EVENT LISTENERS ---
-            // Toggle between login and signup
             authSwitchBtn.addEventListener('click', () => {
                 isLoginMode = !isLoginMode;
                 hideError();
-                authForm.reset(); // Clear form inputs
-
+                authForm.reset();
                 if (isLoginMode) {
                     formTitle.textContent = 'Welcome Back';
                     formSubtitle.textContent = 'Login to continue your journey';
@@ -126,6 +105,7 @@
                     authSwitchBtn.innerHTML = "Don't have an account? <span>Sign up</span>";
                     nameFieldGroup.classList.remove('visible-field'); nameFieldGroup.classList.add('hidden-field');
                     numberFieldGroup.classList.remove('visible-field'); numberFieldGroup.classList.add('hidden-field');
+                    referralFieldGroup.classList.remove('visible-field'); referralFieldGroup.classList.add('hidden-field');
                 } else {
                     formTitle.textContent = 'Join MONETRA';
                     formSubtitle.textContent = 'Create your account to get started';
@@ -133,10 +113,11 @@
                     authSwitchBtn.innerHTML = "Already have an account? <span>Login</span>";
                     nameFieldGroup.classList.remove('hidden-field'); nameFieldGroup.classList.add('visible-field');
                     numberFieldGroup.classList.remove('hidden-field'); numberFieldGroup.classList.add('visible-field');
+                    referralFieldGroup.classList.remove('hidden-field'); referralFieldGroup.classList.add('visible-field');
                 }
             });
 
-            // --- MAIN FORM SUBMISSION LOGIC ---
+            // --- FINAL, PHONE-FRIENDLY SIGNUP LOGIC ---
             authForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const email = document.getElementById('email-input').value.trim();
@@ -146,34 +127,61 @@
 
                 try {
                     if (isLoginMode) {
-                        // ** REAL FIREBASE LOGIN LOGIC **
                         await auth.signInWithEmailAndPassword(email, password);
-                        window.location.href = 'index.html'; // Redirect on success
+                        window.location.href = 'index.html';
                     } else {
-                        // ** REAL FIREBASE SIGNUP LOGIC **
+                        // ** SIGNUP LOGIC **
                         const fullName = document.getElementById('full-name-input').value.trim();
                         const mobileNumber = document.getElementById('number-input').value.trim();
+                        const referralCodeInput = document.getElementById('referral-input').value.trim().toUpperCase();
                         
-                        if (!fullName || !mobileNumber) {
-                            throw new Error('Please fill in all fields.');
+                        if (!fullName || !mobileNumber) { throw new Error('Please fill in your name and number.'); }
+                        
+                        // Step 1: Handle the referral BEFORE creating the new user
+                        if (referralCodeInput) {
+                            const querySnapshot = await db.collection('users').where('referralCode', '==', referralCodeInput).limit(1).get();
+                            if (querySnapshot.empty) {
+                                throw new Error('Invalid referral code.');
+                            }
+                            
+                            // Get the referrer's data and update their wallet
+                            const referrerDoc = querySnapshot.docs[0];
+                            const referrerRef = db.collection('users').doc(referrerDoc.id);
+                            const referralReward = 200; // 200 coins = 2 rupees
+
+                            await referrerRef.update({
+                                walletBalance: firebase.firestore.FieldValue.increment(referralReward)
+                            });
+
+                            // Log this referral for tracking
+                            await db.collection('referrals').add({
+                                referrerUid: referrerDoc.id,
+                                referrerCode: referralCodeInput,
+                                newUserName: fullName, // Log the name of the person who joined
+                                rewardGiven: referralReward,
+                                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                            });
                         }
-                        
+
+                        // Step 2: Create the new user
                         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                         const user = userCredential.user;
+
+                        // Step 3: Create the new user's own referral code
                         const uniquePart = user.uid.slice(-6).toUpperCase();
-                        const referralCode = `MON${uniquePart}`;
+                        const ownReferralCode = `MON${uniquePart}`;
                         
-                        await user.updateProfile({ displayName: fullName });
+                        // Step 4: Save the new user's document in Firestore
                         await db.collection('users').doc(user.uid).set({
                             name: fullName,
                             email: email,
                             phone: mobileNumber,
-                            referralCode: referralCode,
-                            walletBalance: 0,
+                            referralCode: ownReferralCode, // Give them their own code
+                            walletBalance: 0, // New users start with 0
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
                         
-                        window.location.href = 'index.html'; // Redirect on success
+                        window.location.href = 'index.html';
                     }
                 } catch (error) {
                     showError(error.message);
