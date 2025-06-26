@@ -6,16 +6,60 @@
     <title>Offer Details - MONETRA</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS is unchanged */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
+            --secondary-gradient: linear-gradient(135deg, #f093fb, #f5576c);
+            --dark-bg: #0a0e27;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--dark-bg); color: var(--text-primary); overflow-x: hidden; padding-top: 80px; padding-bottom: 90px; }
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .app-container { padding: 0 15px; animation: fadeInUp 0.5s ease-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .app-header { position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); z-index: 10; }
+        .profile-info { display: flex; align-items: center; gap: 12px; } .profile-pic { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
+        .user-details h3 { font-size: 1.1rem; font-weight: 600; } .user-details p { font-size: 0.8rem; color: var(--text-secondary); }
+        .wallet-balance { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-weight: 600; }
+        .coin-icon { width: 20px; height: 20px; } #wallet-balance { font-weight: 700; }
+
+        .offer-banner-container { margin-top: 20px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.2); transition: transform 0.3s ease; }
+        .offer-banner-container:hover { transform: translateY(-5px); }
+        #offer-banner-img { width: 100%; display: block; }
+        
+        .details-card { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px; padding: 25px; margin-top: 25px; border: 1px solid rgba(255, 255, 255, 0.1); transition: transform 0.3s ease; }
+        .details-card:hover { transform: translateY(-10px); }
+        .details-card h2 { font-size: 1.8rem; margin-bottom: 15px; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .details-card h4 { font-size: 1.1rem; margin-top: 20px; margin-bottom: 10px; color: #f093fb; }
+        .details-card p, .details-card li { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+        .details-card ul { padding-left: 20px; }
+
+        .open-offer-btn { width: 100%; padding: 15px; margin-top: 30px; border: none; border-radius: 15px; background: var(--secondary-gradient); color: var(--text-primary); font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .open-offer-btn:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(240, 147, 251, 0.3); }
     </style>
 </head>
 <body>
     <canvas id="particle-canvas"></canvas>
     <header class="app-header">
-        <!-- Header HTML is unchanged -->
+        <div class="profile-info">
+            <img id="user-photo" src="profile.png" alt="Profile" class="profile-pic">
+            <div class="user-details"><h3 id="user-name">...</h3><p id="user-email">...</p></div>
+        </div>
+        <div class="wallet-balance"><img src="coin-icon.png" class="coin-icon"><span id="wallet-balance">0</span></div>
     </header>
     <main class="app-container">
-        <!-- Main content HTML is unchanged -->
+        <div class="offer-banner-container">
+            <img id="offer-banner-img" src="" alt="Offer Banner">
+        </div>
+        <div class="details-card">
+            <h2 id="offer-title">Loading Offer...</h2>
+            <h4>How to Complete:</h4>
+            <ul id="offer-instructions"><li>Loading steps...</li></ul>
+        </div>
+        <button id="open-offer-btn" class="open-offer-btn">Open Offer</button>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -27,8 +71,13 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Particle script...
-        
+        // Particle Script
+        const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let pA; class P{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.dX=dX;this.dY=dY;this.s=s;this.c=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.dX=-this.dX;if(this.y>canvas.height||this.y<0)this.dY=-this.dY;this.x+=this.dX;this.y+=this.dY;this.draw()}}
+        function iP(){pA=[];let n=(canvas.height*canvas.width)/9e3;for(let i=0;i<n;i++){let s=Math.random()*2+1,x=Math.random()*(innerWidth-s*2-s*2)+s*2,y=Math.random()*(innerHeight-s*2-s*2)+s*2,dX=Math.random()*.4-.2,dY=Math.random()*.4-.2;pA.push(new P(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
+        function aP(){requestAnimationFrame(aP);ctx.clearRect(0,0,innerWidth,innerHeight);if(pA)pA.forEach(p=>p.update())}
+        iP();aP();window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;iP()});
+
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.collection('users').doc(user.uid).get().then(doc => {
@@ -36,14 +85,13 @@
                         const userData = doc.data();
                         document.getElementById('user-name').textContent = userData.name || 'User';
                         document.getElementById('user-email').textContent = user.email;
-                        // --- FIX: REMOVED THE "₹" SIGN ---
                         document.getElementById('wallet-balance').textContent = userData.walletBalance || 0;
                     }
                 });
             } else { window.location.href = 'auth.html'; }
         });
         
-        // --- UPDATED OFFER INSTRUCTIONS ---
+        // UPDATED OFFER INSTRUCTIONS
         const offerData = {
             quckcauh: {
                 title: "Quckcauh Survey",
