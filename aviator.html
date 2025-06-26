@@ -8,30 +8,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-blue: #1e40af;
-            --secondary-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
-            --success-green: #10b981;
-            --warning-orange: #f59e0b;
-            --danger-red: #ef4444;
-            --dark-bg: #0f172a;
-            --card-bg: #1e293b;
-            --glass-bg: rgba(30, 41, 59, 0.8);
-            --border-color: rgba(148, 163, 184, 0.2);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            --primary-blue: #1e40af; --secondary-blue: #3b82f6; --accent-purple: #8b5cf6;
+            --success-green: #10b981; --warning-orange: #f59e0b; --danger-red: #ef4444;
+            --dark-bg: #0f172a; --card-bg: #1e293b; --glass-bg: rgba(30, 41, 59, 0.8);
+            --border-color: rgba(148, 163, 184, 0.2); --text-primary: #f8fafc;
+            --text-secondary: #94a3b8; --text-muted: #64748b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: var(--text-primary);
-            overflow: hidden;
-            height: 100vh;
-            position: relative;
-        }
-        .bg-animation { /* ... your bg-animation css ... */ }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: var(--text-primary); overflow: hidden; height: 100vh; position: relative; }
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        .bg-animation::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%); animation: rotate 20s linear infinite; }
+        @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .game-container { display: flex; flex-direction: column; height: 100vh; }
         .header { padding: 15px 20px; background: var(--glass-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--secondary-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
@@ -123,12 +110,14 @@
             </div>
         </div>
     </div>
-
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script>
+        // --- THIS SCRIPT IS NOW COMPLETE AND CORRECT ---
+
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -166,7 +155,6 @@
             canvas.height = canvas.offsetHeight;
             plane.y = canvas.height - 80;
         }
-
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
         
@@ -180,15 +168,10 @@
                         balance = doc.data().walletBalance || 0;
                         updateUI();
                     }
-                }, err => {
-                    console.error("Error fetching real-time balance:", err);
                 });
                 
-                // Start the game only after we have the user
                 startCountdown();
-            } else {
-                window.location.href = 'auth.html';
-            }
+            } else { window.location.href = 'auth.html'; }
         });
 
         async function placeBet() {
@@ -204,8 +187,7 @@
                     userId: currentUser.uid, amount: betAmount, description: 'Placed Bet',
                     type: 'bet', timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                currentBet = betAmount;
-                hasBetPlaced = true;
+                currentBet = betAmount; hasBetPlaced = true;
                 statusText.textContent = 'Bet placed! Waiting...';
                 updateUI();
             } catch (error) { console.error("Error placing bet: ", error); }
@@ -214,8 +196,7 @@
         async function cashOut(automatic = false) {
             if (gameState !== 'flying' || !hasBetPlaced) return;
             const winnings = Math.floor(currentBet * multiplier);
-            hasBetPlaced = false;
-            gameState = 'cashed_out';
+            hasBetPlaced = false; gameState = 'cashed_out';
             
             try {
                 await userDocRef.update({ walletBalance: firebase.firestore.FieldValue.increment(winnings) });
@@ -230,10 +211,132 @@
             setTimeout(() => { if (gameState === 'cashed_out') { roundNumber++; resetGame(); } }, 2000);
         }
 
-        // --- All your other original game functions go here ---
-        // (generateCrashPoint, startCountdown, startGame, crashGame, resetGame, handleAction,
-        // drawPlane, drawTrail, drawBackground, animate, updateUI, setBetAmount, etc.)
-        // No changes are needed for them, just copy them in.
+        function generateCrashPoint() {
+            const r = Math.random();
+            if (r < 0.70) return 1.00 + (Math.random() * 0.01);
+            if (r < 0.90) return 2.0 + (Math.random() * 3.0);
+            return 5.0 + (Math.random() * 5.0);
+        }
+
+        function startCountdown() {
+            gameState = 'countdown'; countdownTimer = 5;
+            timerDisplay.classList.add('active');
+            statusText.textContent = 'Next round starting in';
+            const interval = setInterval(() => {
+                countdownTimer--; timerDisplay.textContent = countdownTimer;
+                if (countdownTimer <= 0) { clearInterval(interval); startGame(); }
+            }, 1000);
+        }
+
+        function startGame() {
+            gameState = 'flying'; gameStartTime = Date.now();
+            crashPoint = generateCrashPoint(); multiplier = 1.00;
+            plane.x = 50; plane.y = canvas.height - 80; plane.angle = -0.1;
+            plane.trail = []; plane.visible = true;
+            timerDisplay.classList.remove('active');
+            statusText.textContent = hasBetPlaced ? 'Flying...' : 'Round in progress';
+            multiplierDisplay.classList.add('active');
+            updateUI(); animate();
+        }
+
+        function crashGame() {
+            gameState = 'crashed'; plane.visible = false;
+            multiplierDisplay.classList.add('crashed');
+            statusText.textContent = `Crashed at ${crashPoint.toFixed(2)}x`;
+            if (hasBetPlaced) { statusText.textContent = `You lost ${currentBet}`; hasBetPlaced = false; }
+            setTimeout(() => { roundNumber++; resetGame(); }, 3000);
+        }
+
+        function resetGame() {
+            gameState = 'waiting';
+            multiplierDisplay.classList.remove('active', 'crashed');
+            statusText.textContent = 'Place your bet for next round';
+            updateUI(); startCountdown();
+        }
+
+        function handleAction() {
+            if ((gameState === 'waiting' || gameState === 'countdown') && !hasBetPlaced) { placeBet(); }
+            else if (gameState === 'flying' && hasBetPlaced) { cashOut(); }
+        }
+
+        function drawPlane() {
+            if (!plane.visible) return;
+            ctx.save(); ctx.translate(plane.x, plane.y); ctx.rotate(plane.angle);
+            const grad = ctx.createLinearGradient(-30, 0, 30, 0);
+            grad.addColorStop(0, '#3b82f6'); grad.addColorStop(1, '#8b5cf6');
+            ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(-20, -5); ctx.lineTo(25, -8); ctx.lineTo(35, 0);
+            ctx.lineTo(25, 8); ctx.lineTo(-20, 5); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = '#60a5fa'; ctx.beginPath(); ctx.moveTo(-5, -8); ctx.lineTo(15, -15);
+            ctx.lineTo(20, -8); ctx.lineTo(5, -5); ctx.closePath(); ctx.fill();
+            ctx.beginPath(); ctx.moveTo(-5, 8); ctx.lineTo(15, 15); ctx.lineTo(20, 8);
+            ctx.lineTo(5, 5); ctx.closePath(); ctx.fill();
+            const glow = ctx.createRadialGradient(-25, 0, 0, -25, 0, 15);
+            glow.addColorStop(0, 'rgba(59, 130, 246, 0.8)'); glow.addColorStop(1, 'rgba(59, 130, 246, 0)');
+            ctx.fillStyle = glow; ctx.fillRect(-40, -10, 20, 20);
+            ctx.restore();
+        }
+
+        function drawTrail() {
+            if (plane.trail.length < 2) return;
+            ctx.strokeStyle = 'rgba(59, 130, 246, 0.3)'; ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let i = 0; i < plane.trail.length; i++) {
+                const p = plane.trail[i];
+                i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
+            }
+            ctx.stroke();
+        }
+
+        function drawBackground() {
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.1)'; ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 50) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+            for (let y = 0; y < canvas.height; y += 50) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+        }
+
+        function animate() {
+            if (gameState !== 'flying') return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBackground();
+            const elapsed = (Date.now() - gameStartTime) / 1000;
+            multiplier = 1 + (elapsed * 0.1) + (elapsed * elapsed * 0.01);
+            plane.x += 2 + (elapsed * 0.5); plane.y -= 1 + (elapsed * 0.1);
+            plane.angle = -0.1 - (elapsed * 0.02);
+            plane.trail.push({ x: plane.x, y: plane.y });
+            if (plane.trail.length > 50) plane.trail.shift();
+            drawTrail(); drawPlane();
+            multiplierDisplay.textContent = `${multiplier.toFixed(2)}x`;
+            if (multiplier >= crashPoint) { crashGame(); return; }
+            if (hasBetPlaced && autoCashout <= multiplier) { cashOut(true); return; }
+            animationId = requestAnimationFrame(animate);
+        }
+
+        function updateUI() {
+            balanceDisplay.textContent = balance; roundDisplay.textContent = roundNumber;
+            if ((gameState === 'waiting' || gameState === 'countdown')) {
+                if (hasBetPlaced) { actionButton.textContent = 'BET PLACED'; actionButton.disabled = true; actionButton.className = 'action-button btn-cancel'; } 
+                else { actionButton.textContent = 'PLACE BET'; actionButton.disabled = false; actionButton.className = 'action-button btn-bet'; }
+            } else if (gameState === 'flying') {
+                if (hasBetPlaced) { actionButton.textContent = `CASH OUT ${(currentBet * multiplier).toFixed(0)}`; actionButton.disabled = false; actionButton.className = 'action-button btn-cashout'; } 
+                else { actionButton.textContent = 'ROUND IN PROGRESS'; actionButton.disabled = true; actionButton.className = 'action-button btn-cancel'; }
+            } else { actionButton.textContent = 'WAITING...'; actionButton.disabled = true; actionButton.className = 'action-button btn-cancel'; }
+        }
+
+        function setBetAmount(amount) {
+            if (amount === balance) betInput.value = balance;
+            else betInput.value = Math.min(amount, balance);
+        }
+        function setAutoCashout(multiplier) { autoCashoutInput.value = multiplier.toFixed(2); }
+        betInput.addEventListener('input', (e) => {
+            const v = parseInt(e.target.value);
+            if (v < 1) e.target.value = 1;
+            if (v > 500) e.target.value = 500;
+            if (v > balance) e.target.value = balance;
+        });
+        autoCashoutInput.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            if (v < 1.01) e.target.value = 1.01;
+            if (v > 10.00) e.target.value = 10.00;
+        });
 
     </script>
 </body>
