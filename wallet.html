@@ -6,7 +6,7 @@
     <title>MONETRA - My Wallet</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ... CSS is unchanged ... */
+        :root { /* ... CSS is unchanged ... */ }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background-color: #0a0e27; color: #ffffff; overflow-x: hidden; padding-top: 80px; padding-bottom: 90px; }
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
@@ -32,7 +32,7 @@
         .request-details .date { font-size: 0.8rem; color: rgba(255, 255, 255, 0.7); }
         .request-status { text-align: right; }
         .request-status .amount { font-weight: 700; font-size: 1.1rem; }
-        .request-status .status { font-size: 0.8rem; font-weight: 600; padding: 4px 8px; border-radius: 5px; margin-top: 5px; display: inline-block; }
+        .request-status .status { font-size: 0.8rem; font-weight: 600; padding: 4px 8px; border-radius: 5px; margin-top: 5px; display: inline-block; text-transform: capitalize; }
         .status.pending { background-color: #ffc107; color: #333; }
         .status.completed { background-color: #28a745; color: #fff; }
         #no-requests-message { text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.7); }
@@ -75,7 +75,13 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- SCRIPT TO FETCH AND DISPLAY WALLET DATA ---
+        // Standard particle and header script...
+        const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let pA; class P{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.dX=dX;this.dY=dY;this.s=s;this.c=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.dX=-this.dX;if(this.y>canvas.height||this.y<0)this.dY=-this.dY;this.x+=this.dX;this.y+=this.dY;this.draw()}}
+        function iP(){pA=[];let n=(canvas.height*canvas.width)/9e3;for(let i=0;i<n;i++){let s=Math.random()*2+1,x=Math.random()*(innerWidth-s*2-s*2)+s*2,y=Math.random()*(innerHeight-s*2-s*2)+s*2,dX=Math.random()*.4-.2,dY=Math.random()*.4-.2;pA.push(new P(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
+        function aP(){requestAnimationFrame(aP);ctx.clearRect(0,0,innerWidth,innerHeight);if(pA)pA.forEach(p=>p.update())}
+        iP();aP();window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;iP()});
+
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.collection('users').doc(user.uid).get().then(doc => {
@@ -92,6 +98,7 @@
             } else { window.location.href = 'auth.html'; }
         });
 
+        // --- SCRIPT TO FETCH AND DISPLAY WITHDRAWAL HISTORY ---
         function fetchWithdrawalHistory(userId) {
             const historyListEl = document.getElementById('withdrawal-history-list');
             
@@ -120,6 +127,10 @@
                     `;
                 });
                 historyListEl.innerHTML = historyHTML;
+            }).catch(error => {
+                // This will help us see if there is still a problem
+                console.error("Error fetching withdrawal history: ", error);
+                historyListEl.innerHTML = '<p id="no-requests-message">Could not load history. Please try again later.</p>';
             });
         }
     </script>
