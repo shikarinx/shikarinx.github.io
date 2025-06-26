@@ -6,14 +6,7 @@
     <title>MONETRA - Settings</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
-            --secondary-gradient: linear-gradient(135deg, #f093fb, #f5576c);
-            --dark-bg: #0a0e27;
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-        }
+        :root { --primary-gradient: linear-gradient(135deg, #667eea, #764ba2); --secondary-gradient: linear-gradient(135deg, #f093fb, #f5576c); --dark-bg: #0a0e27; --card-bg: rgba(255, 255, 255, 0.1); --text-primary: #ffffff; --text-secondary: rgba(255, 255, 255, 0.7); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--dark-bg); color: var(--text-primary); overflow-x: hidden; padding-top: 80px; padding-bottom: 90px; }
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
@@ -26,7 +19,7 @@
         .user-details p { font-size: 0.8rem; color: var(--text-secondary); }
         .wallet-balance { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-weight: 600; }
         .coin-icon { width: 20px; height: 20px; }
-        #wallet-balance { font-weight: 700; font-size: 1.1rem; }
+        #wallet-balance { font-weight: 700; }
         .settings-profile-card { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px; padding: 25px; margin-top: 20px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); }
         .settings-profile-card .profile-pic { width: 80px; height: 80px; margin: 0 auto 15px; border-width: 3px; }
         .settings-profile-card h3 { font-size: 1.5rem; }
@@ -53,44 +46,21 @@
     <header class="app-header">
         <div class="profile-info">
             <img id="user-photo-header" src="profile.png" alt="Profile" class="profile-pic">
-            <div class="user-details">
-                <h3 id="user-name-header">Loading...</h3>
-                <p id="user-email-header">Please wait</p>
-            </div>
+            <div class="user-details"><h3 id="user-name-header">...</h3><p id="user-email-header">...</p></div>
         </div>
-        <div class="wallet-balance">
-            <img src="coin-icon.png" class="coin-icon" alt="coin">
-            <span id="wallet-balance">0</span>
-        </div>
+        <div class="wallet-balance"><img src="coin-icon.png" class="coin-icon"><span id="wallet-balance">0</span></div>
     </header>
     <main class="app-container">
         <div class="settings-profile-card">
             <img id="user-photo-main" src="profile.png" alt="Profile" class="profile-pic">
-            <h3 id="user-name-main">Loading...</h3>
-            <p id="user-email-main">Please wait</p>
+            <h3 id="user-name-main">...</h3><p id="user-email-main">...</p>
         </div>
         <div class="settings-menu">
-            <a href="profile.html" class="settings-item">
-                <img src="profile-icon.png" class="settings-item-icon" alt="">
-                <span>Account Details</span>
-                <span class="arrow-icon">></span>
-            </a>
-            <a href="wallet.html" class="settings-item">
-                <img src="wallet-icon.png" class="settings-item-icon" alt="">
-                <span>Wallet History</span>
-                <span class="arrow-icon">></span>
-            </a>
-             <!-- LINK TO TELEGRAM SUPPORT -->
-             <a href="https://t.me/MON_SUPPORT" target="_blank" class="settings-item">
-                <img src="help-icon.png" class="settings-item-icon" alt="">
-                <span>Help & Support</span>
-                <span class="arrow-icon">></span>
-            </a>
+            <a href="profile.html" class="settings-item"><img src="profile-icon.png" class="settings-item-icon" alt=""><span>Account Details</span><span class="arrow-icon">></span></a>
+            <a href="wallet.html" class="settings-item"><img src="wallet-icon.png" class="settings-item-icon" alt=""><span>Wallet History</span><span class="arrow-icon">></span></a>
+            <a href="https://t.me/MON_SUPPORT" target="_blank" class="settings-item"><img src="help-icon.png" class="settings-item-icon" alt=""><span>Help & Support</span><span class="arrow-icon">></span></a>
         </div>
-        <button id="logout-btn" class="logout-btn">
-            <img src="logout-icon.png" class="settings-item-icon" alt="">
-            <span>Logout</span>
-        </button>
+        <button id="logout-btn" class="logout-btn"><img src="logout-icon.png" class="settings-item-icon" alt=""><span>Logout</span></button>
     </main>
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item"><img src="home-icon.png" alt="Home"><span>Home</span></a>
@@ -98,54 +68,36 @@
         <a href="refer.html" class="nav-item"><img src="refer-icon.png" alt="Refer"><span>Refer</span></a>
         <a href="settings.html" class="nav-item active"><img src="settings-icon.png" alt="Settings"><span>Settings</span></a>
     </nav>
-
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script>
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        // Particle Script
         const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let pA; class P{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.dX=dX;this.dY=dY;this.s=s;this.c=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.dX=-this.dX;if(this.y>canvas.height||this.y<0)this.dY=-this.dY;this.x+=this.dX;this.y+=this.dY;this.draw()}}
         function iP(){pA=[];let n=(canvas.height*canvas.width)/9e3;for(let i=0;i<n;i++){let s=Math.random()*2+1,x=Math.random()*(innerWidth-s*2-s*2)+s*2,y=Math.random()*(innerHeight-s*2-s*2)+s*2,dX=Math.random()*.4-.2,dY=Math.random()*.4-.2;pA.push(new P(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
         function aP(){requestAnimationFrame(aP);ctx.clearRect(0,0,innerWidth,innerHeight);if(pA)pA.forEach(p=>p.update())}
         iP();aP();window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;iP()});
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
         auth.onAuthStateChanged(user => {
             if (user) {
-                document.getElementById('user-email-header').textContent = user.email;
-                document.getElementById('user-email-main').textContent = user.email;
-
-                if (user.photoURL) {
-                    document.getElementById('user-photo-header').src = user.photoURL;
-                    document.getElementById('user-photo-main').src = user.photoURL;
-                }
-                
-                const userDocRef = db.collection('users').doc(user.uid);
-                userDocRef.get().then(doc => {
+                db.collection('users').doc(user.uid).get().then(doc => {
                     if (doc.exists) {
                         const userData = doc.data();
                         document.getElementById('user-name-header').textContent = userData.name || 'User';
+                        document.getElementById('user-email-header').textContent = user.email;
                         document.getElementById('user-name-main').textContent = userData.name || 'User';
-                        
-                        // --- THIS IS THE FIX ---
-                        // It now shows the number without the currency symbol
+                        document.getElementById('user-email-main').textContent = user.email;
                         document.getElementById('wallet-balance').textContent = userData.walletBalance || 0;
-                    } else {
-                        document.getElementById('user-name-header').textContent = 'User';
-                        document.getElementById('user-name-main').textContent = 'User';
-                        document.getElementById('wallet-balance').textContent = 0;
                     }
                 });
             } else { window.location.href = 'auth.html'; }
         });
-
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            auth.signOut().then(() => { window.location.href = 'auth.html'; });
-        });
+        document.getElementById('logout-btn').addEventListener('click', () => { auth.signOut().then(() => { window.location.href = 'auth.html'; }); });
     </script>
 </body>
 </html>
