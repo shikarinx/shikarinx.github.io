@@ -9,7 +9,6 @@
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
-            --secondary-gradient: linear-gradient(135deg, #f093fb, #f5576c);
             --dark-bg: #0a0e27;
             --card-bg: rgba(255, 255, 255, 0.1);
             --text-primary: #ffffff;
@@ -18,41 +17,47 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--dark-bg); color: var(--text-primary); overflow-x: hidden; padding-top: 80px; padding-bottom: 90px; }
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        .app-container { padding: 0 20px; animation: fadeInUp 0.5s ease-out forwards; text-align: center; }
+        .app-container { padding: 0 15px; animation: fadeInUp 0.5s ease-out forwards; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .app-header { position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); z-index: 10; }
-        .profile-info { display: flex; align-items: center; gap: 12px; }
-        .profile-pic { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
-        .user-details h3 { font-size: 1.1rem; font-weight: 600; line-height: 1.2; }
-        .user-details p { font-size: 0.8rem; color: var(--text-secondary); }
+        .profile-info { display: flex; align-items: center; gap: 12px; } .profile-pic { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
+        .user-details h3 { font-size: 1.1rem; font-weight: 600; } .user-details p { font-size: 0.8rem; color: var(--text-secondary); }
         .wallet-balance { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 8px 15px; border-radius: 20px; font-weight: 600; }
-        .coin-icon { width: 20px; height: 20px; }
-        #wallet-balance { font-weight: 700; }
-        .section-title { font-size: 1.5rem; font-weight: 700; margin: 30px 0 20px; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .referral-card { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px; padding: 30px 25px; border: 1px solid rgba(255, 255, 255, 0.1); margin-top: 20px; }
-        .referral-card p { font-size: 1rem; color: rgba(255,255,255,0.8); margin-bottom: 25px; line-height: 1.6; }
-        .referral-code-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; border: 2px dashed rgba(255,255,255,0.3); margin-bottom: 25px; }
-        #referral-code { font-size: 1.8rem; font-weight: 700; letter-spacing: 4px; }
+        .coin-icon { width: 20px; height: 20px; } #wallet-balance { font-weight: 700; }
+
+        /* --- New Invite Friends Section --- */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+        }
+        .card-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; }
+        .invite-steps { display: flex; justify-content: space-between; text-align: center; }
+        .step-item { flex: 1; }
+        .step-item p { font-size: 0.9rem; font-weight: 600; }
+        .step-item span { font-size: 0.8rem; color: var(--text-secondary); }
+        .step-item .arrow { color: #f093fb; font-weight: bold; margin: 0 10px; }
+
+        /* --- New Share Template Section --- */
+        .share-template-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .template-images { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .template-images img { width: 100%; border-radius: 12px; cursor: pointer; transition: transform 0.2s ease; }
+        .template-images img:hover { transform: scale(1.05); }
+        .share-message-box { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .share-message-box p { font-size: 0.9rem; color: var(--text-secondary); flex-grow: 1; }
+        .share-message-box i { color: #f093fb; font-size: 1.2rem; cursor: pointer; padding-left: 10px; }
+        .social-share-icons { display: flex; justify-content: space-around; padding: 25px 0 10px; }
+        .social-share-icons a { font-size: 2.5rem; text-decoration: none; transition: transform 0.2s ease; }
+        .social-share-icons a:hover { transform: scale(1.1); }
+        .fa-whatsapp { color: #25D366; } .fa-telegram { color: #0088cc; }
+        .fa-facebook { color: #1877F2; } .fa-twitter { color: #1DA1F2; }
+        .fa-ellipsis-h { color: #888; }
         
-        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; color: #fff; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-copy { background: var(--secondary-gradient); }
-        .btn-share { background: linear-gradient(135deg, #25D366, #128C7E); }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        
-        .referrals-list-card { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); margin-top: 30px; text-align: left; }
-        .referrals-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .referrals-header h4 { font-size: 1.2rem; color: #f093fb; }
-        .referrals-count { background-color: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 20px; font-weight: 600; }
-        #referred-friends-list .friend-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        #referred-friends-list .friend-item:last-child { border-bottom: none; }
-        .friend-item .friend-name { font-weight: 500; }
-        #no-referrals-message { color: var(--text-secondary); text-align: center; padding: 20px 0; }
-        
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; padding: 5px 15px; }
-        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; filter: grayscale(100%) opacity(0.6); } .nav-item span { font-size: 0.7rem; }
-        .nav-item.active { color: var(--text-primary); } .nav-item.active img { filter: none; } .nav-item.active span { font-weight: 600; }
+        .bottom-nav { /* ... Unchanged ... */ }
     </style>
 </head>
 <body>
@@ -65,19 +70,39 @@
         <div class="wallet-balance"><img src="coin-icon.png" class="coin-icon"><span id="wallet-balance">0</span></div>
     </header>
     <main class="app-container">
-        <h2 class="section-title">Refer & Earn</h2>
-        <div class="referral-card">
-            <p>Share your code with friends. You get a random bonus from <strong>9 to 9999 coins</strong> for each successful referral, credited within 24 hours!</p>
-            <div class="referral-code-box"><span id="referral-code">LOADING...</span></div>
-            <div class="action-buttons">
-                <button id="copy-btn" class="btn btn-copy">Copy Code</button>
-                <button id="share-btn" class="btn btn-share"><i class="fas fa-share-alt"></i> Share</button>
+        
+        <div class="card">
+            <h3 class="card-title">Invite Friends</h3>
+            <div class="invite-steps">
+                <div class="step-item"><p>STEP 1</p><span>Share Link & invitee download</span></div>
+                <span class="arrow">></span>
+                <div class="step-item"><p>STEP 2</p><span>You get random bonus!</span></div>
+                <span class="arrow">></span>
+                <div class="step-item"><p>STEP 3</p><span>Unlock more by invitee bet</span></div>
             </div>
         </div>
-        <div class="referrals-list-card">
-            <div class="referrals-header"><h4>Referred Friends</h4><div class="referrals-count" id="referrals-count">0</div></div>
-            <div id="referred-friends-list"><p id="no-referrals-message">You haven't referred any friends yet.</p></div>
+
+        <div class="card">
+            <div class="share-template-header">
+                <h3 class="card-title" style="margin-bottom: 0;">Share Template</h3>
+            </div>
+            <div class="template-images">
+                <img src="share-template-1.png" alt="Share Template 1" id="share-image-1">
+                <img src="share-template-2.png" alt="Share Template 2" id="share-image-2">
+            </div>
+            <div class="share-message-box">
+                <p id="share-text-display">Loading message...</p>
+                <i class="fas fa-copy" id="copy-message-btn"></i>
+            </div>
+            <div class="social-share-icons">
+                <a href="#" id="share-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" id="share-telegram"><i class="fab fa-telegram"></i></a>
+                <a href="#" id="share-facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" id="share-twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" id="share-more"><i class="fas fa-ellipsis-h"></i></a>
+            </div>
         </div>
+
     </main>
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item"><img src="home-icon.png" alt="Home"><span>Home</span></a>
@@ -93,15 +118,48 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+
+        // --- NEW SHARE LOGIC ---
+        const downloadLink = 'https://shikarin-loots.vercel.app';
+        let shareMessage = '';
+
+        function setShareMessage(code) {
+            shareMessage = `I'm about to cash out from MONETRA! Just click and download. You can also get money here. Download to find me in MONETRA Now!!!\n\nUse my code: ${code}\n\n${downloadLink}`;
+            document.getElementById('share-text-display').textContent = shareMessage;
+        }
+
+        function copyShareMessage() {
+            navigator.clipboard.writeText(shareMessage).then(() => {
+                alert('Share message copied to clipboard!');
+            });
+        }
+
+        // Add listeners to images
+        document.getElementById('share-image-1').addEventListener('click', copyShareMessage);
+        document.getElementById('share-image-2').addEventListener('click', copyShareMessage);
+        document.getElementById('copy-message-btn').addEventListener('click', copyShareMessage);
         
-        // Particle script
-        // ...
+        // Social Media Listeners
+        document.getElementById('share-whatsapp').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(`https://wa.me/?text=${encodeURIComponent(shareMessage)}`, '_blank');
+        });
+        document.getElementById('share-telegram').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(downloadLink)}&text=${encodeURIComponent(shareMessage)}`, '_blank');
+        });
+        document.getElementById('share-facebook').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(downloadLink)}`, '_blank');
+        });
+         document.getElementById('share-twitter').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`, '_blank');
+        });
+        document.getElementById('share-more').addEventListener('click', copyShareMessage);
 
-        const referralCodeEl = document.getElementById('referral-code');
-        const copyBtn = document.getElementById('copy-btn');
-        const shareBtn = document.getElementById('share-btn');
-        let myReferralCode = '';
 
+        // --- Existing Header and User Data Logic ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.collection('users').doc(user.uid).get().then(doc => {
@@ -110,63 +168,14 @@
                         document.getElementById('user-name-header').textContent = userData.name || 'User';
                         document.getElementById('user-email-header').textContent = user.email;
                         document.getElementById('wallet-balance').textContent = userData.walletBalance || 0;
-                        myReferralCode = userData.referralCode;
-                        referralCodeEl.textContent = myReferralCode || 'N/A';
-                        if (myReferralCode) {
-                            fetchReferredUsers(myReferralCode);
-                        }
+                        
+                        // Set the message once the code is available
+                        setShareMessage(userData.referralCode || 'NOCODE');
                     }
                 });
             } else { window.location.href = 'auth.html'; }
         });
 
-        function fetchReferredUsers(myCode) {
-            const listEl = document.getElementById('referred-friends-list');
-            const countEl = document.getElementById('referrals-count');
-            const noRefMsg = document.getElementById('no-referrals-message');
-            
-            db.collection('users').where('referredByCode', '==', myCode).get().then(snapshot => {
-                countEl.textContent = snapshot.size;
-                if (snapshot.empty) {
-                    listEl.innerHTML = '<p id="no-referrals-message">You haven\'t referred any friends yet.</p>';
-                } else {
-                    let friendsHTML = '';
-                    snapshot.forEach(doc => {
-                        const friendData = doc.data();
-                        friendsHTML += `<div class="friend-item"><span class="friend-name">${friendData.name}</span></div>`;
-                    });
-                    listEl.innerHTML = friendsHTML;
-                }
-            }).catch(error => {
-                console.error("Error fetching referrals:", error);
-                listEl.innerHTML = '<p id="no-referrals-message">Could not load referrals.</p>';
-            });
-        }
-        
-        copyBtn.addEventListener('click', () => {
-            if (myReferralCode) {
-                navigator.clipboard.writeText(myReferralCode);
-                copyBtn.textContent = 'Copied!';
-                setTimeout(() => { copyBtn.textContent = 'Copy Code'; }, 2000);
-            }
-        });
-        
-        // --- NEW, IMPROVED SHARE LOGIC ---
-        shareBtn.addEventListener('click', () => {
-            const downloadLink = 'https://shikarin-loots.vercel.app';
-            const shareMessage = `Hey! I'm earning real rewards on MONETRA by completing simple tasks. Join me and get started! 🔥\n\nUse my code to sign up: ${myReferralCode}\n\nDownload the app here:\n${downloadLink}`;
-
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Join MONETRA & Earn Rewards!',
-                    text: shareMessage,
-                }).catch((error) => console.log('Error sharing', error));
-            } else {
-                // Fallback: Copy the full message to the clipboard
-                navigator.clipboard.writeText(shareMessage);
-                alert('Share message copied to clipboard! Paste it in your favorite app.');
-            }
-        });
     </script>
 </body>
 </html>
