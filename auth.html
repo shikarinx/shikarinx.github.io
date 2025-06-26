@@ -69,7 +69,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Setup
             firebase.initializeApp(firebaseConfig);
             const auth = firebase.auth();
             const db = firebase.firestore();
@@ -96,8 +95,7 @@
 
             authSwitchBtn.addEventListener('click', () => {
                 isLoginMode = !isLoginMode;
-                hideError();
-                authForm.reset();
+                hideError(); authForm.reset();
                 if (isLoginMode) {
                     formTitle.textContent = 'Welcome Back';
                     formSubtitle.textContent = 'Login to continue your journey';
@@ -117,7 +115,7 @@
                 }
             });
 
-            // --- FINAL, PHONE-FRIENDLY SIGNUP LOGIC ---
+            // --- FINAL, SIMPLIFIED, AND CORRECTED SCRIPT ---
             authForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const email = document.getElementById('email-input').value.trim();
@@ -130,56 +128,35 @@
                         await auth.signInWithEmailAndPassword(email, password);
                         window.location.href = 'index.html';
                     } else {
-                        // ** SIGNUP LOGIC **
                         const fullName = document.getElementById('full-name-input').value.trim();
                         const mobileNumber = document.getElementById('number-input').value.trim();
                         const referralCodeInput = document.getElementById('referral-input').value.trim().toUpperCase();
                         
                         if (!fullName || !mobileNumber) { throw new Error('Please fill in your name and number.'); }
                         
-                        // Step 1: Handle the referral BEFORE creating the new user
-                        if (referralCodeInput) {
-                            const querySnapshot = await db.collection('users').where('referralCode', '==', referralCodeInput).limit(1).get();
-                            if (querySnapshot.empty) {
-                                throw new Error('Invalid referral code.');
-                            }
-                            
-                            // Get the referrer's data and update their wallet
-                            const referrerDoc = querySnapshot.docs[0];
-                            const referrerRef = db.collection('users').doc(referrerDoc.id);
-                            const referralReward = 200; // 200 coins = 2 rupees
-
-                            await referrerRef.update({
-                                walletBalance: firebase.firestore.FieldValue.increment(referralReward)
-                            });
-
-                            // Log this referral for tracking
-                            await db.collection('referrals').add({
-                                referrerUid: referrerDoc.id,
-                                referrerCode: referralCodeInput,
-                                newUserName: fullName, // Log the name of the person who joined
-                                rewardGiven: referralReward,
-                                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                            });
-                        }
-
-                        // Step 2: Create the new user
+                        // Step 1: Create the new user first. This is the most important action.
                         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                         const user = userCredential.user;
 
-                        // Step 3: Create the new user's own referral code
-                        const uniquePart = user.uid.slice(-6).toUpperCase();
-                        const ownReferralCode = `MON${uniquePart}`;
-                        
-                        // Step 4: Save the new user's document in Firestore
-                        await db.collection('users').doc(user.uid).set({
+                        // Step 2: Prepare the user's data document.
+                        const ownReferralCode = `MON${user.uid.slice(-6).toUpperCase()}`;
+                        const newUserDoc = {
                             name: fullName,
                             email: email,
                             phone: mobileNumber,
-                            referralCode: ownReferralCode, // Give them their own code
-                            walletBalance: 0, // New users start with 0
+                            referralCode: ownReferralCode,
+                            walletBalance: 0,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
+                        };
+
+                        // Step 3: If a referral code was used, just add it to the new user's document.
+                        // We will NOT try to give a reward here. That is done manually by the admin.
+                        if (referralCodeInput) {
+                            newUserDoc.referredByCode = referralCodeInput;
+                        }
+                        
+                        // Step 4: Save the new user's document. This will not fail.
+                        await db.collection('users').doc(user.uid).set(newUserDoc);
                         
                         window.location.href = 'index.html';
                     }
