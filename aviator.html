@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>MONETRA - Aviator Pro</title>
+    <!-- Your Fonts and CSS links here -->
+    <style>
+        /* Your entire CSS code from the file you provided goes here. No changes needed. */
+    </style>
+</head>
+<body>
+    <!-- Your entire HTML body from the file you provided goes here. No changes needed. -->
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        // --- FIREBASE SETUP ---
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        let currentUser = null;
+        let userDocRef = null;
+
+        // Game Variables
+        let balance = 0;
+        let currentBet = 10;
+        // ... all other game variables
+        
+        // DOM Elements
+        // ... all your getElementById calls
+
+        // --- FIREBASE AUTHENTICATION ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                userDocRef = db.collection('users').doc(user.uid);
+                
+                userDocRef.onSnapshot(doc => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        balance = userData.walletBalance || 0;
+                        updateUI();
+                    }
+                });
+            } else {
+                window.location.href = 'auth.html';
+            }
+        });
+
+        // --- ALL YOUR ORIGINAL GAME FUNCTIONS ---
+        // I will only show the functions that have been changed.
+
+        async function placeBet() {
+            if (gameState !== 'waiting' && gameState !== 'countdown') return;
+            const betAmount = parseInt(betInput.value);
+            if (betAmount < 1 || betAmount > balance) {
+                alert('Invalid bet amount or insufficient balance!');
+                return;
+            }
+            
+            try {
+                // Deduct bet from the user's wallet
+                await userDocRef.update({
+                    walletBalance: firebase.firestore.FieldValue.increment(-betAmount)
+                });
+                
+                // --- THIS IS THE FIX ---
+                // Log the bet to your EXISTING transactions collection
+                await db.collection('transactions').add({
+                    userId: currentUser.uid,
+                    amount: betAmount,
+                    description: 'Aviator Bet',
+                    type: 'withdrawal', // A bet is a type of withdrawal
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                currentBet = betAmount;
+                hasBetPlaced = true;
+                statusText.textContent = 'Bet placed! Waiting for round to start...';
+                updateUI();
+            } catch (error) {
+                console.error("Error placing bet: ", error);
+                alert("Could not place bet. Please try again.");
+            }
+        }
+
+        async function cashOut(automatic = false) {
+            if (gameState !== 'flying' || !hasBetPlaced) return;
+            const winnings = Math.floor(currentBet * multiplier);
+            hasBetPlaced = false;
+            gameState = 'cashed_out';
+            
+            try {
+                // Add winnings to the user's wallet
+                await userDocRef.update({
+                    walletBalance: firebase.firestore.FieldValue.increment(winnings)
+                });
+
+                // --- THIS IS THE FIX ---
+                // Log the win to your EXISTING transactions collection
+                await db.collection('transactions').add({
+                    userId: currentUser.uid,
+                    amount: winnings,
+                    description: `Aviator Win @ ${multiplier.toFixed(2)}x`,
+                    type: 'earning',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                statusText.textContent = `${automatic ? 'Auto ' : ''}Cashed out! Won ${winnings} coins`;
+                updateUI();
+            } catch (error) {
+                console.error("Error cashing out: ", error);
+            }
+            
+            setTimeout(() => {
+                if (gameState === 'cashed_out') {
+                    roundNumber++;
+                    resetGame();
+                }
+            }, 2000);
+        }
+        
+        // No changes needed for crashGame, updateUI, or other functions
+        
+        // --- All other utility functions from your original file go here.
+
+        // Initialize Game
+        // ...
+    </script>
+</body>
+</html>
