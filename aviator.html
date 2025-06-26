@@ -70,12 +70,12 @@
                 });
                 
                 // --- THIS IS THE FIX ---
-                // Log the bet to your EXISTING transactions collection
-                await db.collection('transactions').add({
+                // Log the bet to the NEW aviator_history collection
+                await db.collection('aviator_history').add({
                     userId: currentUser.uid,
                     amount: betAmount,
-                    description: 'Aviator Bet',
-                    type: 'withdrawal', // A bet is a type of withdrawal
+                    description: 'Placed Bet',
+                    type: 'bet', // A bet
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
@@ -102,12 +102,12 @@
                 });
 
                 // --- THIS IS THE FIX ---
-                // Log the win to your EXISTING transactions collection
-                await db.collection('transactions').add({
+                // Log the win to the NEW aviator_history collection
+                await db.collection('aviator_history').add({
                     userId: currentUser.uid,
                     amount: winnings,
-                    description: `Aviator Win @ ${multiplier.toFixed(2)}x`,
-                    type: 'earning',
+                    description: `Win @ ${multiplier.toFixed(2)}x`,
+                    type: 'win',
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
@@ -125,7 +125,7 @@
             }, 2000);
         }
         
-        // No changes needed for crashGame, updateUI, or other functions
+        // No changes needed for other functions
         
         // --- All other utility functions from your original file go here.
 
