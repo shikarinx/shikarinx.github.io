@@ -7,8 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ... CSS is unchanged ... */
-        :root { --primary-gradient: linear-gradient(135deg, #667eea, #764ba2); --dark-bg: #0a0e27; --card-bg: rgba(255, 255, 255, 0.1); --text-primary: #ffffff; --text-secondary: rgba(255, 255, 255, 0.7); }
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
+            --dark-bg: #0a0e27;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--dark-bg); color: var(--text-primary); overflow-x: hidden; padding-top: 80px; padding-bottom: 90px; }
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
@@ -39,6 +44,10 @@
         .fa-whatsapp { color: #25D366; } .fa-telegram { color: #0088cc; }
         .fa-facebook { color: #1877F2; } .fa-twitter { color: #1DA1F2; }
         .fa-ellipsis-h { color: #888; }
+        
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; background: rgba(10, 14, 39, 0.8); backdrop-filter: blur(10px); padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 10; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; padding: 5px 15px; } .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; filter: grayscale(100%) opacity(0.6); } .nav-item span { font-size: 0.7rem; }
+        .nav-item.active { color: #ffffff; } .nav-item.active img { filter: none; } .nav-item.active span { font-weight: 600; }
     </style>
 </head>
 <body>
@@ -51,7 +60,6 @@
         <div class="wallet-balance"><img src="coin-icon.png" class="coin-icon"><span id="wallet-balance">0</span></div>
     </header>
     <main class="app-container">
-        
         <div class="card">
             <h3 class="card-title">Invite Friends</h3>
             <div class="invite-steps">
@@ -59,14 +67,9 @@
                 <span class="arrow">></span>
                 <div class="step-item"><p>STEP 2</p><span>You get a random bonus!</span></div>
                 <span class="arrow">></span>
-                <div class="step-item">
-                    <p>STEP 3</p>
-                    <!-- UPDATED TEXT -->
-                    <span>Bonus on their first task</span>
-                </div>
+                <div class="step-item"><p>STEP 3</p><span>Bonus on their first task</span></div>
             </div>
         </div>
-
         <div class="card">
             <div class="share-template-header"><h3 class="card-title" style="margin-bottom: 0;">Share Template</h3></div>
             <div class="template-images">
@@ -86,13 +89,72 @@
             </div>
         </div>
     </main>
-    <!-- Nav and Script unchanged -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item"><img src="home-icon.png" alt="Home"><span>Home</span></a>
+        <a href="earn-more.html" class="nav-item"><img src="earn-icon.png" alt="Earn"><span>Earn</span></a>
+        <a href="refer.html" class="nav-item active"><img src="refer-icon.png" alt="Refer"><span>Refer</span></a>
+        <a href="settings.html" class="nav-item"><img src="settings-icon.png" alt="Settings"><span>Settings</span></a>
+    </nav>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script>
-        // All script is the same, no changes needed here
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Particle Script
+        const canvas = document.getElementById('particle-canvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let pA; class P{constructor(x,y,dX,dY,s,c){this.x=x;this.y=y;this.dX=dX;this.dY=dY;this.s=s;this.c=c}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()}update(){if(this.x>canvas.width||this.x<0)this.dX=-this.dX;if(this.y>canvas.height||this.y<0)this.dY=-this.dY;this.x+=this.dX;this.y+=this.dY;this.draw()}}
+        function iP(){pA=[];let n=(canvas.height*canvas.width)/9e3;for(let i=0;i<n;i++){let s=Math.random()*2+1,x=Math.random()*(innerWidth-s*2-s*2)+s*2,y=Math.random()*(innerHeight-s*2-s*2)+s*2,dX=Math.random()*.4-.2,dY=Math.random()*.4-.2;pA.push(new P(x,y,dX,dY,s,'rgba(102,126,234,0.6)'))}}
+        function aP(){requestAnimationFrame(aP);ctx.clearRect(0,0,innerWidth,innerHeight);if(pA)pA.forEach(p=>p.update())}
+        iP();aP();window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;iP()});
+
+        // --- FINAL, CORRECTED SCRIPT ---
+        const downloadLink = 'https://shikarin-loots.vercel.app';
+        let shareMessage = '';
+
+        function setShareMessage(code) {
+            shareMessage = `I'm about to cash out from MONETRA! Just click and download. You can also get money here. Download to find me in MONETRA Now!!!\n\nUse my code: ${code}\n\n${downloadLink}`;
+            document.getElementById('share-text-display').textContent = shareMessage;
+        }
+
+        function copyShareMessage() {
+            navigator.clipboard.writeText(shareMessage).then(() => {
+                alert('Share message copied to clipboard!');
+            });
+        }
+        
+        document.getElementById('share-image-1').addEventListener('click', copyShareMessage);
+        document.getElementById('share-image-2').addEventListener('click', copyShareMessage);
+        document.getElementById('copy-message-btn').addEventListener('click', copyShareMessage);
+        document.getElementById('share-whatsapp').addEventListener('click', (e) => { e.preventDefault(); window.open(`https://wa.me/?text=${encodeURIComponent(shareMessage)}`, '_blank'); });
+        document.getElementById('share-telegram').addEventListener('click', (e) => { e.preventDefault(); window.open(`https://t.me/share/url?url=${encodeURIComponent(downloadLink)}&text=${encodeURIComponent(shareMessage)}`, '_blank'); });
+        document.getElementById('share-facebook').addEventListener('click', (e) => { e.preventDefault(); window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(downloadLink)}`, '_blank'); });
+        document.getElementById('share-twitter').addEventListener('click', (e) => { e.preventDefault(); window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`, '_blank'); });
+        document.getElementById('share-more').addEventListener('click', copyShareMessage);
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // This is the most reliable way to get data
+                db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        
+                        // Update Header
+                        document.getElementById('user-name-header').textContent = userData.name || 'User';
+                        document.getElementById('user-email-header').textContent = user.email;
+                        document.getElementById('wallet-balance').textContent = userData.walletBalance || 0;
+                        if (user.photoURL) document.getElementById('user-photo').src = user.photoURL;
+
+                        // Update Share Message
+                        setShareMessage(userData.referralCode || 'NOCODE');
+                    }
+                });
+            } else { window.location.href = 'auth.html'; }
+        });
+
     </script>
 </body>
 </html>
